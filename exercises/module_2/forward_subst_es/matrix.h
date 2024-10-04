@@ -9,6 +9,7 @@ template <typename T> class Matrix {
 private:
   /*
    * Retrieve vector position from matrix coordinates
+   * (Starting from 0,0 to nc,nr)
    */
   int site(int i, int j) const { return i * nc + j; }
 
@@ -18,10 +19,7 @@ public:
   Matrix(const Matrix<T> &in) : nr(in.nr), nc(in.nc), data(in.data) {}
 
   T operator()(int i, int j) const {
-    assert(i < nc && j < nr);
-
-    return data[this->site(i, j)];
-  }
+ }
 
   T &operator()(int i, int j) {
     assert(i < nc && j < nr);
@@ -76,6 +74,13 @@ template <typename T> void Matrix<T>::ones() {
 template <typename T> void Matrix<T>::random() {
   for (int i = 0; i < nr * nc; i++)
     data[i] = (T)(std::rand() / (double)RAND_MAX);
+}
+
+
+template <typename T> T &Matrix<T>::operator()(int i, int j) const {
+    assert(i < nc && j < nr);
+
+    return data[this->site(i, j)];
 }
 
 template <typename T> Matrix<T> &Matrix<T>::operator=(const Matrix<T> &in) {
