@@ -5,6 +5,9 @@
 #include <cassert>
 #include <iostream>
 
+namespace TensorHelper
+{
+
 /*
  * Perform Back Substitution Algorithm on an upper triangular matrix
  *
@@ -12,10 +15,6 @@
  * A: the matrix
  * b: the given vector
  */
-
-namespace TensorHelper
-{
-
 template <typename T> Tensor<T> BackwardSubstitution(Tensor<T> A, Tensor<T> b);
 
 template <typename T> void Print(Tensor<T> mat);
@@ -44,40 +43,11 @@ template <typename T> class TensorBuilder
     /*
      * Fill an identity tensor in the correct format for each order of the tensor
      */
-    TensorBuilder<T> &Identity()
-    {
-        // Identity for vector is a tensor filled with ones
-        if (m_Temp.m_Cols == 1 || m_Temp.m_Rows == 1)
-        {
-            return Ones();
-        }
+    TensorBuilder<T> &Identity();
 
-        // Identity should be a square matrix
-        assert(m_Temp.m_Cols == m_Temp.m_Rows);
+    TensorBuilder<T> &Ones();
 
-        for (int i = 0; i < m_Temp.m_Rows; i++)
-        {
-            m_Temp(i, i) = 1;
-        }
-
-        return *this;
-    }
-
-    TensorBuilder<T> &Ones()
-    {
-        for (int i = 0; i < m_Temp.m_Rows * m_Temp.m_Cols; i++)
-            m_Temp.m_Data[i] = 1.0;
-
-        return *this;
-    }
-
-    TensorBuilder<T> &Random()
-    {
-        for (int i = 0; i < m_Temp.m_Rows * m_Temp.m_Cols; i++)
-            m_Temp.m_Data[i] = (T)(std::rand() / (double)RAND_MAX);
-
-        return *this;
-    }
+    TensorBuilder<T> &Random();
 
     Tensor<T> Build()
     {
@@ -135,3 +105,38 @@ template <typename T> void Print(Tensor<T> mat)
 }
 
 } // namespace TensorHelper
+
+template <typename T> TensorBuilder<T> &TensorBuilder<T>::Identity()
+{
+    // Identity for vector is a tensor filled with ones
+    if (m_Temp.m_Cols == 1 || m_Temp.m_Rows == 1)
+    {
+        return Ones();
+    }
+
+    // Identity should be a square matrix
+    assert(m_Temp.m_Cols == m_Temp.m_Rows);
+
+    for (int i = 0; i < m_Temp.m_Rows; i++)
+    {
+        m_Temp(i, i) = 1;
+    }
+
+    return *this;
+}
+
+template <typename T> TensorBuilder<T> &TensorBuilder<T>::Ones()
+{
+    for (int i = 0; i < m_Temp.m_Rows * m_Temp.m_Cols; i++)
+        m_Temp.m_Data[i] = 1.0;
+
+    return *this;
+}
+
+template <typename T> TensorBuilder<T> &TensorBuilder<T>::Random()
+{
+    for (int i = 0; i < m_Temp.m_Rows * m_Temp.m_Cols; i++)
+        m_Temp.m_Data[i] = (T)(std::rand() / (double)RAND_MAX);
+
+    return *this;
+}
