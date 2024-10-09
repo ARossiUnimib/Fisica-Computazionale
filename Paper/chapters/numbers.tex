@@ -1,0 +1,139 @@
+\setchapterpreamble[u]{\margintoc}
+\chapter{Numeri}
+\labch{numbers}
+
+\section{Rappresentazione}
+
+La rappresentazione numerica a cui il calcolo scientifico si riferisce principalmente
+è quella dei numeri reali; nell’ambito informatico tale rappresentazione utilizza
+il concetto di numeri a virgola mobile come standard: i numeri reali vengono
+rappresentati attraverso una notazione scientifica in base due tramite la seguente formula:
+
+$$
+	(-1)^S \left( 1 + \sum_n M_n 2^{-n} \right) \cdot 2^{E}
+$$
+
+Dove:
+\begin{description}
+	\item $S$ è il valore booleano per il \textbf{segno}
+	\item $M$ è la parte decimale detta \textbf{mantissa}
+
+	\item $E = e - d$ è l'\textbf{esponente} con $d$ (offset), $e$ (esponente dopo offset)
+\end{description}
+
+% inserire formula
+
+\section{Precisione: Esercizio 1}
+
+
+\paragraph{Nozioni teoriche} \mbox{}\\
+
+\textit{Definizione}: La \textbf{precisione macchina} (o \textit{$\epsilon$ di macchina})
+è la differenza tra 1 e il numero successivo rappresentabile dato il numero di bit
+richiesti, esso sarà dunque:
+
+$$
+	\epsilon = 2^{-M}
+$$
+
+
+Nello standard dei numeri a virgola mobile (IEE 754) si studiano principalmente
+due sottoclassi di numeri i cui nominativi nei linguaggi C-like è:
+
+\begin{description}
+	\item[float] numero a singola precisione (32 bit di memoria):
+		\begin{itemize}
+			\item $M$: 23 bit
+			\item $E$: 8 bit
+			\item Valore massimo: $3.40 \cdot 10^{38}$
+			\item $\epsilon$: $\sim 10^{-7}$
+		\end{itemize}
+	\item[double] numero a doppia precisione (64 bit di memoria):
+		\begin{itemize}
+			\item $M$: 52 bit
+			\item $E$: 11 bit
+			\item Valore massimo: $1.8 \cdot 10^{308}$
+			\item $\epsilon$: $\sim 10^{-16}$
+		\end{itemize}
+
+\end{description}
+
+\paragraph{Implementazione e osservazioni} \mbox{}\\
+\\
+\textit{File necessari}: sorgente: \texttt{number\_precision.c}, dati \textt{number\_precision.dat}
+\\
+
+% TODO: aggiungere grafico?
+
+\paragraph{Analisi e conclusioni}
+
+Nel
+primo esercizio si possono notare in maniera esaustiva varie propriet`a dei
+numeri a virgola mobile:
+1. Esiste un valore massimo sia per singola (∼ 3·1038) sia per doppia pre-
+cisione (∼ 2 · 10308), superato esso viene mostrato un valore esatto inf
+definito dallo standard descritto in precedenza;
+2. I numeri hanno un errore macchina dettato dalla capienza di memo-
+ria della mantissa;
+3. Come mostrer`a pi`u precisamente la prossima sezione, l’errore viene
+propagato nella somma:
+• 1 + fmult perde completamente l’informazione su fmult
+• 1 + dmult la conserva soltanto per le prime iterazioni;
+
+\section{Propagazione degli errori: Esercizio 2}
+
+\paragraph{Nozioni teoriche}
+
+\paragraph{Implementazione e osservazioni}\mbox{}\\
+\\
+\textit{File necessari}: sorgente: \texttt{error\_propagation.c}
+\\
+
+\begin{enumerate}
+
+	\item $(0.7 + 0.1) + 0.3 =_? 0.7 + (0.1 + 0.3)$:
+	      $$\texttt{Output: 1.1000000238418579, 1.1000000238418579}$$
+
+	      La somma risulta associativa.
+
+	\item $[10^{20} + (−10^{20})] + 1 =_? 10^{20} + [(−10^{20}) + 1]$:
+	      $$\texttt{Output: 1.0000000000000000, 0.0000000000000000}$$
+
+	      La somma risulta non associativa.
+\end{enumerate}
+
+\paragraph{Analisi}
+
+Utilizzando le formule discusse si può studiare la propagazione dell’errore nella somma.
+In essa la propagazione dipende dall’errore assoluto dei singoli addendi.
+Assumendo numeri a singola precisione e ricordando che $ \epsilon \sim 10^{−7}$,
+si studiano i casi ottenuti:
+
+\begin{enumerate}
+
+	\item Per i valori 0.7, 0.1, 0.3 l’ordine di grandeza è lo stesso, quindi,
+	      tutti i valori possegono un errore assoluto $\Delta x \sim 10^{-8}$, propagando
+	      l’errore nella somma si ottiene dunque $\Delta_{output} \sim 3 \cdot \Delta x$ in accordo con
+	      i risultati.
+
+	\item Esso è describile come un caso limite nell’errore di propagazione rispetto
+	      alla singola precisione, infatti, 1020 avr`a un errore assoluto di ∼ 1013
+	      mentre 1 di 10−7!
+
+	      E’ quindi ragionevole spiegare
+	      l’output in termini di ordini di grandezza. Nel termine di sinistra ven-
+	      gono sommati prima numeri con errore assoluto paragonabile si otterr`a
+	      dunque ∼ 0 che sar`a poi sommato con un numero avente un errore
+	      assoluto simile a 1.
+	      Nel termine a destra, invece, si sommano due
+	      valori con venti ordini di grandezza di differenza: l’errore assoluto di
+	      1020 prevale e si perde qualsiasi informazione nella somma per termini
+	      x << 1020 ⇒ x + 1020 ∼ 1020, ’1’ `e quindi ignorato nella somma a
+	      destra.
+\end{enumerate}
+
+\paragraph{Conclusioni}
+Nel manipolare numeri in un calcolatore l’operazione eseguita, la precisione e
+la differenza in ordine di grandezza dei numeri partecipanti devono essere tenuti
+sempre in considerazione specialmente nelle addizioni.
+
