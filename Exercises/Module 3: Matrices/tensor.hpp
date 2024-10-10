@@ -1,5 +1,6 @@
 #pragma once
 
+#include <algorithm>
 #include <cassert>
 #include <cstdlib>
 #include <cstring>
@@ -63,13 +64,21 @@ template <typename T> class Tensor
 
     void SwapRows(int i, int j);
 
-    // TODO:
-    void SumRows(int i, int j, int final);
+    /*
+     * Linear combination of two rows into a final row
+     * of the tensor
+     *
+     * row_final = row_i + value * row_j
+     */
+    void LinearCombRows(int i, int j, T value, int final);
 
     // Action via a scalar
     template <typename K> Tensor<T> operator*(K d) const;
 
     /****************************************************/
+
+    // TODO: get row as a vector
+    std::vector<T> Row(int i); 
 
     Tensor<T> &operator=(const Tensor<T> &in)
     {
@@ -119,6 +128,17 @@ template <typename T> void Tensor<T>::SwapRows(int i, int j)
     std::copy(&m_Data[this->Site(i, 0)], &m_Data[this->Site(j, 0)], sizeof(T) * m_Cols);
     std::copy(&m_Data[this->Site(j, 0)], tmp, sizeof(T) * m_Cols);
     delete[] tmp;
+}
+
+template <typename T> void Tensor<T>::LinearCombRows(int i, int j, T value, int final)
+{
+    assert(i < m_Rows && j < m_Rows);
+    assert(final < m_Rows);
+
+    for (int k = 0; k < m_Cols; k++)
+    {
+        m_Data[Site(final, k)] = m_Data[Site(i, k)] + value * m_Data[Site(j, k)];
+    }
 }
 
 template <typename T> T Tensor<T>::operator()(int i, int j) const

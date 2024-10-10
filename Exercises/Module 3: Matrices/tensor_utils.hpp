@@ -4,9 +4,17 @@
 
 #include <cassert>
 #include <iostream>
+#include <tuple>
+
+#define D_TENSOR_COUPLE std::tuple<Tensor<T>, Tensor<T>>
 
 namespace TensorHelper
 {
+
+template <typename T> T DeterminantFromLU(Tensor<T> &A);
+template <typename T> D_TENSOR_COUPLE LUDecomposition(Tensor<T> &A);
+
+template <typename T> Tensor<T> GaussianElimination(Tensor<T> &A, Tensor<T> &b);
 
 /*
  * Perform Back Substitution Algorithm on an upper triangular matrix
@@ -40,6 +48,11 @@ template <typename T> class TensorBuilder
         return TensorBuilder<T>(rows, cols);
     }
 
+    static TensorBuilder<T> SMatrix(int size)
+    {
+        return TensorBuilder<T>(size, size);
+    }
+
     /*
      * Fill an identity tensor in the correct format for each order of the tensor
      */
@@ -66,6 +79,55 @@ template <typename T> class TensorBuilder
 namespace TensorHelper
 {
 
+template <typename T> T DeterminantFromLU(Tensor<T> &A)
+{
+    auto U = std::get<1>(LUDecomposition(A));
+    auto det = 1;
+
+    for (int i = 0; i < A.Rows(); i++)
+    {
+        det *= U(i, i);
+    }
+
+    return det;
+}
+
+template <typename T> D_TENSOR_COUPLE LUDecomposition(Tensor<T> &A)
+{
+    T scalar;
+    auto L = TensorBuilder<T>::SMatrix(A.Rows()).Build();
+    auto U = Tensor<T>(A);
+
+    for (int j = 0; j < U.Rows() - 1; j++)
+    {
+        for (int i = j + 1; i < U.Cols(); i++)
+        {
+            scalar = -U(i, j) / U(j, j);
+            L(i, j) = -scalar;
+            U.LinearCombRows(i, j, scalar, i);
+        }
+    }
+
+    return std::make_tuple(L, U);
+}
+
+template <typename T> Tensor<T> GaussianElimination(Tensor<T> &A, Tensor<T> &b)
+{
+    T scalar;
+
+    for (int j = 0; j < A.Rows() - 1; j++)
+    {
+        for (int i = j + 1; i < A.Cols(); i++)
+        {
+            scalar = -A(i, j) / A(j, j);
+            A.LinearCombRows(i, j, scalar, i);
+            b.LinearCombRows(i, j, scalar, i);
+        }
+    }
+
+    return BackwardSubstitution(A, b);
+}
+
 template <typename T> Tensor<T> BackwardSubstitution(Tensor<T> A, Tensor<T> b)
 {
     // Check if A is a square matrix
@@ -74,10 +136,24 @@ template <typename T> Tensor<T> BackwardSubstitution(Tensor<T> A, Tensor<T> b)
     int N = A.Rows();
 
     // TODO: Check if A is upper right triangular
+    bool flag = true;
+
+    for (int i = 0; i < N; i++)
+    {
+        if (!A(i, i))
+        {
+            flag = false;
+            break;
+        }
+
+        for (int j = 0; j < N - i; j++)
+        {
+        }
+    }
 
     auto solution = TensorBuilder<double>::Vector(3).Build();
 
-    double sum;
+    T sum;
 
     for (int i = N - 1; i >= 0; i--)
     {
@@ -98,10 +174,12 @@ template <typename T> void Print(Tensor<T> mat)
     for (int i = 0; i < mat.Rows(); i++)
     {
         for (int j = 0; j < mat.Cols(); j++)
-            std::cout << mat(i, j);
+            std::cout << " " << mat(i, j);
 
         std::cout << "\n";
     }
+
+    std::cout << "\n";
 }
 
 } // namespace TensorHelper
