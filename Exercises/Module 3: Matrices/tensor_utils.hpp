@@ -5,10 +5,11 @@
 #include <cassert>
 #include <iostream>
 #include <tuple>
+#include <vector>
 
 #define D_TENSOR_COUPLE std::tuple<Tensor<T>, Tensor<T>>
 
-namespace TensorHelper
+namespace TensorUtils
 {
 
 template <typename T> T DeterminantFromLU(Tensor<T> &A);
@@ -27,7 +28,7 @@ template <typename T> Tensor<T> BackwardSubstitution(Tensor<T> A, Tensor<T> b);
 
 template <typename T> void Print(Tensor<T> mat);
 
-} // namespace TensorHelper
+} // namespace TensorUtils
 
 /*
  * Builder to construct tensors
@@ -53,6 +54,16 @@ template <typename T> class TensorBuilder
         return TensorBuilder<T>(size, size);
     }
 
+    static TensorBuilder<T> FromData(std::vector<T> data, int rows, int cols)
+    {
+        return TensorBuilder<T>(std::move(data), rows, cols);
+    }
+
+    static TensorBuilder<T> FromData(std::vector<T> data)
+    {
+        return FromData(std::move(data), data.size(), 1);
+    }
+
     /*
      * Fill an identity tensor in the correct format for each order of the tensor
      */
@@ -72,17 +83,22 @@ template <typename T> class TensorBuilder
     {
     }
 
+    TensorBuilder(std::vector<T> &&data, int rows, int cols) : m_Temp(Tensor<T>(data, rows, cols))
+    {
+    }
+
   private:
     Tensor<T> m_Temp;
 };
 
-namespace TensorHelper
+namespace TensorUtils
 {
 
 template <typename T> T DeterminantFromLU(Tensor<T> &A)
 {
+    assert(A.Cols() == A.Rows());
     auto U = std::get<1>(LUDecomposition(A));
-    auto det = 1;
+    T det = 1;
 
     for (int i = 0; i < A.Rows(); i++)
     {
@@ -111,8 +127,25 @@ template <typename T> D_TENSOR_COUPLE LUDecomposition(Tensor<T> &A)
     return std::make_tuple(L, U);
 }
 
+
+template <typename T> Tensor<T> InverseMatrix(Tensor<T> A)
+{
+    assert(A.Cols() == A.Rows());
+    assert(DeterminantFromLU(A) != 0);
+
+    auto I = TensorBuilder<T>::SMatrix(A.Cols()).Identity().Build();
+
+    return GaussianElimination(A, I);
+}
+
 template <typename T> Tensor<T> GaussianElimination(Tensor<T> &A, Tensor<T> &b)
 {
+    assert(A.Cols() == A.Rows());
+    assert(DeterminantFromLU(A) != 0);
+
+    int N = A.Rows();
+    assert(N == b.Rows());
+
     T scalar;
 
     for (int j = 0; j < A.Rows() - 1; j++)
@@ -130,12 +163,13 @@ template <typename T> Tensor<T> GaussianElimination(Tensor<T> &A, Tensor<T> &b)
 
 template <typename T> Tensor<T> BackwardSubstitution(Tensor<T> A, Tensor<T> b)
 {
-    // Check if A is a square matrix
-    assert(A.Rows() == A.Cols());
-
+    assert(A.Cols() == A.Rows());
     int N = A.Rows();
+    assert(N == b.Rows());
+
 
     // TODO: Check if A is upper right triangular
+    /*
     bool flag = true;
 
     for (int i = 0; i < N; i++)
@@ -150,20 +184,25 @@ template <typename T> Tensor<T> BackwardSubstitution(Tensor<T> A, Tensor<T> b)
         {
         }
     }
+    */
 
-    auto solution = TensorBuilder<double>::Vector(3).Build();
+    auto solution = TensorBuilder<T>::Matrix(b.Rows(), b.Cols()).Build();
 
     T sum;
 
-    for (int i = N - 1; i >= 0; i--)
+    // Iterate through b columns 
+    for (int k = 0; k < b.Cols(); k++)
     {
-        sum = 0;
-        for (int j = i + 1; j <= N - 1; j++)
+        for (int i = N - 1; i >= 0; i--)
         {
-            sum += A(i, j) * solution(j);
-        }
+            sum = 0;
+            for (int j = i + 1; j <= N - 1; j++)
+            {
+                sum += A(i, j) * solution(j, k);
+            }
 
-        solution(i) = (b(i) - sum) / A(i, i);
+            solution(i, k) = (b(i, k) - sum) / A(i, i);
+        }
     }
 
     return solution;
@@ -182,7 +221,7 @@ template <typename T> void Print(Tensor<T> mat)
     std::cout << "\n";
 }
 
-} // namespace TensorHelper
+} // namespace TensorUtils
 
 template <typename T> TensorBuilder<T> &TensorBuilder<T>::Identity()
 {

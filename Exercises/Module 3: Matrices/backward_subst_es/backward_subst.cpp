@@ -19,7 +19,7 @@ int main()
     b_vec(2) = 4;
 
     {
-        using namespace TensorHelper;
+        using namespace TensorUtils;
 
         auto solution = BackwardSubstitution(U_mat, b_vec);
         Print(solution);

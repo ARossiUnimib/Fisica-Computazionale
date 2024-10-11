@@ -33,6 +33,11 @@ template <typename T> class Tensor
     {
     }
 
+    Tensor(std::vector<T> data, int nrows, int ncols) : m_Rows(nrows), m_Cols(ncols), m_Data(data)
+    {
+        assert(data.size() == nrows * ncols);
+    }
+
   public:
     Tensor(const Tensor<T> &other) : m_Rows(other.m_Rows), m_Cols(other.m_Cols), m_Data(other.m_Data)
     {
@@ -106,6 +111,11 @@ template <typename T> class Tensor
     inline int Rows()
     {
         return m_Rows;
+    }
+
+    inline std::vector<T> RawData()
+    {
+        return m_Data;
     }
 
   private:

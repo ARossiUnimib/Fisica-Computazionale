@@ -19,7 +19,7 @@ int main()
     auto i_vec = Tensor<double>(vec);
 
     {
-        using namespace TensorHelper;
+        using namespace TensorUtils;
         Print(mat);
         Print(vec);
 
