@@ -5,8 +5,29 @@
 #include <cwchar>
 #include <vector>
 
-#include "../Module 3: Matrices/tensor_utils.hpp"
 #include "../utils.hpp"
+
+/**
+ * @brief Class to store data of a function
+ *
+ * @tparam T precision
+ */
+template <typename T> class FunctionData;
+
+namespace FunctionUtils
+{
+
+/**
+ * @brief Create a polynomial function
+ *
+ * @tparam T
+ * @param coefficients
+ * @param x values
+ * @return FunctionData<T>
+ */
+template <typename T> FunctionData<T> Polynomial(std::vector<T> coefficients, const Utils::Range<T> &x);
+
+} // namespace FunctionUtils
 
 template <typename T> class FunctionData
 {
@@ -122,10 +143,10 @@ template <typename T> class FunctionData
 namespace FunctionUtils
 {
 
-template <typename T> FunctionData<T> Polynomial(std::vector<T> coefficients, const Utils::Range<T> &range)
+template <typename T> FunctionData<T> Polynomial(std::vector<T> coefficients, const Utils::Range<T> &x)
 {
     FunctionData<double> p;
-    for (auto &&x : range)
+    for (auto &&x : x)
     {
         double sum = 0;
         for (int j = 0; j < coefficients.size(); j++)

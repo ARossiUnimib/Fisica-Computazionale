@@ -9,33 +9,70 @@
 
 #define D_TENSOR_COUPLE std::tuple<Tensor<T>, Tensor<T>>
 
+/**
+ * @brief Builder to construct tensors
+ *
+ * The builder pattern avoids commons mistakes that could happen when declaring
+ * tensors preventing access to the inner logic of the Tensor class
+ *
+ * @tparam T precision
+ */
+template <typename T> class TensorBuilder;
+
 namespace TensorUtils
 {
 
+/**
+ * @brief Calculate the determinant of a matrix using LU decomposition
+ *
+ * @tparam T
+ * @param A
+ * @return T
+ */
 template <typename T> T DeterminantFromLU(Tensor<T> &A);
+
+/**
+ * @brief Calculate the inverse of a matrix using LU decomposition
+ *
+ * @tparam T
+ * @param A
+ * @return Tensor<T>
+ */
 template <typename T> D_TENSOR_COUPLE LUDecomposition(Tensor<T> &A);
 
+/**
+ * @brief Calculate the inverse of a matrix using LU decomposition
+ *
+ * @tparam T
+ * @param A
+ * @return Tensor<T>
+ */
 template <typename T> Tensor<T> GaussianElimination(Tensor<T> &A, Tensor<T> &b);
 
-/*
- * Perform Back Substitution Algorithm on an upper triangular matrix
- *
+/**
+ * @brief Perform Back Substitution Algorithm on an upper triangular matrix
  * Ax = b
- * A: the matrix
- * b: the given vector
+ *
+ * @tparam T precision
+ * @param A upper triangular matrix
+ * @param b given tensor (also)
+ * @return Tensor<T>
  */
 template <typename T> Tensor<T> BackwardSubstitution(Tensor<T> A, Tensor<T> b);
 
 template <typename T> void Print(Tensor<T> mat);
 
+/**
+ * @brief Calculate the inverse of a matrix using LU decomposition
+ *
+ * @tparam T precision
+ * @param A matrix
+ * @return Tensor<T>
+ */
+template <typename T> Tensor<T> InverseMatrix(Tensor<T> A);
+
 } // namespace TensorUtils
 
-/*
- * Builder to construct tensors
- *
- * The builder pattern avoids commons mistakes that could happen when declaring
- * tensors preventing access to the inner logic of the Tensor class
- */
 template <typename T> class TensorBuilder
 {
   public:
@@ -127,7 +164,6 @@ template <typename T> D_TENSOR_COUPLE LUDecomposition(Tensor<T> &A)
     return std::make_tuple(L, U);
 }
 
-
 template <typename T> Tensor<T> InverseMatrix(Tensor<T> A)
 {
     assert(A.Cols() == A.Rows());
@@ -167,7 +203,6 @@ template <typename T> Tensor<T> BackwardSubstitution(Tensor<T> A, Tensor<T> b)
     int N = A.Rows();
     assert(N == b.Rows());
 
-
     // TODO: Check if A is upper right triangular
     /*
     bool flag = true;
@@ -190,7 +225,7 @@ template <typename T> Tensor<T> BackwardSubstitution(Tensor<T> A, Tensor<T> b)
 
     T sum;
 
-    // Iterate through b columns 
+    // Iterate through b columns
     for (int k = 0; k < b.Cols(); k++)
     {
         for (int i = N - 1; i >= 0; i--)

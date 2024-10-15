@@ -21,14 +21,13 @@ Dove:
 	\item $E = e - d$ è l'\textbf{esponente} con $d$ (offset), $e$ (esponente dopo offset)
 \end{description}
 
-% inserire formula
+\section{Esercizi}
 
-\section{Precisione: Esercizio 1}
+\subsection{Precisione}
 
+\paragraph{Nozioni teoriche}
 
-\paragraph{Nozioni teoriche} \mbox{}\\
-
-\textit{Definizione}: La \textbf{precisione macchina} (o \textit{$\epsilon$ di macchina})
+\subparagraph{Definizione} La \textit{precisione di macchina} (o \textit{$\epsilon$ di macchina})
 è la differenza tra 1 e il numero successivo rappresentabile dato il numero di bit
 richiesti, esso sarà dunque:
 
@@ -36,9 +35,8 @@ $$
 	\epsilon = 2^{-M}
 $$
 
-
 Nello standard dei numeri a virgola mobile (IEE 754) si studiano principalmente
-due sottoclassi di numeri i cui nominativi nei linguaggi C-like è:
+due sottoclassi di numeri i cui nominativi nei linguaggi C-like sono:
 
 \begin{description}
 	\item[float] numero a singola precisione (32 bit di memoria):
@@ -58,36 +56,65 @@ due sottoclassi di numeri i cui nominativi nei linguaggi C-like è:
 
 \end{description}
 
-\paragraph{Implementazione e osservazioni} \mbox{}\\
-\\
-\textit{File necessari}: sorgente: \texttt{number\_precision.c}, dati \textt{number\_precision.dat}
-\\
+\paragraph{Implementazione e osservazioni}
 
-% TODO: aggiungere grafico?
+\subparagraph{File necessari} sorgente: \texttt{number\_precision.c}, dati: \texttt{number\_precision.dat}
+
+Il codice sorgente scritto utilizza funzionalità base del linguaggio C. \sidenote{
+	Per formattare il codice secondo la richiesta del problema si usi la
+	definizione \texttt{EXERCISE\_FORMAT}, altrimenti verrà utilizzata una formattazione
+	più compatta per leggere in maniera più diretta i dati, si consiglia di utilizzare
+	quest'ultima per comprendere l'analisi sottostante}
 
 \paragraph{Analisi e conclusioni}
 
-Nel
-primo esercizio si possono notare in maniera esaustiva varie propriet`a dei
+Dai dati ottenuti si possono notare in maniera esaustiva varie proprietà dei
 numeri a virgola mobile:
-1. Esiste un valore massimo sia per singola (∼ 3·1038) sia per doppia pre-
-cisione (∼ 2 · 10308), superato esso viene mostrato un valore esatto inf
-definito dallo standard descritto in precedenza;
-2. I numeri hanno un errore macchina dettato dalla capienza di memo-
-ria della mantissa;
-3. Come mostrer`a pi`u precisamente la prossima sezione, l’errore viene
-propagato nella somma:
-• 1 + fmult perde completamente l’informazione su fmult
-• 1 + dmult la conserva soltanto per le prime iterazioni;
 
-\section{Propagazione degli errori: Esercizio 2}
+\begin{enumerate}
+	\item Esiste un \textit{valore massimo} sia per singola ($\sim 3 \cdot 10^{38}$) sia
+	      per doppia precisione ($\sim 2 \cdot 10^{308}$), superato esso viene mostrato un
+	      valore esatto \textit{inf} definito dallo standard descritto in precedenza;
+
+	\item I numeri hanno un \textit{errore macchina} dettato dalla capienza di memoria della mantissa;
+
+	\item Come mostrerà più precisamente la prossima sezione, l’errore viene
+	      \textit{propagato} nella somma:
+
+	      \begin{itemize}
+		      \item $1 + f_{mult}$ perde completamente l’informazione su $f_{mult}$
+
+		      \item $1 + d_{mult}$ la conserva soltanto per le prime iterazioni;
+	      \end{itemize}
+\end{enumerate}
+\subsection{Propagazione degli errori}
 
 \paragraph{Nozioni teoriche}
 
-\paragraph{Implementazione e osservazioni}\mbox{}\\
-\\
-\textit{File necessari}: sorgente: \texttt{error\_propagation.c}
-\\
+E' immediato notare come i numeri a virgola mobile possano essere rappresentati come
+variaili casuali con errore associato, derivante dalla precisione di macchina.
+
+Prendiamo in esame una funzione $f(x, y)$ dove $x, y$ sono variabili casuali indipendenti
+con rispettivo errore $\sigma_x, \sigma_y$, allora l'errore su f sarà:
+
+$$
+	\sigma_f^2 = {\left( \frac{\partial f}{\partial x} \right)^2 \sigma_x^2 + \left( \frac{\partial f}{\partial y} \right)^2 \sigma_y^2}
+$$
+
+Assumendo ora $f = x + y$ otteniamo:
+
+$$
+	\sigma_f^2 = {\sigma_x^2 + \sigma_y^2}
+$$
+
+Notiamo immediatamente quindi che se $x \gg y $ allora $\sigma_f \approx \sigma_x$ quindi
+si perde l'informazione su $y$ nella somma.
+
+\paragraph{Implementazione e osservazioni}
+
+\subparagraph{File necessari} sorgente: \texttt{error\_propagation.c}
+
+In base alle richieste l'output è il seguente:
 
 \begin{enumerate}
 
@@ -106,30 +133,36 @@ propagato nella somma:
 
 Utilizzando le formule discusse si può studiare la propagazione dell’errore nella somma.
 In essa la propagazione dipende dall’errore assoluto dei singoli addendi.
-Assumendo numeri a singola precisione e ricordando che $ \epsilon \sim 10^{−7}$,
-si studiano i casi ottenuti:
+Assumendo numeri a singola precisione e ricordando che $ \sigma_x \approx \epsilon \sim 10^{−7}$,
+si ottengono i seguenti casi:
 
 \begin{enumerate}
 
-	\item Per i valori 0.7, 0.1, 0.3 l’ordine di grandeza è lo stesso, quindi,
-	      tutti i valori possegono un errore assoluto $\Delta x \sim 10^{-8}$, propagando
+	\item Per i valori 0.7, 0.1, 0.3 l’ordine di grandezza è lo stesso, quindi,
+	      tutti i valori possegono un errore assoluto $\Delta x \sim 10^{-8}$; propagando
 	      l’errore nella somma si ottiene dunque $\Delta_{output} \sim 3 \cdot \Delta x$ in accordo con
 	      i risultati.
 
-	\item Esso è describile come un caso limite nell’errore di propagazione rispetto
-	      alla singola precisione, infatti, 1020 avr`a un errore assoluto di ∼ 1013
-	      mentre 1 di 10−7!
+	\item Il risultato è describile come un caso limite nell’errore di propagazione rispetto
+	      alla singola precisione, infatti, $10^{20}$ avrà un errore assoluto di $\sim 10^{13}$
+	      mentre 1 di $10^{-7}$!
 
-	      E’ quindi ragionevole spiegare
-	      l’output in termini di ordini di grandezza. Nel termine di sinistra ven-
-	      gono sommati prima numeri con errore assoluto paragonabile si otterr`a
-	      dunque ∼ 0 che sar`a poi sommato con un numero avente un errore
-	      assoluto simile a 1.
-	      Nel termine a destra, invece, si sommano due
-	      valori con venti ordini di grandezza di differenza: l’errore assoluto di
-	      1020 prevale e si perde qualsiasi informazione nella somma per termini
-	      x << 1020 ⇒ x + 1020 ∼ 1020, ’1’ `e quindi ignorato nella somma a
-	      destra.
+	      La spiegazione dell'output ottenuto, dunque, si basa sulla differenza
+	      tra ordini di grandezza dei diversi addendi:
+	      \begin{itemize}
+		      \item Nel termine a sinistra
+		            vengono sommati prima numeri con errore assoluto paragonabile.
+		            Si ottiene quindi $\sim 0$ che sarà poi sommato con un numero
+		            avente errore assoluto simile a 1.
+
+		      \item
+		            Nel termine a destra, invece, si sommano due valori con venti
+		            ordini di grandezza di differenza: l’errore assoluto di
+		            $10^{20}$ prevale e si perde qualsiasi informazione nella somma per termini:
+		            $$x \ll 10^{20} \Rightarrow x + 10^{20} \sim 10^{20}$$
+		            Segue che $\mathit{1}$ sarà ignorato nella somma a destra.
+	      \end{itemize}
+
 \end{enumerate}
 
 \paragraph{Conclusioni}

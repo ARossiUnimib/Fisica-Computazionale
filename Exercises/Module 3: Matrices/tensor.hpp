@@ -82,9 +82,6 @@ template <typename T> class Tensor
 
     /****************************************************/
 
-    // TODO: get row as a vector
-    std::vector<T> Row(int i); 
-
     Tensor<T> &operator=(const Tensor<T> &in)
     {
         m_Rows = in.m_Rows;

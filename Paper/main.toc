@@ -12,17 +12,22 @@
 \etoc@startlocaltoc {5}
 \contentsline {section}{\numberline {2.1}Rappresentazione}{3}{section.2.1}%
 \contentsline {mtocsection}{\numberline {2.1}Rappresentazione}{3}{section.2.1}%
-\contentsline {section}{\numberline {2.2}Precisione: Esercizio 1}{3}{section.2.2}%
-\contentsline {mtocsection}{\numberline {2.2}Precisione: Esercizio 1}{3}{section.2.2}%
+\contentsline {section}{\numberline {2.2}Esercizi}{3}{section.2.2}%
+\contentsline {mtocsection}{\numberline {2.2}Esercizi}{3}{section.2.2}%
+\contentsline {subsection}{\numberline {2.2.1}Precisione}{3}{subsection.2.2.1}%
+\contentsline {mtocsubsection}{\numberline {2.2.1}Precisione}{3}{subsection.2.2.1}%
 \contentsline {paragraph}{\nonumberline Nozioni teoriche}{3}{paragraph*.3}%
-\contentsline {paragraph}{\nonumberline Implementazione e osservazioni}{4}{paragraph*.5}%
-\contentsline {paragraph}{\nonumberline Analisi e conclusioni}{4}{paragraph*.7}%
-\contentsline {section}{\numberline {2.3}Propagazione degli errori: Esercizio 2}{4}{section.2.3}%
-\contentsline {mtocsection}{\numberline {2.3}Propagazione degli errori: Esercizio 2}{4}{section.2.3}%
-\contentsline {paragraph}{\nonumberline Nozioni teoriche}{4}{paragraph*.9}%
-\contentsline {paragraph}{\nonumberline Implementazione e osservazioni}{4}{paragraph*.11}%
-\contentsline {paragraph}{\nonumberline Analisi}{4}{paragraph*.13}%
-\contentsline {paragraph}{\nonumberline Conclusioni}{5}{paragraph*.15}%
+\contentsline {subparagraph}{\nonumberline Definizione}{3}{subparagraph*.5}%
+\contentsline {paragraph}{\nonumberline Implementazione e osservazioni}{4}{paragraph*.7}%
+\contentsline {subparagraph}{\nonumberline File necessari}{4}{subparagraph*.9}%
+\contentsline {paragraph}{\nonumberline Analisi e conclusioni}{4}{paragraph*.11}%
+\contentsline {subsection}{\numberline {2.2.2}Propagazione degli errori}{4}{subsection.2.2.2}%
+\contentsline {mtocsubsection}{\numberline {2.2.2}Propagazione degli errori}{4}{subsection.2.2.2}%
+\contentsline {paragraph}{\nonumberline Nozioni teoriche}{4}{paragraph*.13}%
+\contentsline {paragraph}{\nonumberline Implementazione e osservazioni}{4}{paragraph*.15}%
+\contentsline {subparagraph}{\nonumberline File necessari}{4}{subparagraph*.17}%
+\contentsline {paragraph}{\nonumberline Analisi}{5}{paragraph*.19}%
+\contentsline {paragraph}{\nonumberline Conclusioni}{5}{paragraph*.21}%
 \contentsline {chapter}{\numberline {3}Approssimazioni}{7}{chapter.3}%
 \etoc@startlocaltoc {6}
 \etoc@startlocaltoc {7}
@@ -31,3 +36,21 @@
 \contentsline {chapter}{\numberline {4}Matrici}{9}{chapter.4}%
 \etoc@startlocaltoc {8}
 \etoc@startlocaltoc {9}
+\contentsline {section}{\numberline {4.1}Introduzione}{9}{section.4.1}%
+\contentsline {mtocsection}{\numberline {4.1}Introduzione}{9}{section.4.1}%
+\contentsline {paragraph}{\nonumberline Struttura del codice}{9}{paragraph*.23}%
+\contentsline {section}{\numberline {4.2}Esercizi}{9}{section.4.2}%
+\contentsline {mtocsection}{\numberline {4.2}Esercizi}{9}{section.4.2}%
+\contentsline {subsection}{\numberline {4.2.1}Inversione di matrici triangolari}{9}{subsection.4.2.1}%
+\contentsline {mtocsubsection}{\numberline {4.2.1}Inversione di matrici triangolari}{9}{subsection.4.2.1}%
+\contentsline {subsection}{\numberline {4.2.2}Eliminazione di Gauss}{9}{subsection.4.2.2}%
+\contentsline {mtocsubsection}{\numberline {4.2.2}Eliminazione di Gauss}{9}{subsection.4.2.2}%
+\contentsline {subsection}{\numberline {4.2.3}Decomposizione LU}{9}{subsection.4.2.3}%
+\contentsline {mtocsubsection}{\numberline {4.2.3}Decomposizione LU}{9}{subsection.4.2.3}%
+\contentsline {chapter}{\numberline {5}Intepolazione}{11}{chapter.5}%
+\etoc@startlocaltoc {10}
+\etoc@startlocaltoc {11}
+\contentsline {section}{\numberline {5.1}Interpolazione: esercizio 1}{11}{section.5.1}%
+\contentsline {mtocsection}{\numberline {5.1}Interpolazione: esercizio 1}{11}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Funzione di Runge: esercizio 2}{11}{section.5.2}%
+\contentsline {mtocsection}{\numberline {5.2}Funzione di Runge: esercizio 2}{11}{section.5.2}%

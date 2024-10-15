@@ -26,17 +26,13 @@ void CalculateInterpolation(FunctionData<double>&& f, const Utils::Range<double>
 
     f = FunctionData<double>(_x, _f);
 
-    Utils::Range<double> range = {START, END, STEPS};
+    auto range = Utils::Range<double>::Fixed(START, END, STEPS);
 
     FunctionData<double> newton_poly = Interpolation::NewtonPolynomial(f, range);
 
-    auto f_tensor = TensorBuilder<double>::FromData(f.F()).Build();
-    auto vande_matrix = Interpolation::VandermondeMatrix(f.X());
-    auto values = TensorUtils::GaussianElimination(vande_matrix, f_tensor).RawData();
+    FunctionData<double> direct_poly = Interpolation::DirectPolynomial(f, range);
 
-    FunctionData<double> poly = FunctionUtils::Polynomial(values, range);
-
-    DataPrint(newton_poly, poly);
+    DataPrint(newton_poly, direct_poly);
 }
 
 int main()
@@ -55,16 +51,10 @@ int main()
 #elif PART_3
     slice_range = {0, 4};
 #else
-    slice_range = {0, (double)function.Size()};
+    #error "Please define PART_[1-3]"
 #endif
 
     CalculateInterpolation(std::move(function), slice_range);
-
-    auto mat = TensorBuilder<double>::SMatrix(3).Random().Build();
-    TensorUtils::Print(mat);
-
-    auto inverse = TensorUtils::InverseMatrix(mat);
-    TensorUtils::Print(inverse);
 
     return 0;
 }
