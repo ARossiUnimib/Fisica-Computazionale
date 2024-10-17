@@ -131,6 +131,20 @@ template <typename T> class TensorBuilder
 namespace TensorUtils
 {
 
+// get i column of tensor
+Tensor<double> GetColumn(const Tensor<double> &A, int i)
+{
+    assert(i < A.Cols());
+
+    Tensor<double> column = TensorBuilder<double>::Vector(A.Rows()).Build();
+    for (int j = 0; j < A.Rows(); j++)
+    {
+        column(j, 0) = A(j, i);
+    }
+
+    return column;
+}
+
 template <typename T> T DeterminantFromLU(Tensor<T> &A)
 {
     assert(A.Cols() == A.Rows());

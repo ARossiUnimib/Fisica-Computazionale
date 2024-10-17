@@ -39,6 +39,11 @@ template <typename T> class Tensor
     }
 
   public:
+
+    Tensor() : m_Rows(0), m_Cols(0)
+    {
+    }
+
     Tensor(const Tensor<T> &other) : m_Rows(other.m_Rows), m_Cols(other.m_Cols), m_Data(other.m_Data)
     {
     }
@@ -78,7 +83,24 @@ template <typename T> class Tensor
     void LinearCombRows(int i, int j, T value, int final);
 
     // Action via a scalar
-    template <typename K> Tensor<T> operator*(K d) const;
+    Tensor<T> operator*(const T &d) const
+    {
+        Tensor<T> out(*this);
+
+        for (int i = 0; i < m_Rows * m_Cols; i++)
+            out.m_Data[i] *= d;
+
+        return out;
+    }
+
+    Tensor<T> operator*(T d)
+    {
+        Tensor<T> out(*this);
+        for (int i = 0; i < m_Rows * m_Cols; i++)
+            out.m_Data[i] *= d;
+
+        return out;
+    }
 
     /****************************************************/
 
@@ -106,6 +128,16 @@ template <typename T> class Tensor
     }
 
     inline int Rows()
+    {
+        return m_Rows;
+    }
+
+    inline int Cols() const
+    {
+        return m_Cols;
+    }
+
+    inline int Rows() const
     {
         return m_Rows;
     }
@@ -222,16 +254,6 @@ template <typename T> Tensor<T> Tensor<T>::Dot(const Tensor<T> &a) const
         for (int j = 0; j < a.m_Cols; j++)
             for (int k = 0; k < m_Cols; k++)
                 out(i, j) += m_Data[this->Site(i, k)] * a(k, j);
-    return out;
-}
-
-template <typename T> template <typename K> Tensor<T> Tensor<T>::operator*(K d) const
-{
-    Tensor<T> out(*this);
-
-    for (int i = 0; i < m_Rows * m_Cols; i++)
-        out.m_Data[i] *= d;
-
     return out;
 }
 
