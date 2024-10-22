@@ -9,7 +9,7 @@ double g_A = -1;
 
 Tensor<double> RealOscillator(double t, const Tensor<double> &y)
 {
-    auto dydt = TensorBuilder<double>::Vector(2).Build();
+    auto dydt = Tensor<double>::Vector(2);
 
     // real armonic oscillator
     dydt(0) = y(1);
@@ -20,7 +20,7 @@ Tensor<double> RealOscillator(double t, const Tensor<double> &y)
 
 Tensor<double> DampedOscillator(double t, const Tensor<double> &y)
 {
-    auto dydt = TensorBuilder<double>::Vector(2).Build();
+    auto dydt = Tensor<double>::Vector(2);
 
     // real armonic oscillator
     dydt(0) = y(1);
@@ -31,7 +31,7 @@ Tensor<double> DampedOscillator(double t, const Tensor<double> &y)
 
 Tensor<double> ForcedOscillator(double t, const Tensor<double> &y)
 {
-    auto dydt = TensorBuilder<double>::Vector(2).Build();
+    auto dydt = Tensor<double>::Vector(2);
 
     // real armonic oscillator
     dydt(0) = y(1);
@@ -57,7 +57,7 @@ int main(int argc, const char *argv[])
         return 1;
     }
 
-    auto initial_tensor = TensorBuilder<double>::Vector(2).Build();
+    auto initial_tensor = Tensor<double>::Vector(2);
     initial_tensor(0) = 0.0;
     initial_tensor(1) = 1.0;
 

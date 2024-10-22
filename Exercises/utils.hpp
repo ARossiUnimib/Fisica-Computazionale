@@ -1,10 +1,6 @@
 #pragma once
 
 #include <cmath>
-#include <functional>
-#include <iostream>
-#include <ostream>
-#include <stdexcept>
 #include <vector>
 
 namespace Utils
@@ -25,7 +21,8 @@ template <typename T> struct Range;
  * @param slice_range
  * @return std::vector<T>
  */
-template <typename T> std::vector<T> slice(std::vector<T> const &v, Range<T> slice_range);
+template <typename T>
+std::vector<T> slice(std::vector<T> const &v, int start, int end);
 
 } // namespace Utils
 
@@ -36,10 +33,10 @@ template <typename T> struct Range
 {
     enum class IntervalType
     {
-        Inclusive,          // Both Start and End are inclusive
-        Exclusive,          // Both Start and End are exclusive
-        SemiInclusiveStart, // Start inclusive, End exclusive
-        SemiInclusiveEnd    // Start exclusive, End inclusive
+        Inclusive,          // [a, b]
+        Exclusive,          // (a, b)
+        SemiInclusiveStart, // [a, b]
+        SemiInclusiveEnd    // (a, b]
     } IntType;
 
     enum class NodeType
@@ -54,7 +51,8 @@ template <typename T> struct Range
         size_t index;
 
       public:
-        Iterator(const std::vector<T> &nodes, size_t index = 0) : nodes(nodes), index(index)
+        Iterator(const std::vector<T> &nodes, size_t index = 0)
+            : nodes(nodes), index(index)
         {
         }
 
@@ -90,17 +88,20 @@ template <typename T> struct Range
     size_t NumNodes;
     std::vector<T> nodes;
 
-    static Range Chebyshev(T start, T end, size_t numNodes, IntervalType intType = IntervalType::Inclusive)
+    static Range Chebyshev(T start, T end, size_t numNodes,
+                           IntervalType intType = IntervalType::Inclusive)
     {
         return Range(start, end, numNodes, intType);
     }
 
-    static Range Fixed(T start, T end, T step = 1, IntervalType intType = IntervalType::Inclusive)
+    static Range Fixed(T start, T end, T step = 1,
+                       IntervalType intType = IntervalType::Inclusive)
     {
         return Range(start, end, step, intType);
     }
 
-    static Range FixedNum(T start, T end, T numNodes, IntervalType intType = IntervalType::Inclusive)
+    static Range FixedNum(T start, T end, T numNodes,
+                          IntervalType intType = IntervalType::Inclusive)
     {
         return Range(start, end, ((end - start) / numNodes), intType);
     }
@@ -109,16 +110,20 @@ template <typename T> struct Range
 
   private:
     // Constructor for Chebyshev nodes
-    Range(T start, T end, size_t numNodes, IntervalType intType = IntervalType::Inclusive)
-        : Start(start), End(end), NumNodes(numNodes), Step(0), Type(NodeType::Chebyshev), IntType(intType)
+    Range(T start, T end, size_t numNodes,
+          IntervalType intType = IntervalType::Inclusive)
+        : Start(start), End(end), NumNodes(numNodes), Step(0),
+          Type(NodeType::Chebyshev), IntType(intType)
     {
         nodes.reserve(numNodes);  // Reserve space for Chebyshev nodes
         generateChebyshevNodes(); // Precompute Chebyshev nodes
     }
 
     // Constructor for Fixed distance nodes
-    Range(T start, T end, T step, IntervalType intType = IntervalType::Inclusive)
-        : Start(start), End(end), NumNodes(0), Step(step), Type(NodeType::Fixed), IntType(intType)
+    Range(T start, T end, T step,
+          IntervalType intType = IntervalType::Inclusive)
+        : Start(start), End(end), NumNodes(0), Step(step),
+          Type(NodeType::Fixed), IntType(intType)
     {
         generateFixedDistanceNodes(); // Precompute fixed distance nodes
     }
@@ -129,7 +134,9 @@ template <typename T> struct Range
         // Inverting the formula for Chebyshev nodes
         for (size_t k = NumNodes; k-- > 0;)
         {
-            T node = (Start + End) / 2 + (End - Start) / 2 * std::cos((2 * k + 1) * M_PI / (2 * NumNodes));
+            T node = (Start + End) / 2 +
+                     (End - Start) / 2 *
+                         std::cos((2 * k + 1) * M_PI / (2 * NumNodes));
             nodes.push_back(node);
         }
     }
@@ -137,7 +144,9 @@ template <typename T> struct Range
     // Generate Fixed distance nodes
     void generateFixedDistanceNodes()
     {
-        for (T current = Start; (IntType == IntervalType::Inclusive) ? (current <= End) : (current < End);
+        for (T current = Start;
+             (IntType == IntervalType::Inclusive) ? (current <= End)
+                                                  : (current < End);
              current += Step)
         {
             nodes.push_back(current);
@@ -170,10 +179,11 @@ template <typename T> struct Range
     }
 };
 
-template <typename T> std::vector<T> slice(std::vector<T> const &v, Range<T> slice_range)
+template <typename T>
+std::vector<T> slice(std::vector<T> const &v, int start, int end)
 {
-    auto first = v.cbegin() + slice_range.Start;
-    auto last = v.cbegin() + slice_range.End + 1;
+    auto first = v.cbegin() + start;
+    auto last = v.cbegin() + end + 1;
     return std::vector<T>(first, last);
 }
 

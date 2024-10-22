@@ -7,6 +7,7 @@
 
 #include <math.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 /*
  * Exp con semplicemente taylor
@@ -28,23 +29,28 @@ double exp_alt(double x, int steps);
  */
 int factorial(int n);
 
-#define MAX_STEPS 4
-
-int main()
+int main(int argc, char const *argv[])
 {
     double abs_error, estim_error;
+
+    // interpreting argv[1] as steps
+    if (argc < 2)
+    {
+        printf("Usage: %s <steps>\n", argv[0]);
+        return 1;
+    }
+
+    int n = atoi(argv[1]);
 
     // printf("%f", exp_alt(1.0, MAX_STEPS));
 
     for (double x = 0.1; x < 1; x += 0.1)
     {
-        for (int n = 0; n < MAX_STEPS; n++)
-        {
-            abs_error = fabs(exp_approx(x, n) - exp(x));
-            estim_error = (double)(powl(x, n + 1) / (double)factorial(n + 1));
+        abs_error = fabs(exp_approx(x, n) - exp(x));
+        estim_error = (double)(powl(x, n + 1) / (double)factorial(n + 1));
 
-            printf("%.7f\t%.7f\t%.7f\t%.7f\n", x, abs_error, estim_error, fabs(abs_error - estim_error));
-        }
+        printf("%.7f\t%.7f\t%.7f\t%.7f\t%.7f\t%.7f\n", x, exp(x), exp_approx(x, n), abs_error, estim_error,
+               fabs(abs_error - estim_error));
     }
 }
 

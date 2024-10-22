@@ -8,17 +8,13 @@
  *NOTE: guarda a tipo 40000 che sono circa costanti
  * e' presente un bias costante rispetto al valore esatto
 */
-#define PRECISION float 
-
-#define M_PI 3.14159265358979323846
-
-// Define in preprocessor flag -DPRECISION=float
+#define PRECISION double 
 
 #define TRUE 1
 #define FALSE 0
 
-#define MAX_STEPS 50000
-#define SUM_RESULT M_PI* M_PI / 6
+#define MAX_STEPS 1000000
+#define SUM_RESULT 1.6449340668482264364724151666460251892189499012067984377355582293700074704032008738336289006197587053040043189623371906796287246870050077879351029463308662768317333093677626050952510068721400547968116
 
 PRECISION basel(int inverse, int steps);
 
@@ -34,7 +30,7 @@ int main() {
         seq_diff = fabs(SUM_RESULT - basel(FALSE, i));
         inv_diff = fabs(SUM_RESULT - basel(TRUE, i));
 
-        printf("%d\t%.20f\t%.20f\n", i, seq_diff, inv_diff);
+        printf("%d\t%.20f\t%.20f\t%.20f\t%.20f\n", i, basel(FALSE, i), basel(TRUE, i), seq_diff, inv_diff);
     }
 }
 
@@ -50,6 +46,8 @@ PRECISION basel(int inverse, int steps) {
             sum += (double) (1.0f / (i*i));
         }
     }
+
+    
 
     return sum;
 }

@@ -25,7 +25,9 @@ namespace FunctionUtils
  * @param x values
  * @return FunctionData<T>
  */
-template <typename T> FunctionData<T> Polynomial(std::vector<T> coefficients, const Utils::Range<T> &x);
+template <typename T>
+FunctionData<T> Polynomial(std::vector<T> coefficients,
+                           const Utils::Range<T> &x);
 
 } // namespace FunctionUtils
 
@@ -82,7 +84,8 @@ template <typename T> class FunctionData
     class Iterator
     {
       public:
-        Iterator(const FunctionData<T> &function, std::size_t index) : m_Function(function), m_Index(index)
+        Iterator(const FunctionData<T> &function, std::size_t index)
+            : m_Function(function), m_Index(index)
         {
         }
 
@@ -92,14 +95,12 @@ template <typename T> class FunctionData
             return {m_Function.X(m_Index), m_Function.F(m_Index)};
         }
 
-        // Prefix increment operator
         Iterator &operator++()
         {
             ++m_Index;
             return *this;
         }
 
-        // Postfix increment operator
         Iterator operator++(int)
         {
             Iterator temp = *this;
@@ -107,7 +108,6 @@ template <typename T> class FunctionData
             return temp;
         }
 
-        // Equality operator
         bool operator==(const Iterator &other) const
         {
             return m_Index == other.m_Index;
@@ -143,7 +143,9 @@ template <typename T> class FunctionData
 namespace FunctionUtils
 {
 
-template <typename T> FunctionData<T> Polynomial(std::vector<T> coefficients, const Utils::Range<T> &x)
+template <typename T>
+FunctionData<T> Polynomial(std::vector<T> coefficients,
+                           const Utils::Range<T> &x)
 {
     FunctionData<double> p;
     for (auto &&x : x)

@@ -56,6 +56,8 @@ due sottoclassi di numeri i cui nominativi nei linguaggi C-like sono:
 
 \end{description}
 
+% TODO: aggiungere richiesta degli esercizi
+
 \paragraph{Implementazione e osservazioni}
 
 \subparagraph{File necessari} sorgente: \texttt{number\_precision.c}, dati: \texttt{number\_precision.dat}
@@ -123,17 +125,18 @@ In base alle richieste l'output è il seguente:
 
 	      La somma risulta associativa.
 
-	\item $[10^{20} + (−10^{20})] + 1 =_? 10^{20} + [(−10^{20}) + 1]$:
+	\item $[10^{20} + (-10^{20})] + 1 =_? 10^{20} + [(-10^{20}) + 1]$:
 	      $$\texttt{Output: 1.0000000000000000, 0.0000000000000000}$$
 
 	      La somma risulta non associativa.
 \end{enumerate}
 
+\label{sec:propagation}
 \paragraph{Analisi}
 
 Utilizzando le formule discusse si può studiare la propagazione dell’errore nella somma.
 In essa la propagazione dipende dall’errore assoluto dei singoli addendi.
-Assumendo numeri a singola precisione e ricordando che $ \sigma_x \approx \epsilon \sim 10^{−7}$,
+Assumendo numeri a singola precisione e ricordando che $ \sigma_x \approx \epsilon \sim 10^{-7}$,
 si ottengono i seguenti casi:
 
 \begin{enumerate}

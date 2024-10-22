@@ -1,11 +1,10 @@
-#include "../../Module 3: Matrices/tensor_utils.hpp"
 #include "../../utils.hpp"
 #include "../odes.hpp"
 #include <cmath>
 
 Tensor<double> Oscillator(double t, const Tensor<double> &y)
 {
-    auto dydt = TensorBuilder<double>::Vector(2).Build();
+    auto dydt = Tensor<double>::Vector(2);
     // real armonic oscillator
     dydt(0) = y(1);
     dydt(1) = -y(0);
@@ -44,7 +43,7 @@ int main(int argc, char const *argv[])
     }
 
     // 1.0 1.0 1.0
-    auto initial_tensor = TensorBuilder<double>::Vector(2).Build();
+    auto initial_tensor = Tensor<double>::Vector(2);
     initial_tensor(0) = 0.0;
     initial_tensor(1) = 1.0;
 

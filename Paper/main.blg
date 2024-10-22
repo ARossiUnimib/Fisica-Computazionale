@@ -1,5 +1,5 @@
 [0] Config.pm:306> INFO - This is Biber 2.18
 [0] Config.pm:309> INFO - Logfile is 'main.blg'
-[57] biber:340> INFO - === Tue Oct  8, 2024, 13:00:43
-[65] Utils.pm:399> ERROR - main.bcf is not UTF-8 or even latin1, please delete it and run latex again or check that biblatex is writing a valid .bcf file.
-[65] Biber.pm:135> INFO - ERRORS: 1
+[72] biber:340> INFO - === Fri Oct 18, 2024, 16:19:55
+[84] Utils.pm:399> ERROR - main.bcf is not UTF-8 or even latin1, please delete it and run latex again or check that biblatex is writing a valid .bcf file.
+[84] Biber.pm:135> INFO - ERRORS: 1

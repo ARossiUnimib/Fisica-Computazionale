@@ -4,14 +4,14 @@
 
 int main()
 {
-    auto mat = TensorBuilder<double>::Matrix(3, 3).Build();
+    auto mat = Tensor<double>::SMatrix(3);
     mat(0, 1) = mat(0, 2) = mat(1, 0) = mat(1, 1) = mat(2, 0) = mat(2, 2) = 1;
     mat(0, 0) = mat(2, 1) = 2;
     mat(1, 2) = -2;
 
     auto i_mat = Tensor<double>(mat);
 
-    auto vec = TensorBuilder<double>::Vector(3).Build();
+    auto vec = Tensor<double>::Vector(3);
     vec(0) = 8;
     vec(1) = -2;
     vec(2) = 2;

@@ -6,24 +6,370 @@
 
 \paragraph{Struttura del codice}
 
-Da questo capitolo in poi, il codice sorgente utilizzera come linguaggio primario
+Da questo capitolo in poi, il codice sorgente utilizzerà come linguaggio primario
 C++. La librerie necessarie prima di proseguire sono le seguenti:
 
 \begin{itemize}
-    \item \texttt{tensor.hpp} versione modificata di \texttt{matrix.h} disponibile
-        su e-learning: l'header e' stato generalizzato per funzionare sia come
-        vettori sia come matrici rendendo le operazioni compatibili fra i due e 
-        facilitando il successivo svolgimento degli esercizi.
-    \item \texttt{tensor\_utils.hpp} contentente varie funzionalita' utili e contente
-        gli argomenti creati per ogni esercizio
-    
+	\item \texttt{tensor.hpp} versione modificata di \texttt{matrix.h} disponibile
+	      su e-learning: l'header è stato generalizzato per interpretare sia
+	      vettori sia matrici rendendo le operazioni compatibili fra i due e
+	      facilitando il successivo svolgimento degli esercizi.
+	\item \texttt{tensor\_utils.hpp} contentente varie funzionalità utili e contente
+	      gli argomenti creati per ogni esercizio.
 \end{itemize}
+
+Le cartelle corrispettive dei vari esercisi conterranno solo la richiesta e i dati
+proposti, mentre le funzionalità interne degli algoritmi verranno implementate
+principalmente in \texttt{tensor\_utils.hpp} per facilitare il riutilizzo nei moduli
+successivi.
+
+\paragraph{Introduzione}
 
 \section{Esercizi}
 
-\subsection{Inversione di matrici triangolari}
+\subsection{Soluzione di sistemi lineari con matrici triangolari}
+
+\paragraph{Nozioni teoriche}
+
+I sistemi lineari con matrici triangolari sono la tipologia di matrici più semplice da risolvere.
+
+Preso ora una matrice $A$ triangolare superiore:
+
+$$
+	A = \begin{bmatrix}
+		a_{00} & a_{01} & a_{02} \\
+		0      & a_{11} & a_{12} \\
+		0      & 0      & a_{22}
+	\end{bmatrix} \begin{bmatrix}
+		x_0 \\ x_1 \\ x_2 \end{bmatrix} = \begin{bmatrix}
+		b_0 \\ b_1 \\ b_2 \end{bmatrix}
+$$
+
+Otteniamo immediatamente $$x_2 = \frac{b_2}{a_{22}}$$ si sostituisce ora ricorsivamente
+$x_2$ nella seconda equazione e si ottiene $$x_1 = \frac{b_1 - a_{12}x_2}{a_{11}}$$ e
+così via. Si ottiene quindi in generale la seguente formula, detta di \textit{Backward substitution}:
+
+$$
+	x_i = \frac{1}{a_{ii}} ( b_i - \sum_{j=i+1}^{N-1} a_{ij}x_j )
+$$
+
+\paragraph{Implementazione e stile di struttura tipica del codice}
+
+La funzione può essere trovata in \textit{tensor\_utils.hpp}.
+
+
+\begin{lstlisting} [language=C++]
+
+/*
+* Viene utilizzato T generico per rappresentare la precisione 
+* delle entrate matriciali, riferirsi alla documentazione di 
+* Tensor per ulteriori informazioni (tensor.hpp)
+*
+* Grazie alla generalizzazione a tensore b viene rappresentata 
+* anche come matrice se necessario
+*/
+template <typename T> Tensor<T> BackwardSubstitution(Tensor<T> const &A, Tensor<T> const&b)
+{
+    /*
+    *   Negli algoritmi saranno presenti vari assert a fini di 
+    *   debugging, si aggiunge il parametro -DNDEBUG durante la 
+    *   compilazione per evitare questi ulteriori controlli
+    */
+
+    assert(A.Cols() == A.Rows());
+    assert(A.Rows() == b.Rows());
+    assert(IsUpperTriangular(A));
+
+    ... // Definizione delle variabili
+
+    /* 
+    * Si itera rispetto alle colonne di b 
+    * si risolve il sistema per ogni colonna
+    * utile per il calcolo della matrice inversa
+    * nei prossimi esercizi
+    */
+    for (int k = 0; k < b.Cols(); k++)
+    {
+        // Formula di backward substitution citata precedentemente
+        for (int i = N - 1; i >= 0; i--)
+        {
+            sum = 0;
+            for (int j = i + 1; j <= N - 1; j++)
+            {
+                sum += A(i, j) * solution(j, k);
+            }
+
+            solution(i, k) = (b(i, k) - sum) / A(i, i);
+        }
+    }
+
+    return solution;
+}
+
+\end{lstlisting}
+
+\newpage
+
+\paragraph{Analisi risultati}
+
+\subparagraph{File necessari} \texttt{backward\_subst.cpp}
+
+\subparagraph{Risultato e controllo}
+
+Inserendo $U$ e $b$ proposti dall'esercizio si ottiene il seguente risultato:
+
+$$
+	\begin{bmatrix}
+		2 & 1 & 1  \\
+		0 & 1 & -2 \\
+		0 & 0 & 1
+	\end{bmatrix} \mathbf{X} = \begin{bmatrix}
+		1 \\ -1 \\ 4 \end{bmatrix}
+	\quad \Rightarrow \quad \mathbf{X} = \begin{bmatrix} -5 \\ 7 \\ 4 \end{bmatrix}
+$$
+
+Per controllare il risultato basta moltiplicare $U$ per il risultato ottenuto e
+verificare che sia uguale a $b$.
 
 \subsection{Eliminazione di Gauss}
 
+\paragraph{Nozioni teoriche}
+
+Il metodo di eliminazione di gauss utilizza le operazioni elementari delle matrici
+le quali lasciano invariate le soluzioni del sistema lineare. L'idea è quella di
+ridurre la matrice $A$ in una matrice triangolare superiore $U$ e di applicare a $b$
+le stesse operazioni elementari. Successivamente è possibile applicare la backward
+substitution per trovare la soluzione del sistema.
+
+Prendiamo una matrice $A$ generica $3 \times 3$ senza perdere di generalità:
+
+$$
+	A = \begin{bmatrix}
+		a_{00} & a_{01} & a_{02} \\
+		a_{10} & a_{11} & a_{12} \\
+		a_{20} & a_{21} & a_{22}
+	\end{bmatrix} \begin{bmatrix}
+		x_0 \\ x_1 \\ x_2 \end{bmatrix} = \begin{bmatrix}
+		b_0 \\ b_1 \\ b_2 \end{bmatrix}
+$$
+
+possiamo applicare le seguenti operazioni elementari, ottenendo
+
+$$
+	\begin{bmatrix}
+		a_{00} & a_{01}  & a_{02}  \\
+		0      & a'_{11} & a'_{12} \\
+		0      & a'_{21} & a'_{22}
+	\end{bmatrix} \begin{bmatrix}
+		x_0 \\ x_1 \\ x_2 \end{bmatrix} = \begin{bmatrix}
+		b_0 \\ b'_1 \\ b'_2 \end{bmatrix}
+$$
+
+iterando il processo si ottiene la matrice $U$ triangolare superiore e la matrice $b$:
+
+$$
+	\begin{bmatrix}
+		a_{00} & a_{01}  & a_{02}   \\
+		0      & a'_{11} & a'_{12}  \\
+		0      & 0       & a''_{22}
+	\end{bmatrix} \begin{bmatrix}
+		x_0 \\ x_1 \\ x_2 \end{bmatrix} = \begin{bmatrix}
+		b_0 \\ b'_1 \\ b''_2 \end{bmatrix}
+$$
+
+In generale si otterrà che per a e dunque per b:
+
+$$
+	a_{ij} = a_{ij} - \frac{a_{ik}}{a_{kk}} a_{kj} \quad \quad b_i = b_i - \frac{a_{ik}}{a_{kk}} b_k
+$$
+
+Estendendo $b$ ad una matrice, la formula diventa:
+
+$$
+	b_{ij} = b_{ij} - \underbrace{\frac{a_{ik}}{a_{kk}}}_{\lambda} b_{kj}
+$$
+
+\paragraph{Implementazione}
+
+Evitando verbosità la parte fondamentale del codice è la seguente:
+
+\begin{lstlisting} [language=C++]
+    ... // Asserts e definizioni
+
+    // Utilizziamo le formule sopra citate
+    for (int j = 0; j < A.Rows() - 1; j++)
+    {
+        for (int i = j + 1; i < A.Cols(); i++)
+        {
+            // lambda
+            scalar = -A(i, j) / A(j, j);
+
+            // Effettuiamo la stessa combinazione lineare 
+            // sulle righe 
+            A.LinearCombRows(i, j, scalar, i);
+            b.LinearCombRows(i, j, scalar, i);
+        }
+    }
+
+    // Effettuiamo la backward substitution
+    return BackwardSubstitution(A, b);
+\end{lstlisting}
+
+\paragraph{Analisi risultati}
+
+\subparagraph{File necessari} \texttt{gauss\_elim.cpp}
+
+\subparagraph{Soluzione} Data la matrice $A$ e il vettore $b$ proposti dall'esercizio si ottiene il seguente risultato:
+
+$$
+	\begin{bmatrix}
+		2 & 1 & 1  \\
+		1 & 1 & -2 \\
+		1 & 2 & 1
+	\end{bmatrix} \mathbf{X} = \begin{bmatrix}
+		8 \\ -2 \\ -2 \end{bmatrix}
+	\quad \Rightarrow \quad \mathbf{X} = \begin{bmatrix} 4 \\ -2 \\ 2 \end{bmatrix}
+$$
+
+Il controllo si svolge in maniera equivalente al precedente esercizio.
+
+% % % % % % % % % \newpage
+
 \subsection{Decomposizione LU}
 
+\paragraph{Nozioni teoriche}
+
+Il compito della decomposizione LU di una matrice è il seguente: prendiamo
+una matrice A invertibile, allora essa è scomponibile in due matrici triangolari
+L, U inferiori e superiori rispettivamente:
+$$
+	A = LU = \begin{bmatrix}
+		L_{00} & 0      & 0      \\
+		L_{10} & L_{11} & 0      \\
+		L_{20} & L_{21} & L_{22} \\
+	\end{bmatrix}
+	\begin{bmatrix}
+		U_{00} & U_{01} & U_{02} \\
+		0      & U_{11} & U_{12} \\
+		0      & 0      & U_{22} \\
+	\end{bmatrix}
+$$
+
+La decomposizione LU non è unica quindi si assume per semplicità che la diagonale
+sia unitaria ($L_{ii} = 1$).
+
+Moltiplicando L ed U si ottiene una matrice che può essere ridotta tramite il metodo
+di Gauss: per comparazione si ottiene che la matrice ridotta è U e i termini di L sono
+i termini scalari moltiplicativi utilizzati per ridurla.
+
+Ottenuta la decomposizione e provando a cercare di risolvere un sistema lineare si otteniene:
+
+$$
+	A \mathbf{X} = \mathbf{b} \Rightarrow LU \mathbf{X} = \mathbf{b} \Rightarrow L(U \mathbf{X}) = \mathbf{b}
+$$
+
+Concludiamo che una matrice decomposta può essere risolta, risolvendo i sistemi
+lineari associati alle matrici triangolari utilizzando i metodi di backward e
+forward substitution.
+
+\paragraph{Implementazione}
+
+\subparagraph{File necessari} \texttt{tensor\_utils.hpp}
+
+Conviene in questo algoritmo definire la seguente \textit{alias}.
+
+\begin{lstlisting} [language=C++]
+// Coppia di tensori L e U
+template <typename T>
+using TensorPair = std::pair<Tensor<T>, Tensor<T>>;
+\end{lstlisting}
+
+La decomposizione LU può essere implementata come segue:
+
+\begin{lstlisting} [language=C++]
+template <typename T> TensorPair<T> LUDecomposition(Tensor<T> const &A)
+{
+    ... // Asserts
+
+    T scalar;
+    auto L = Tensor<T>::SMatrix(A.Rows());
+
+    // U parte come una "deep copy" di A
+    auto U = Tensor<T>(A);
+
+    // Scegliamo diagonale di L unitaria
+    for (int i = 0; i < U.Rows(); i++)
+    {
+        L(i, i) = 1;
+    }
+
+    // Effettuiamo l'eliminazione di gauss
+    for (int j = 0; j < U.Rows() - 1; j++)
+    {
+        for (int i = j + 1; i < U.Cols(); i++)
+        {
+            scalar = -U(i, j) / U(j, j);
+
+            // Lo scalare è effettivamente un elemento di L
+            L(i, j) = -scalar;
+
+            // Riduciamo U
+            U.LinearCombRows(i, j, scalar, i);
+        }
+    }
+
+    return std::make_pair(L, U);
+}
+\end{lstlisting}
+
+Presa una matrice decomposta tramite LU allora possiamo ottenerne facilmente il
+determinante (considerando che il deteminante di una matrice triangolare è il prodotto
+degli elementi sulla sua diagonale).
+$$
+	\det{A} = \det{LU} = \det{L} \det{U} = \prod_{i=0}^{N-1} U_{ii}
+$$
+
+\begin{lstlisting} [language=C++]
+template <typename T> T DeterminantFromLU(Tensor<T> const &A)
+{
+    // Prendiamo il secondo elemento della coppia
+    auto U = std::get<1>(LUDecomposition(A));
+    T det = 1;
+
+    // Il determinante di una matrice triangolare 
+    // viene calcolato dagli elementi sulla diagonale
+    for (int i = 0; i < A.Rows(); i++)
+    {
+        // Assumiamo che L abbiamo 1 sulla diagonale
+        det *= U(i, i);
+    }
+
+    return det;
+}
+\end{lstlisting}
+
+\paragraph{Analisi risultati}
+
+\subparagraph{File necessari} \texttt{lu\_decomp.cpp}
+
+Eseguendo il codice si ottiene il seguente risultato:
+
+$$
+    \begin{bmatrix}
+        2 & 1 & 1  \\
+        1 & 1 & -2 \\
+        1 & 2 & 1
+    \end{bmatrix} = \begin{bmatrix}
+		1   & 0 & 0 \\
+		0.5 & 1 & 0 \\
+		0.5 & 3 & 1
+	\end{bmatrix} \begin{bmatrix}
+		2 & 1   & 1    \\
+		0 & 0.5 & -2.5 \\
+		0 & 0   & 8
+	\end{bmatrix}
+$$
+
+Da cui segue che il determinante è 8 come risulta dall output.
+
+% TODO: discutere costo computazionale

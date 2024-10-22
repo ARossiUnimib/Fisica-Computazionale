@@ -31,26 +31,59 @@
 \contentsline {chapter}{\numberline {3}Approssimazioni}{7}{chapter.3}%
 \etoc@startlocaltoc {6}
 \etoc@startlocaltoc {7}
-\contentsline {section}{\numberline {3.1}Prova}{7}{section.3.1}%
-\contentsline {mtocsection}{\numberline {3.1}Prova}{7}{section.3.1}%
-\contentsline {chapter}{\numberline {4}Matrici}{9}{chapter.4}%
+\contentsline {section}{\numberline {3.1}Introduzione}{7}{section.3.1}%
+\contentsline {mtocsection}{\numberline {3.1}Introduzione}{7}{section.3.1}%
+\contentsline {section}{\numberline {3.2}Esercizi}{7}{section.3.2}%
+\contentsline {mtocsection}{\numberline {3.2}Esercizi}{7}{section.3.2}%
+\contentsline {subsection}{\numberline {3.2.1}Funzione esponenziale}{7}{subsection.3.2.1}%
+\contentsline {mtocsubsection}{\numberline {3.2.1}Funzione esponenziale}{7}{subsection.3.2.1}%
+\contentsline {paragraph}{\nonumberline Nozioni teoriche}{7}{paragraph*.23}%
+\contentsline {paragraph}{\nonumberline Implementazione e osservazioni}{7}{paragraph*.25}%
+\contentsline {subparagraph}{\nonumberline File necessari}{7}{subparagraph*.27}%
+\contentsline {subsection}{\numberline {3.2.2}Problema di Basilea}{8}{subsection.3.2.2}%
+\contentsline {mtocsubsection}{\numberline {3.2.2}Problema di Basilea}{8}{subsection.3.2.2}%
+\contentsline {paragraph}{\nonumberline Nozioni teoriche}{8}{paragraph*.31}%
+\contentsline {paragraph}{\nonumberline Osservazioni e conclusioni}{8}{paragraph*.33}%
+\contentsline {subparagraph}{\nonumberline Singola precisione}{8}{subparagraph*.35}%
+\contentsline {subparagraph}{\nonumberline Doppia precisione}{9}{subparagraph*.38}%
+\contentsline {chapter}{\numberline {4}Matrici}{11}{chapter.4}%
 \etoc@startlocaltoc {8}
 \etoc@startlocaltoc {9}
-\contentsline {section}{\numberline {4.1}Introduzione}{9}{section.4.1}%
-\contentsline {mtocsection}{\numberline {4.1}Introduzione}{9}{section.4.1}%
-\contentsline {paragraph}{\nonumberline Struttura del codice}{9}{paragraph*.23}%
-\contentsline {section}{\numberline {4.2}Esercizi}{9}{section.4.2}%
-\contentsline {mtocsection}{\numberline {4.2}Esercizi}{9}{section.4.2}%
-\contentsline {subsection}{\numberline {4.2.1}Inversione di matrici triangolari}{9}{subsection.4.2.1}%
-\contentsline {mtocsubsection}{\numberline {4.2.1}Inversione di matrici triangolari}{9}{subsection.4.2.1}%
-\contentsline {subsection}{\numberline {4.2.2}Eliminazione di Gauss}{9}{subsection.4.2.2}%
-\contentsline {mtocsubsection}{\numberline {4.2.2}Eliminazione di Gauss}{9}{subsection.4.2.2}%
-\contentsline {subsection}{\numberline {4.2.3}Decomposizione LU}{9}{subsection.4.2.3}%
-\contentsline {mtocsubsection}{\numberline {4.2.3}Decomposizione LU}{9}{subsection.4.2.3}%
-\contentsline {chapter}{\numberline {5}Intepolazione}{11}{chapter.5}%
+\contentsline {section}{\numberline {4.1}Introduzione}{11}{section.4.1}%
+\contentsline {mtocsection}{\numberline {4.1}Introduzione}{11}{section.4.1}%
+\contentsline {paragraph}{\nonumberline Struttura del codice}{11}{paragraph*.40}%
+\contentsline {paragraph}{\nonumberline Introduzione}{11}{paragraph*.42}%
+\contentsline {section}{\numberline {4.2}Esercizi}{11}{section.4.2}%
+\contentsline {mtocsection}{\numberline {4.2}Esercizi}{11}{section.4.2}%
+\contentsline {subsection}{\numberline {4.2.1}Soluzione di sistemi lineari con matrici triangolari}{11}{subsection.4.2.1}%
+\contentsline {mtocsubsection}{\numberline {4.2.1}Soluzione di sistemi lineari con matrici triangolari}{11}{subsection.4.2.1}%
+\contentsline {paragraph}{\nonumberline Nozioni teoriche}{11}{paragraph*.44}%
+\contentsline {paragraph}{\nonumberline Implementazione e stile di struttura tipica del codice}{12}{paragraph*.46}%
+\contentsline {paragraph}{\nonumberline Analisi risultati}{13}{paragraph*.48}%
+\contentsline {subparagraph}{\nonumberline File necessari}{13}{subparagraph*.50}%
+\contentsline {subparagraph}{\nonumberline Risultato e controllo}{13}{subparagraph*.52}%
+\contentsline {subsection}{\numberline {4.2.2}Eliminazione di Gauss}{13}{subsection.4.2.2}%
+\contentsline {mtocsubsection}{\numberline {4.2.2}Eliminazione di Gauss}{13}{subsection.4.2.2}%
+\contentsline {paragraph}{\nonumberline Nozioni teoriche}{13}{paragraph*.54}%
+\contentsline {paragraph}{\nonumberline Implementazione}{14}{paragraph*.56}%
+\contentsline {paragraph}{\nonumberline Analisi risultati}{14}{paragraph*.58}%
+\contentsline {subparagraph}{\nonumberline File necessari}{14}{subparagraph*.60}%
+\contentsline {subparagraph}{\nonumberline Soluzione}{14}{subparagraph*.62}%
+\contentsline {subsection}{\numberline {4.2.3}Decomposizione LU}{14}{subsection.4.2.3}%
+\contentsline {mtocsubsection}{\numberline {4.2.3}Decomposizione LU}{14}{subsection.4.2.3}%
+\contentsline {paragraph}{\nonumberline Nozioni teoriche}{14}{paragraph*.64}%
+\contentsline {paragraph}{\nonumberline Implementazione}{15}{paragraph*.66}%
+\contentsline {subparagraph}{\nonumberline File necessari}{15}{subparagraph*.68}%
+\contentsline {paragraph}{\nonumberline Analisi risultati}{16}{paragraph*.70}%
+\contentsline {subparagraph}{\nonumberline File necessari}{16}{subparagraph*.72}%
+\contentsline {chapter}{\numberline {5}Intepolazione}{17}{chapter.5}%
 \etoc@startlocaltoc {10}
 \etoc@startlocaltoc {11}
-\contentsline {section}{\numberline {5.1}Interpolazione: esercizio 1}{11}{section.5.1}%
-\contentsline {mtocsection}{\numberline {5.1}Interpolazione: esercizio 1}{11}{section.5.1}%
-\contentsline {section}{\numberline {5.2}Funzione di Runge: esercizio 2}{11}{section.5.2}%
-\contentsline {mtocsection}{\numberline {5.2}Funzione di Runge: esercizio 2}{11}{section.5.2}%
+\contentsline {section}{\numberline {5.1}Esercizi}{17}{section.5.1}%
+\contentsline {mtocsection}{\numberline {5.1}Esercizi}{17}{section.5.1}%
+\contentsline {subsection}{\numberline {5.1.1}Interpolazione}{17}{subsection.5.1.1}%
+\contentsline {mtocsubsection}{\numberline {5.1.1}Interpolazione}{17}{subsection.5.1.1}%
+\contentsline {subsection}{\numberline {5.1.2}Funzione di Runge}{17}{subsection.5.1.2}%
+\contentsline {mtocsubsection}{\numberline {5.1.2}Funzione di Runge}{17}{subsection.5.1.2}%
+\contentsline {subsection}{\numberline {5.1.3}Esercizio 3?}{17}{subsection.5.1.3}%
+\contentsline {mtocsubsection}{\numberline {5.1.3}Esercizio 3?}{17}{subsection.5.1.3}%

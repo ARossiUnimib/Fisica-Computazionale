@@ -2,9 +2,25 @@
 **/*.o
 **/*.out
 
+# Images
+**/*.gif
+
 # Latex
 **/*.aux
 **/*.fdb_latexmk
 **/*.fls
 **/*.log
 **/*.synctex.gz
+**/*.pdf
+**/*.toc
+**/*.out
+**/*.bbl
+**/*.blg
+**/*.bcf
+**/*.run.xml
+**/*.lof
+**/*.lot
+**/*.cb
+**/*.cb2
+**/*.lb
+

@@ -1,20 +1,22 @@
 #pragma once
 
+#include "../Module 3: Matrices/tensor.hpp"
 #include "../utils.hpp"
-
-#include "../Module 3: Matrices/tensor_utils.hpp"
+#include <functional>
+#include <iostream>
 
 namespace ODEUtils
 {
 
-template <typename T> using ODEFunction = std::function<Tensor<T>(T, const Tensor<T> &)>;
+template <typename T>
+using ODEFunction = std::function<Tensor<T>(T, const Tensor<T> &)>;
 
 template <typename T>
-Tensor<T> Euler(const Tensor<T> &y0, const Utils::Range<T> &time_range, ODEFunction<T> system_func)
+Tensor<T> Euler(const Tensor<T> &y0, const Utils::Range<T> &time_range,
+                ODEFunction<T> system_func)
 {
-    Tensor<T> y = y0; // Current state of the system
-    Tensor<T> result =
-        TensorBuilder<T>::Matrix(time_range.nodes.size(), y0.Rows()).Build(); // Store the results in a tensor
+    Tensor<T> y = y0;
+    Tensor<T> result = Tensor<T>::Matrix(time_range.nodes.size(), y0.Rows());
 
     int step_index = 0;
     for (const auto &t : time_range)
@@ -39,11 +41,11 @@ Tensor<T> Euler(const Tensor<T> &y0, const Utils::Range<T> &time_range, ODEFunct
 }
 
 template <typename T>
-Tensor<T> Midpoint(const Tensor<T> &y0, const Utils::Range<T> &time_range, ODEFunction<T> system_func)
+Tensor<T> Midpoint(const Tensor<T> &y0, const Utils::Range<T> &time_range,
+                   ODEFunction<T> system_func)
 {
-    Tensor<T> y = y0; // Current state of the system
-    Tensor<T> result =
-        TensorBuilder<T>::Matrix(time_range.nodes.size(), y0.Rows()).Build(); // Store the results in a tensor
+    Tensor<T> y = y0;
+    Tensor<T> result = Tensor<T>::Matrix(time_range.nodes.size(), y0.Rows());
 
     int step_index = 0;
     for (const auto &t : time_range)
@@ -55,9 +57,9 @@ Tensor<T> Midpoint(const Tensor<T> &y0, const Utils::Range<T> &time_range, ODEFu
         }
 
         Tensor<T> k_1 = system_func(t, y);
-        Tensor<T> k_2 = system_func(t + time_range.Step / 2, y + k_1 * (time_range.Step / 2));
+        Tensor<T> k_2 = system_func(t + time_range.Step / 2,
+                                    y + k_1 * (time_range.Step / 2));
 
-        // Update the current state using Euler's method
         for (int i = 0; i < y.Rows(); ++i)
         {
             y(i) += time_range.Step * k_2(i);

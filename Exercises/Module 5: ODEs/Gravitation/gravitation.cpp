@@ -1,29 +1,28 @@
-#include "../../Module 3: Matrices/tensor_utils.hpp"
 #include "../../utils.hpp"
 #include "../odes.hpp"
 #include <cmath>
 
-static Tensor<double> masses = TensorBuilder<double>::Vector(3).Ones().Build();
+static Tensor<double> masses = Tensor<double>::One(3);
 
 // System of ODEs representing the 3-body problem
 Tensor<double> NewtonGrav(double t, const Tensor<double> &y)
 {
     // Create a tensor to hold the derivatives
-    Tensor<double> dydt = TensorBuilder<double>::Vector(3 * 3 * 2).Build();
+    Tensor<double> dydt = Tensor<double>::Vector(3 * 3 * 2);
 
     // Gravitational constant (set to 1 for simplicity)
     const double G = 1.0;
 
     // Helper lambda to compute the gravitational force between two bodies
     auto grav_accell = [&](int i, int j) -> Tensor<double> {
-        Tensor<double> r_ij = TensorBuilder<double>::Vector(3).Build();
+        Tensor<double> r_ij = Tensor<double>::Vector(3);
         for (int k = 0; k < 3; k++)
             r_ij(k) = y(3 * i + k) - y(3 * j + k);
 
         double dist = sqrt(r_ij.Norm());
         double dist_cubed = std::pow(dist, 3);
 
-        Tensor<double> accell = TensorBuilder<double>::Vector(3).Build();
+        Tensor<double> accell = Tensor<double>::Vector(3);
 
         for (int k = 0; k < 3; ++k)
             accell(k) = -G * masses(j) * r_ij(k) / dist_cubed;
@@ -39,7 +38,7 @@ Tensor<double> NewtonGrav(double t, const Tensor<double> &y)
             dydt(3 * i + k) = y(3 * (i + 3) + k);
 
         // Velocity derivatives (acceleration due to gravity)
-        Tensor<double> acc = TensorBuilder<double>::Vector(3).Build();
+        Tensor<double> acc = Tensor<double>::Vector(3);
 
         acc = grav_accell(i, (i + 1) % 3) + grav_accell(i, (i + 2) % 3);
 
@@ -52,14 +51,15 @@ Tensor<double> NewtonGrav(double t, const Tensor<double> &y)
 
 int main(int argc, char const *argv[])
 {
-    auto value = std::stoi(argv[1]);
-    if (!argv[1] && value != 1 && value != 2)
+    auto value = argc != 2 ? 0 : std::stoi(argv[1]);
+
+    if (!value)
     {
         std::cerr << "No es provided" << std::endl;
         return 1;
     }
 
-    Tensor<double> initial_conditions = TensorBuilder<double>::Vector(3 * 3 * 2).Build();
+    auto initial_conditions = Tensor<double>::Vector(3 * 3 * 2);
 
     // Initial positions
 
@@ -111,6 +111,7 @@ int main(int argc, char const *argv[])
     using namespace ODEUtils;
     ODEFunction<double> ode_func = NewtonGrav;
     Tensor<double> results = Euler(initial_conditions, time_range, ode_func);
+
     // calculate total energy of the system
 
     Print(results, time_range.Start, time_range.Step);

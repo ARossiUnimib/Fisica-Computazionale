@@ -4,8 +4,8 @@
 int main()
 {
 #ifndef OPTIONAL_EXERCISE
-    auto U_mat = TensorBuilder<double>::Matrix(3, 3).Build();
-    auto b_vec = TensorBuilder<double>::Vector(3).Build();
+    auto U_mat = Tensor<double>::SMatrix(3);
+    auto b_vec = Tensor<double>::Vector(3);
 
     // 2 1 1
     // 0 1 -2
@@ -14,6 +14,7 @@ int main()
     U_mat(0, 0) = 2;
     U_mat(1, 2) = -2;
 
+    // 1 -1 4
     b_vec(0) = 1;
     b_vec(1) = -1;
     b_vec(2) = 4;
@@ -33,9 +34,8 @@ int main()
 #else
 
     {
-        for (int n = 2; n <= 500; n += 10) 
+        for (int n = 2; n <= 500; n += 10)
         {
-
         }
     }
 

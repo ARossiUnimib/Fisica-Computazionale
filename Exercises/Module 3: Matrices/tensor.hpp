@@ -1,12 +1,9 @@
 #pragma once
 
-#include <algorithm>
 #include <cassert>
 #include <cstdlib>
 #include <cstring>
 #include <vector>
-
-template <typename U> class TensorBuilder;
 
 /*
  * This is a modified version of the matrix.h header provided in e-learning
@@ -19,6 +16,74 @@ template <typename T> class Tensor
 {
     template <typename U> friend class TensorBuilder;
 
+  public:
+    static Tensor<T> Vector(int n)
+    {
+        return Tensor<T>(n, 1);
+    }
+
+    static Tensor<T> Matrix(int n, int m)
+    {
+        return Tensor<T>(n, m);
+    }
+
+    static Tensor<T> SMatrix(int n)
+    {
+        return Tensor<T>(n, n);
+    }
+
+    static Tensor<T> Identity(int n)
+    {
+        Tensor<T> out(n, n);
+        for (int i = 0; i < n; i++)
+            out(i, i) = 1.0;
+        return out;
+    }
+
+    static Tensor<T> Ones(int n)
+    {
+        Tensor<T> out(n, n);
+        for (int i = 0; i < n; i++)
+            out(i, i) = 1.0;
+        return out;
+    }
+
+    static Tensor<T> One(int n)
+    {
+        Tensor<T> out(n, 1);
+        for (int i = 0; i < n; i++)
+            out(i) = 1.0;
+        return out;
+    }
+
+    static Tensor<T> Random(int n)
+    {
+        Tensor<T> out(n, n);
+        for (int i = 0; i < n; i++)
+            for (int j = 0; j < n; j++)
+                out(i, j) = rand() % 100;
+        return out;
+    }
+
+    static Tensor<T> Random(int n, int m)
+    {
+        Tensor<T> out(n, m);
+        for (int i = 0; i < n; i++)
+            for (int j = 0; j < m; j++)
+                out(i, j) = rand() % 100;
+        return out;
+    }
+
+    static Tensor<T> FromData(std::vector<T> data, int rows, int cols)
+    {
+        return Tensor<T>(std::move(data), rows, cols);
+    }
+
+    static Tensor<T> FromData(std::vector<T> data)
+    {
+        return FromData(std::move(data), data.size(), 1);
+    }
+
   private:
     /*
      * Retrieve vector position from tensor coordinates
@@ -29,22 +94,24 @@ template <typename T> class Tensor
         return i * m_Cols + j;
     }
 
-    Tensor(int nrows, int ncols) : m_Rows(nrows), m_Cols(ncols), m_Data(nrows * ncols, 0)
+    Tensor(int rows, int cols)
+        : m_Rows(rows), m_Cols(cols), m_Data(rows * cols, 0)
     {
     }
 
-    Tensor(std::vector<T> data, int nrows, int ncols) : m_Rows(nrows), m_Cols(ncols), m_Data(data)
+    Tensor(std::vector<T> data, int rows, int cols)
+        : m_Rows(rows), m_Cols(cols), m_Data(data)
     {
-        assert(data.size() == nrows * ncols);
+        assert(data.size() == rows * cols);
     }
 
   public:
-
     Tensor() : m_Rows(0), m_Cols(0)
     {
     }
 
-    Tensor(const Tensor<T> &other) : m_Rows(other.m_Rows), m_Cols(other.m_Cols), m_Data(other.m_Data)
+    Tensor(Tensor<T> const &other)
+        : m_Rows(other.m_Rows), m_Cols(other.m_Cols), m_Data(other.m_Data)
     {
     }
 
@@ -55,22 +122,18 @@ template <typename T> class Tensor
     T &operator()(int i, int j);
     T &operator()(int i);
 
-    /* Common Tensor operations */
+    /* ----------------- COMMON TENSOR OPERATIONS --------------------------- */
 
-    Tensor<T> operator+(const Tensor<T> &b) const;
+    Tensor<T> operator+(Tensor<T> const &b) const;
+    Tensor<T> operator-(Tensor<T> const &b) const;
 
-    Tensor<T> operator-(const Tensor<T> &b) const
-    {
-        return *this + (b * (-1.0));
-    }
-
-    Tensor<T> Dot(const Tensor<T> &a) const;
+    Tensor<T> Dot(Tensor<T> const &a) const;
 
     Tensor<T> Dagger();
 
-    double Norm();
+    T Norm();
 
-    /* Solution invariant operations                   */
+    /* ----------------- SOLUTION INVARIANT OPERATIONS ---------------------- */
 
     void SwapRows(int i, int j);
 
@@ -83,41 +146,23 @@ template <typename T> class Tensor
     void LinearCombRows(int i, int j, T value, int final);
 
     // Action via a scalar
-    Tensor<T> operator*(const T &d) const
+    Tensor<T> operator*(T const &d) const;
+
+    Tensor<T> operator*(T d);
+
+    /* ----------------- SOLUTION INVARIANT OPERATIONS ---------------------- */
+
+    Tensor<T> &operator=(Tensor<T> const &in)
     {
-        Tensor<T> out(*this);
-
-        for (int i = 0; i < m_Rows * m_Cols; i++)
-            out.m_Data[i] *= d;
-
-        return out;
+        return *this(m_Data, m_Rows, m_Cols);
     }
 
-    Tensor<T> operator*(T d)
-    {
-        Tensor<T> out(*this);
-        for (int i = 0; i < m_Rows * m_Cols; i++)
-            out.m_Data[i] *= d;
-
-        return out;
-    }
-
-    /****************************************************/
-
-    Tensor<T> &operator=(const Tensor<T> &in)
-    {
-        m_Rows = in.m_Rows;
-        m_Cols = in.m_Cols;
-        m_Data = in.m_Data;
-        return *this;
-    }
-
-    inline bool operator==(const Tensor<T> &b)
+    inline bool operator==(Tensor<T> const &b)
     {
         return m_Rows == b.m_Rows && m_Cols == b.m_Cols && m_Data == b.m_Data;
     }
 
-    inline bool &operator==(const Tensor<T> &b) const
+    inline bool &operator==(Tensor<T> const &b) const
     {
         return m_Rows == b.m_Rows && m_Cols == b.m_Cols && m_Data == b.m_Data;
     }
@@ -157,126 +202,5 @@ template <typename T> class Tensor
     int m_Cols;
 };
 
-template <typename T> void Tensor<T>::SwapRows(int i, int j)
-{
-    T *tmp = new T[m_Cols];
-
-    // Move slices of the std::vector data on the correct column representation in
-    // the std::vector format
-    std::copy(tmp, &m_Data[this->Site(i, 0)], sizeof(T) * m_Cols);
-    std::copy(&m_Data[this->Site(i, 0)], &m_Data[this->Site(j, 0)], sizeof(T) * m_Cols);
-    std::copy(&m_Data[this->Site(j, 0)], tmp, sizeof(T) * m_Cols);
-    delete[] tmp;
-}
-
-template <typename T> void Tensor<T>::LinearCombRows(int i, int j, T value, int final)
-{
-    assert(i < m_Rows && j < m_Rows);
-    assert(final < m_Rows);
-
-    for (int k = 0; k < m_Cols; k++)
-    {
-        m_Data[Site(final, k)] = m_Data[Site(i, k)] + value * m_Data[Site(j, k)];
-    }
-}
-
-template <typename T> T Tensor<T>::operator()(int i, int j) const
-{
-    assert(i < m_Rows && j < m_Cols);
-
-    return m_Data[this->Site(i, j)];
-}
-
-template <typename T> T &Tensor<T>::operator()(int i, int j)
-{
-    assert(i < m_Rows && j < m_Cols);
-
-    return m_Data[this->Site(i, j)];
-}
-
-template <typename T> T Tensor<T>::operator()(int i) const
-{
-    // Tensor should be a vector
-    assert(m_Rows == 1 || m_Cols == 1);
-
-    // Check if vector is transposed
-    if (m_Cols == 1)
-    {
-        assert(i < m_Rows);
-
-        return m_Data[this->Site(i, 0)];
-    }
-
-    assert(i < m_Cols);
-
-    return m_Data[this->Site(0, i)];
-}
-
-template <typename T> T &Tensor<T>::operator()(int i)
-{
-    // Tensor should be a vector
-    assert(m_Rows == 1 || m_Cols == 1);
-
-    // Check if vector is transposed
-    if (m_Cols == 1)
-    {
-        assert(i < m_Rows);
-
-        return m_Data[this->Site(i, 0)];
-    }
-
-    assert(i < m_Cols);
-
-    return m_Data[this->Site(0, i)];
-}
-
-template <typename T> Tensor<T> Tensor<T>::operator+(const Tensor<T> &b) const
-{
-    Tensor<T> out(m_Rows, m_Cols);
-
-    // Tensors should have the same dimension
-    assert((m_Rows == b.m_Rows) && (m_Cols == b.m_Cols));
-
-    for (int i = 0; i < m_Rows * m_Cols; i++)
-        out.m_Data[i] = m_Data[i] + b.m_Data[i];
-
-    return out;
-}
-
-template <typename T> Tensor<T> Tensor<T>::Dot(const Tensor<T> &a) const
-{
-    Tensor<T> out(m_Rows, a.m_Cols);
-
-    // Check for compability of the tensors for a dot product
-    assert((m_Cols == a.m_Rows));
-
-    for (int i = 0; i < m_Rows; i++)
-        for (int j = 0; j < a.m_Cols; j++)
-            for (int k = 0; k < m_Cols; k++)
-                out(i, j) += m_Data[this->Site(i, k)] * a(k, j);
-    return out;
-}
-
-template <typename T> Tensor<T> Tensor<T>::Dagger()
-{
-    Tensor<T> out(m_Cols, m_Rows);
-
-    for (int i = 0; i < m_Cols; i++)
-        for (int j = 0; j < m_Rows; j++)
-            out(i, j) = conj(m_Data[this->Site(j, i)]);
-
-    return out;
-}
-
-template <typename T> double Tensor<T>::Norm()
-{
-    double n = 0.0;
-
-    for (int i = 0; i < m_Rows * m_Cols; i++)
-    {
-        double h = std::abs(this->m_Data[i]);
-        n += h * h;
-    }
-
-    return n;
-}
+// Implementation of the Tensor class' methods
+#include "tensor.inl"
