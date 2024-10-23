@@ -1,20 +1,6 @@
-#include "../../utils.hpp"
-#include "../odes.hpp"
 #include <cmath>
 
-Tensor<double> Oscillator(double t, const Tensor<double> &y)
-{
-    auto dydt = Tensor<double>::Vector(2);
-    // real armonic oscillator
-    dydt(0) = y(1);
-    dydt(1) = -y(0);
-    return dydt;
-}
-
-double ExactSolution(double t)
-{
-    return sin(t);
-}
+#include "../odes.hpp"
 
 #define PT_1 1
 #define PT_2 2
@@ -23,76 +9,85 @@ double ExactSolution(double t)
 #define MIDPOINT 2
 #define RK4 3
 
-using MethodFunc =
-    std::function<Tensor<double>(const Tensor<double>, const Utils::Range<double> &, ODEUtils::ODEFunction<double>)>;
+tensor::Tensor<double> Oscillator(double t, tensor::Tensor<double> const &y); 
 
-void PrintError(const char *name)
-{
-    std::cerr << "Usage: " << name << " <es_point (1, 2)> <ode_method (1: Euler, 2: Midpoint, 3: RK4)>\n";
-}
+void PrintError(char const *name); 
 
-int main(int argc, char const *argv[])
-{
-    int point = argc < 2 ? -1 : std::stoi(argv[1]);
-    int method = argc < 3 ? -1 : std::stoi(argv[2]);
+double ExactSolution(double t) { return sin(t); }
 
-    if (argc < 3 || point > 2 || point <= 0 || method > 3 || method <= 0)
-    {
-        PrintError(argv[0]);
-        return 1;
-    }
 
-    // 1.0 1.0 1.0
-    auto initial_tensor = Tensor<double>::Vector(2);
-    initial_tensor(0) = 0.0;
-    initial_tensor(1) = 1.0;
+using MethodFunc = tensor::Tensor<double> (*)(tensor::Tensor<double> const &,
+                                              func::Range<double> const &,
+                                              ode::Function<double>);
 
-    auto time_range = Utils::Range<double>::Fixed(0.0, 100.0, 0.001);
+int main(int argc, char const *argv[]) {
+  int point = argc < 2 ? -1 : std::stoi(argv[1]);
+  int method = argc < 3 ? -1 : std::stoi(argv[2]);
 
-    using namespace ODEUtils;
+  if (argc < 3 || point > 2 || point <= 0 || method > 3 || method <= 0) {
+    PrintError(argv[0]);
+    return 1;
+  }
 
-    ODEFunction<double> ode_func = Oscillator;
-    MethodFunc method_func;
+  // 1.0 1.0 1.0
+  auto initial_tensor = tensor::Tensor<double>::Vector(2);
+  initial_tensor(0) = 0.0;
+  initial_tensor(1) = 1.0;
 
-    Tensor<double> results;
+  auto time_range = func::Range<double>::Fixed(0.0, 100.0, 0.001);
 
-    switch (method)
-    {
+  ode::Function<double> ode_func = Oscillator;
+  MethodFunc method_func = nullptr;
+  tensor::Tensor<double> results;
+
+  switch (method) {
     case EULER: {
-        method_func = Euler<double>;
-        break;
+      method_func = reinterpret_cast<MethodFunc>(ode::Euler<double>);
+      break;
     }
     case MIDPOINT: {
-        method_func = Midpoint<double>;
-        break;
+      method_func = reinterpret_cast<MethodFunc>(ode::Midpoint<double>);
+      break;
     }
+  }
+
+  if (point == PT_1) {
+    results = method_func(initial_tensor, time_range, ode_func);
+    ode::Print(results, time_range.Start(), time_range.Step());
+  }
+
+  if (point == PT_2) {
+    auto h_range = func::Range<double>::FixedNum(0.001, 1, 1000);
+
+    func::Range<double> time_range;
+
+    for (const auto h : h_range) {
+      time_range = func::Range<double>::Fixed(0.0, 10, h);
+
+      auto max_h = time_range.Nodes().size() - 1;
+
+      auto mat = method_func(initial_tensor, time_range, ode_func);
+
+      auto value = mat(max_h, 0) - ExactSolution(time_range.Nodes()[max_h]);
+
+      std::cout << h << " " << std::abs(value) << std::endl;
     }
+  }
 
-    if (point == PT_1)
-    {
-        results = method_func(initial_tensor, time_range, ode_func);
-        Print(results, time_range.Start, time_range.Step);
-    }
+  return 0;
+}
 
-    if (point == PT_2)
-    {
-        auto h_range = Utils::Range<double>::FixedNum(0.001, 1, 1000);
+void PrintError(char const *name) {
+  std::cerr
+      << "Usage: " << name
+      << " <es_point (1, 2)> <ode_method (1: Euler, 2: Midpoint, 3: RK4)>\n";
+}
 
-        Utils::Range<double> time_range;
+tensor::Tensor<double> Oscillator(double t, tensor::Tensor<double> const &y) {
+  auto dydt = tensor::Tensor<double>::Vector(2);
 
-        for (const auto h : h_range)
-        {
-            time_range = Utils::Range<double>::Fixed(0.0, 10, h);
-
-            auto max_h = time_range.nodes.size() - 1;
-
-            auto mat = method_func(initial_tensor, time_range, ode_func);
-
-            auto value = mat(max_h, 0) - ExactSolution(time_range.nodes[max_h]);
-
-            std::cout << h << " " << std::abs(value) << std::endl;
-        }
-    }
-
-    return 0;
+  // real armonic oscillator
+  dydt(0) = y(1);
+  dydt(1) = -y(0);
+  return dydt;
 }

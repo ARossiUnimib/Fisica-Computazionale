@@ -1,7 +1,6 @@
 #include <stdio.h>
 
 int main() {
-
 #ifdef EXERCISE_FORMAT
   // Exact exercise request
 

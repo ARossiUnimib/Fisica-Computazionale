@@ -1,11 +1,9 @@
-#include "../../utils.hpp"
+#include <iostream>
+
 #include "../function_data.hpp"
 #include "../interpolation.hpp"
 
-double runge_function(double x)
-{
-    return 1.0 / (1.0 + 25.0 * x * x);
-}
+double runge_function(double x) { return 1.0 / (1.0 + 25.0 * x * x); }
 
 // NOTE: direct poly becomes ill conditioned in chebeyshev points and it
 // explodes faster than newton polys in fixed points due to worse handling of
@@ -17,17 +15,13 @@ double runge_function(double x)
 #define FUNCTION FixedNum
 #endif
 
-int main()
-{
-
+int main() {
     // Data sample for interpolation
-    auto interp_sample = Utils::Range<double>::FUNCTION(-1.0, 1.0, 50);
+    auto interp_sample = func::Range<double>::FUNCTION(-1.0, 1.0, 50);
 
     std::vector<double> runge_values;
 
-    for (auto x : interp_sample)
-    {
-
+    for (auto x : interp_sample) {
 #ifdef PRINT_RUNGE
         std::cout << x << "\t" << runge_function(x) << std::endl;
         continue;
@@ -39,18 +33,21 @@ int main()
 
     // Print runge sampled data
 
-    FunctionData<double> runge_data = {interp_sample.nodes, runge_values};
+    func::FunctionData<double> runge_data = {interp_sample.Nodes(),
+                                             runge_values};
 
     // Testing sample to visualize generated polynomial
-    auto testing_sample = Utils::Range<double>::FUNCTION(-1.0, 1.0, 150);
+    auto testing_sample = func::Range<double>::FUNCTION(-1.0, 1.0, 150);
 
-    auto newton_interpolation = Interpolation::NewtonPolynomial(runge_data, testing_sample);
-    auto direct_interpolation = Interpolation::DirectPolynomial(runge_data, testing_sample);
+    auto newton_interpolation =
+        interp::NewtonPolynomial(runge_data, testing_sample);
+    auto direct_interpolation =
+        interp::DirectPolynomial(runge_data, testing_sample);
 
     // Print
-    for (int i = 0; i < newton_interpolation.Size(); i++)
-    {
-        std::cout << newton_interpolation.X()[i] << "\t" << newton_interpolation.F()[i] << "\t"
+    for (int i = 0; i < newton_interpolation.Size(); i++) {
+        std::cout << newton_interpolation.X()[i] << "\t"
+                  << newton_interpolation.F()[i] << "\t"
                   << direct_interpolation.F()[i] << std::endl;
     }
 

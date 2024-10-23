@@ -5,159 +5,86 @@
 #include <cwchar>
 #include <vector>
 
-#include "../utils.hpp"
+namespace func {
 
 /**
  * @brief Class to store data of a function
  *
  * @tparam T precision
  */
-template <typename T> class FunctionData;
-
-namespace FunctionUtils
-{
-
-/**
- * @brief Create a polynomial function
- *
- * @tparam T
- * @param coefficients
- * @param x values
- * @return FunctionData<T>
- */
 template <typename T>
-FunctionData<T> Polynomial(std::vector<T> coefficients,
-                           const Utils::Range<T> &x);
+class FunctionData {
+   public:
+    FunctionData() : x_values_(), f_values_() {}
 
-} // namespace FunctionUtils
-
-template <typename T> class FunctionData
-{
-  public:
-    FunctionData() : m_xValues(), m_fValues()
-    {
+    FunctionData(std::size_t size) {
+        x_values_.reserve(size);
+        f_values_.reserve(size);
     }
 
-    FunctionData(std::size_t size)
-    {
-        m_xValues.reserve(size);
-        m_fValues.reserve(size);
+    FunctionData(std::vector<T> x_values, std::vector<T> f_values)
+        : x_values_(std::move(x_values)), f_values_(std::move(f_values)) {
+        assert(x_values_.size() == f_values_.size());
     }
 
-    FunctionData(std::vector<T> xValues, std::vector<T> fValues)
-        : m_xValues(std::move(xValues)), m_fValues(std::move(fValues))
-    {
-        assert(m_xValues.size() == m_fValues.size());
+    std::size_t Size() const { return x_values_.size(); }
+
+    T X(std::size_t index) const { return x_values_[index]; }
+
+    T F(std::size_t index) const { return f_values_[index]; }
+
+    const std::vector<T> &F() const { return f_values_; }
+
+    const std::vector<T> &X() const { return x_values_; }
+
+    void Add(T x, T f) {
+        x_values_.push_back(x);
+        f_values_.push_back(f);
     }
 
-    std::size_t Size() const
-    {
-        return m_xValues.size();
-    }
-
-    T X(std::size_t index) const
-    {
-        return m_xValues[index];
-    }
-
-    T F(std::size_t index) const
-    {
-        return m_fValues[index];
-    }
-
-    const std::vector<T> &F() const
-    {
-        return m_fValues;
-    }
-
-    const std::vector<T> &X() const
-    {
-        return m_xValues;
-    }
-
-    void Add(T x, T f)
-    {
-        m_xValues.push_back(x);
-        m_fValues.push_back(f);
-    }
-
-    class Iterator
-    {
-      public:
+    class Iterator {
+       public:
         Iterator(const FunctionData<T> &function, std::size_t index)
-            : m_Function(function), m_Index(index)
-        {
-        }
+            : function_(function), index_(index) {}
 
         // Dereference operator
-        std::pair<T, T> operator*() const
-        {
-            return {m_Function.X(m_Index), m_Function.F(m_Index)};
+        std::pair<T, T> operator*() const {
+            return {function_.X(index_), function_.F(index_)};
         }
 
-        Iterator &operator++()
-        {
-            ++m_Index;
+        Iterator &operator++() {
+            ++index_;
             return *this;
         }
 
-        Iterator operator++(int)
-        {
+        Iterator operator++(int) {
             Iterator temp = *this;
-            ++m_Index;
+            ++index_;
             return temp;
         }
 
-        bool operator==(const Iterator &other) const
-        {
-            return m_Index == other.m_Index;
+        bool operator==(const Iterator &other) const {
+            return index_ == other.index_;
         }
 
         // Inequality operator
-        bool operator!=(const Iterator &other) const
-        {
-            return m_Index != other.m_Index;
+        bool operator!=(const Iterator &other) const {
+            return index_ != other.index_;
         }
 
-      private:
-        const FunctionData &m_Function;
-        std::size_t m_Index;
+       private:
+        const FunctionData &function_;
+        std::size_t index_;
     };
 
-    Iterator begin() const
-    {
-        return Iterator(*this, 0);
-    }
+    Iterator begin() const { return Iterator(*this, 0); }
 
     // End iterator
-    Iterator end() const
-    {
-        return Iterator(*this, m_fValues.size());
-    }
+    Iterator end() const { return Iterator(*this, f_values_.size()); }
 
-  private:
-    std::vector<T> m_xValues;
-    std::vector<T> m_fValues;
+   private:
+    std::vector<T> x_values_;
+    std::vector<T> f_values_;
 };
 
-namespace FunctionUtils
-{
-
-template <typename T>
-FunctionData<T> Polynomial(std::vector<T> coefficients,
-                           const Utils::Range<T> &x)
-{
-    FunctionData<double> p;
-    for (auto &&x : x)
-    {
-        double sum = 0;
-        for (int j = 0; j < coefficients.size(); j++)
-        {
-            sum += coefficients[j] * pow(x, j);
-        }
-        p.Add(x, sum);
-    }
-    return p;
-}
-
-} // namespace FunctionUtils
+}  // namespace func

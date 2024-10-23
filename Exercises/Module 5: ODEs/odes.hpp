@@ -1,97 +1,91 @@
 #pragma once
-
-#include "../Module 3: Matrices/tensor.hpp"
-#include "../utils.hpp"
 #include <functional>
 #include <iostream>
 
-namespace ODEUtils
-{
+#include "../Module 3: Matrices/tensor.hpp"
+#include "../Module 4: Interpolation/range.hpp"
+
+namespace ode {
 
 template <typename T>
-using ODEFunction = std::function<Tensor<T>(T, const Tensor<T> &)>;
+using Function = std::function<tensor::Tensor<T>(T, tensor::Tensor<T> const &)>;
 
 template <typename T>
-Tensor<T> Euler(const Tensor<T> &y0, const Utils::Range<T> &time_range,
-                ODEFunction<T> system_func)
-{
-    Tensor<T> y = y0;
-    Tensor<T> result = Tensor<T>::Matrix(time_range.nodes.size(), y0.Rows());
+tensor::Tensor<T> Euler(tensor::Tensor<T> const &y0, func::Range<T> &time_range,
+                        ode::Function<T> const &system_func) {
 
-    int step_index = 0;
-    for (const auto &t : time_range)
-    {
-        // Store the current state in the result tensor
-        for (int i = 0; i < y.Rows(); ++i)
-        {
-            result(step_index, i) = y(i);
-        }
+  using namespace tensor;
 
-        Tensor<T> dydt = system_func(t, y);
+  Tensor<T> y = y0;
+  Tensor<T> result = Tensor<T>::Matrix(time_range.Nodes().size(), y0.Rows());
 
-        for (int i = 0; i < y.Rows(); ++i)
-        {
-            y(i) += time_range.Step * dydt(i);
-        }
-
-        step_index++;
+  int step_index = 0;
+  for (const auto &t : time_range) {
+    // Store the current state in the result tensor
+    for (int i = 0; i < y.Rows(); ++i) {
+      result(step_index, i) = y(i);
     }
 
-    return result;
+    Tensor<T> dydt = system_func(t, y);
+
+    for (int i = 0; i < y.Rows(); ++i) {
+      y(i) += time_range.Step() * dydt(i);
+    }
+
+    step_index++;
+  }
+
+  return result;
 }
 
 template <typename T>
-Tensor<T> Midpoint(const Tensor<T> &y0, const Utils::Range<T> &time_range,
-                   ODEFunction<T> system_func)
-{
-    Tensor<T> y = y0;
-    Tensor<T> result = Tensor<T>::Matrix(time_range.nodes.size(), y0.Rows());
+tensor::Tensor<T> Midpoint(const tensor::Tensor<T> &y0,
+                           func::Range<T> &time_range,
+                           Function<T> system_func) {
+  using namespace tensor;
 
-    int step_index = 0;
-    for (const auto &t : time_range)
-    {
-        // Store the current state in the result tensor
-        for (int i = 0; i < y.Rows(); ++i)
-        {
-            result(step_index, i) = y(i);
-        }
+  Tensor<T> y = y0;
+  Tensor<T> result = Tensor<T>::Matrix(time_range.Nodes().size(), y0.Rows());
 
-        Tensor<T> k_1 = system_func(t, y);
-        Tensor<T> k_2 = system_func(t + time_range.Step / 2,
-                                    y + k_1 * (time_range.Step / 2));
-
-        for (int i = 0; i < y.Rows(); ++i)
-        {
-            y(i) += time_range.Step * k_2(i);
-        }
-
-        step_index++;
+  int step_index = 0;
+  for (const auto &t : time_range) {
+    // Store the current state in the result tensor
+    for (int i = 0; i < y.Rows(); ++i) {
+      result(step_index, i) = y(i);
     }
 
-    return result;
+    Tensor<T> k_1 = system_func(t, y);
+    Tensor<T> k_2 = system_func(t + time_range.Step() / 2,
+                                y + k_1 * (time_range.Step() / 2));
+
+    for (int i = 0; i < y.Rows(); ++i) {
+      y(i) += time_range.Step() * k_2(i);
+    }
+
+    step_index++;
+  }
+
+  return result;
 }
 
-template <typename T> void Print(const Tensor<T> &results, T t0, T h)
-{
-    std::cout << "t";
-    for (int i = 0; i < results.Cols(); ++i)
-    {
-        std::cout << "\ty" << (i + 1);
+template <typename T>
+void Print(tensor::Tensor<T> const &results, T t0, T h) {
+  std::cout << "t";
+  for (int i = 0; i < results.Cols(); ++i) {
+    std::cout << "\ty" << (i + 1);
+  }
+  std::cout << std::endl;
+
+  T t = t0;
+  for (int row = 0; row < results.Rows(); ++row) {
+    std::cout << t;
+    for (int col = 0; col < results.Cols(); ++col) {
+      std::cout << "\t" << results(row, col);
     }
     std::cout << std::endl;
 
-    T t = t0;
-    for (int row = 0; row < results.Rows(); ++row)
-    {
-        std::cout << t;
-        for (int col = 0; col < results.Cols(); ++col)
-        {
-            std::cout << "\t" << results(row, col);
-        }
-        std::cout << std::endl;
-
-        t += h;
-    }
+    t += h;
+  }
 }
 
-} // namespace ODEUtils
+}  // namespace ode

@@ -1,19 +1,19 @@
 #include "../tensor_utils.hpp"
 
-int main()
-{
-    auto mat = Tensor<double>::SMatrix(3);
-    mat(0, 1) = mat(0, 2) = mat(1, 0) = mat(1, 1) = mat(2, 0) = mat(2, 2) = 1;
-    mat(0, 0) = mat(2, 1) = 2;
-    mat(1, 2) = -2;
+int main() {
+  using namespace tensor;
 
-    using namespace TensorUtils;
+  auto mat = Tensor<double>::SMatrix(3);
+  mat(0, 1) = mat(0, 2) = mat(1, 0) = mat(1, 1) = mat(2, 0) = mat(2, 2) = 1;
+  mat(0, 0) = mat(2, 1) = 2;
+  mat(1, 2) = -2;
 
-    TensorPair<double> decomp = TensorUtils::LUDecomposition(mat);
-    Print(std::get<0>(decomp));
-    Print(std::get<1>(decomp));
+  TensorPair<double> decomp = LUDecomposition(mat);
 
-    std::cout << (DeterminantFromLU(mat)) << std::endl;
+  Print(std::get<0>(decomp));
+  Print(std::get<1>(decomp));
 
-    return 0;
+  std::cout << (DeterminantFromLU(mat)) << std::endl;
+
+  return 0;
 }
