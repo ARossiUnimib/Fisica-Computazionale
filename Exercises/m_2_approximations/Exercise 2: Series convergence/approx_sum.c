@@ -1,13 +1,6 @@
 #include <math.h>
 #include <stdio.h>
 
-/*
- * I Concetti da capire sono quelli della somma commutativa
- * e cosa succede se si sommano valori he non si dovrebbero sommare
- * NOTE: servono numeri belli grandi
- *NOTE: guarda a tipo 40000 che sono circa costanti
- * e' presente un bias costante rispetto al valore esatto
- */
 #define PRECISION double
 
 #define TRUE 1

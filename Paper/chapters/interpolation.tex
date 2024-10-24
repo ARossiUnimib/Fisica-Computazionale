@@ -2,11 +2,139 @@
 \chapter{Intepolazione}
 \labch{interp}
 
+
+\section{Implementazione preliminaria}
+
+Prima di procedere è necessario specificare varie funzioni/classi appositamente create
+per la scrittura del codice e una più facile implementazione degli algoritmi.
+
+\paragraph{Classe \texttt{FunctionData}}
+
+La classe \texttt{FunctionData} ha lo scopo di conservare i dati numerici ottenuti
+dalla computazione delle varie funzioni (in questo modulo principalmente polinomi) \sidenote{Nell'implementazione della classe
+	può essere trovata anche un'implementazione apposita di un iterator per
+	facilitare l'utilizzo dei valori quando ciclati.}.
+
+Essa ha come membri due vettori di tipo \texttt{std::vector} che conservano le
+informazioni di $x$ e $f(x)$.
+
+\paragraph{Classe \texttt{Range}}
+
+La classe \texttt{Range} ha invece lo scopo di rappresentare una successione di
+punti $\left\{a_i\right\}_{i \in (a, b) \subset \mathbb{R}}$ (la rappresentazione
+prevede intervalli inclusivi ed esclusivi).
+
+Scopo principale della classe sarà quello di generare nodi di distanza finita e
+nodi di Chebyshev.
+
+\textit{Ulteriori informazioni sulle due classi possono essere trovate nella
+	documentazione dedicata negli appositi header} \texttt{function\_data.hpp} \textit{e}
+\texttt{range.hpp}.
+
 \section{Esercizi}
 
-d
+\subsection{Metodo diretto e polinomio di Newton}
 
-\subsection{Interpolazione}
+\paragraph{Nozioni teoriche}
+
+Il metodo più semplice per ottenere il polinomio di interpolazione è quello di ottenere
+
+% TODO:
+
+\paragraph{Implementazione metodo diretto}
+
+\subparagraph{File necessari} \texttt{interpolation.hpp}
+
+Come primo step si ottiene la matrice di Vandermonde dalla sua definizione:
+
+\begin{lstlisting} [language=C++]
+
+// "values" sono i valori {x_1, x_2, ...} da inserire 
+template <typename T>
+tensor::Tensor<T> VandermondeMatrix(std::vector<T> const &values) {
+  auto mat = tensor::Tensor<T>::SMatrix(values.size());
+
+  for (int i = 0; i < values.size(); i++) {
+    for (int j = 0; j < values.size(); j++) {
+      mat(i, j) = pow(values[i], j);
+    }
+  }
+
+  return mat;
+}
+    
+\end{lstlisting}
+
+Successivamente si risolve il sistema lineare utilizzando il metodo di Gauss
+(invertire la matrice necessiterebbe di un ulteriore eliminazione di Gauss ed
+ulteriore allocamento di memoria).
+
+\begin{lstlisting} [language=C++]
+template <typename T>
+std::vector<T> DirectCoefficients(func::FunctionData<T> const &f) {
+  auto f_tensor = tensor::Tensor<T>::FromData(f.F());
+
+  tensor::Tensor<T> vande_matrix = VandermondeMatrix(f.X());
+  tensor::Tensor<T> values =
+      tensor::GaussianElimination(vande_matrix, f_tensor);
+
+  // Trasforma l'oggetto tensore in std::vector
+  return values.RawData();
+}
+
+\end{lstlisting}
+
+\paragraph{Implementazione metodo di Newton}
+
+Analogamente al metodo diretto calcoliamo i coefficienti per il polinomio di
+newton seguendo la formula citata precedentemente otteniamo.
+
+\begin{lstlisting} [language=C++]
+template <typename T>
+std::vector<T> NewtonCoefficients(func::FunctionData<T> const &f) {
+  int N = f.Size();
+
+  std::vector<T> a(N);
+
+  auto A = tensor::Tensor<double>::SMatrix(N);
+
+  // Rempiamo la prima colonna con i valori della funzione
+  for (int i = 0; i < N; i++) {
+    A(i, 0) = f.F(i);
+  }
+
+  // Calcoliamo le differenze divise
+  for (int j = 1; j < N; j++) {
+    for (int i = 0; i < N - j; i++) {
+      A(i, j) = (A(i + 1, j - 1) - A(i, j - 1)) / (f.X(i + j) - f.X(i));
+    }
+  }
+
+  // Estrapoliamo i coefficienti
+  for (int i = 0; i < N; i++) {
+    a[i] = A(0, i);
+  }
+
+  return a;
+}
+\end{lstlisting}
+
+\subparagraph{Considerazioni} L'algoritmo è direttamente implementato rispetto a
+lla logica che abbiamo considerato per calcolare i coefficienti di Newton.
+Uno svantaggio di questo algoritmo sta nell utilizzo dell'oggetto Tensor, infatti
+il funzionamento interno della classe traduce una matrice 2x2 in una vettore
+contiguo: questo permette un ottimizzazzione della cache della cpu rispetto ad un
+vettore di vettori, ma nel caso utilizzato la matrice è solo occupata a metà, 
+lasciando inizializzati a 0 molti valori non utilizzati nella computazione dei
+coefficient.
+Un modo per evitare ciò sarebbe per esempio quello di implementare un oggetto ad hoc
+per il problema, ai fini concettuali, però, l'implementazione sarebbe la medesima.
+
+\paragraph{Analisi dei risultati}
+
+Dalla implementazione dei metodi sopra citati e dai dati forniti dal problema
+otteniamo le seguenti interpolazioni:
+
 
 \subsection{Funzione di Runge}
 

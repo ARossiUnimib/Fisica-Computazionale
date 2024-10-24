@@ -1,10 +1,3 @@
-/*
- * TODO:: plottare i diversi dati in funzione di N (diverso colore) e X
- * Spiegazione del risultato dell errore che aumenta: il "leading scaling" e'
- * quello dell esercizio ma mano a mano che x non e' piu' x << 1 non e' piu'
- * considerabile come x^(n+1) ...
- */
-
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>

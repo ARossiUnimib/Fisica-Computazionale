@@ -1,3 +1,4 @@
+#include "../ode_resolver.hpp"
 #include "../odes.hpp"
 
 tensor::Tensor<double> LorenzSystem(double t, tensor::Tensor<double> const &y) {
@@ -9,6 +10,7 @@ tensor::Tensor<double> LorenzSystem(double t, tensor::Tensor<double> const &y) {
 
   return dydt;
 }
+
 void PrintUsage(char const *name) {
   std::cerr << "Usage: " << name
             << " <ode_method (1: Euler, 2: RK2, 3: RK4) \n";
@@ -21,25 +23,21 @@ int main(int argc, char const **argv) {
   }
 
   // 1.0 1.0 1.0
-  auto initial_tensor = tensor::Tensor<double>::Ones(3);
+  auto initial_tensor = tensor::Tensor<double>::One(3);
 
   auto time_range = func::Range<double>::Fixed(0.0, 10.0, 0.01);
 
-  ode::Function<double> ode_func = LorenzSystem;
+  // Note method is 1 to 3 corresponding to Euler, Midpoint, RK4
+  Method ode_method = static_cast<Method>(std::stoi(argv[1]));
 
-  tensor::Tensor<double> result;
+  auto solver = ODESolver<double>::Builder()
+                                 .InitialConditions(initial_tensor)
+                                 .CoordinatesRange(time_range)
+                                 .SystemFunction(LorenzSystem)
+                                 .Method(ode_method)
+                                 .BuildPtr();
 
-  switch (std::stoi(argv[1])) {
-    case 1:
-      result = ode::Euler(initial_tensor, time_range, ode_func);
-      break;
-    case 2:
-      result = ode::Midpoint(initial_tensor, time_range, ode_func);
-      break;
-    case 3:
-      // TODO: Implement RK4
-      break;
-  }
+  tensor::Tensor<double> result = solver->Solve();
 
   ode::Print(result, time_range.Start(), time_range.Step());
 

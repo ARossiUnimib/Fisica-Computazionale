@@ -85,6 +85,7 @@ class Tensor {
 
   /* ----------------- COMMON TENSOR OPERATIONS --------------------------- */
 
+  Tensor<T> operator+=(Tensor<T> const &b) const;
   Tensor<T> operator+(Tensor<T> const &b) const;
   Tensor<T> operator-(Tensor<T> const &b) const;
 
@@ -236,6 +237,11 @@ T &Tensor<T>::operator()(int i) {
   return data_[Site(0, i)];
 }
 
+template <typename T>
+Tensor<T> Tensor<T>::operator+=(Tensor<T> const &b) const
+{
+    *this = *this + b;
+}
 template <typename T>
 Tensor<T> Tensor<T>::operator+(Tensor<T> const &b) const {
   // Tensors should have the same dimension

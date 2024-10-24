@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../Module 3: Matrices/tensor.hpp"
-#include "../Module 3: Matrices/tensor_utils.hpp"
+#include "../m_3_matrices/tensor.hpp"
+#include "../m_3_matrices/tensor_utils.hpp"
 #include "function_data.hpp"
 #include "function_utils.hpp"
 #include "range.hpp"
@@ -78,7 +78,6 @@ tensor::Tensor<T> VandermondeMatrix(std::vector<T> const &values) {
 
   return mat;
 }
-
 template <typename T>
 std::vector<T> DirectCoefficients(func::FunctionData<T> const &f) {
   auto f_tensor = tensor::Tensor<T>::FromData(f.F());

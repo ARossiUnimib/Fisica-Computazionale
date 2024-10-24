@@ -1,6 +1,7 @@
 #include <cmath>
 #include <string>
 
+#include "../ode_resolver.hpp"
 #include "../odes.hpp"
 
 double Gamma = -1;
@@ -45,58 +46,60 @@ void PrintUsage(char const *name) {
 }
 
 int main(int argc, const char *argv[]) {
-  int point = argc < 2 ? -1 : std::stoi(argv[1]);
-  double gamma = argc < 3 ? -1 : std::stod(argv[2]);
-  double A = argc < 4 ? -1 : std::stod(argv[3]);
+  int _point = argc < 2 ? -1 : std::stoi(argv[1]);
+  double _gamma = argc < 3 ? -1 : std::stod(argv[2]);
+  double _A = argc < 4 ? -1 : std::stod(argv[3]);
 
-  if (argc < 2 || point > 3 || point <= 0) {
+  if (argc < 2 || _point > 3 || _point <= 0) {
     PrintUsage(argv[0]);
     return 1;
   }
+
+  ode::Function<double> ode_func;
+
+  switch (_point) {
+    case 1: {
+      ode_func = RealOscillator;
+      break;
+    }
+
+    case 2: {
+      if (_gamma >= 2 || _gamma <= 0) {
+        PrintUsage(argv[0]);
+        return 1;
+      }
+
+      Gamma = _gamma;
+      ode_func = DampedOscillator;
+      break;
+    }
+
+    case 3: {
+      if (_gamma >= 2 || _gamma <= 0 || _A >= 2 || _A <= 0) {
+        PrintUsage(argv[0]);
+        return 1;
+      }
+
+      Gamma = _gamma;
+      _A = _A;
+      ode_func = ForcedOscillator;
+      break;
+    }
+  }
+
+  auto time_range = func::Range<double>::Fixed(0.0, 100.0, 0.001);
 
   auto initial_tensor = tensor::Tensor<double>::Vector(2);
   initial_tensor(0) = 0.0;
   initial_tensor(1) = 1.0;
 
-  auto time_range = func::Range<double>::Fixed(0.0, 100.0, 0.001);
-
-  ode::Function<double> ode_func;
-
-  switch (point) {
-    case 1:
-      ode_func = RealOscillator;
-      break;
-
-    case 2:
-
-      if (gamma >= 2 || gamma <= 0) {
-        PrintUsage(argv[0]);
-        return 1;
-      }
-
-      Gamma = gamma;
-
-      ode_func = DampedOscillator;
-
-      break;
-
-    case 3:
-
-      if (gamma >= 2 || gamma <= 0 || A >= 2 || A <= 0) {
-        PrintUsage(argv[0]);
-        return 1;
-      }
-
-      Gamma = gamma;
-      A = A;
-
-      ode_func = ForcedOscillator;
-
-      break;
-  }
-
-  tensor::Tensor<double> result =
-      ode::Midpoint(initial_tensor, time_range, ode_func);
+  tensor::Tensor<double> result = ODESolver<double>::Builder()
+                                      .Method(Method::kRK4)
+                                      .SystemFunction(ode_func)
+                                      .InitialConditions(initial_tensor)
+                                      .CoordinatesRange(time_range)
+                                      .Build()
+                                      .Solve();
 
   ode::Print(result, time_range.Start(), time_range.Step());
 }

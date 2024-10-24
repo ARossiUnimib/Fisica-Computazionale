@@ -1,19 +1,63 @@
 #pragma once
+
 #include <functional>
 #include <iostream>
 
-#include "../Module 3: Matrices/tensor.hpp"
-#include "../Module 4: Interpolation/range.hpp"
+#include "../m_3_matrices/tensor.hpp"
+#include "../m_4_interpolation/range.hpp"
 
 namespace ode {
 
+/**
+ * @brief function which describes the behaviour of the system of every first
+ * order derivatives
+ *
+ * Given a vector of derivatives, Function describes the ode system completely
+ * passing the initial value through a RK method
+ *
+ * @tparam T precision
+ */
 template <typename T>
 using Function = std::function<tensor::Tensor<T>(T, tensor::Tensor<T> const &)>;
+
+/**
+ * @brief Prints the solution of the ODE system in the order given by
+ * ode::Function
+ */
+template <typename T>
+void Print(tensor::Tensor<T> const &results, T t0, T h);
+
+/**
+ * @brief Euler method for solving ODE
+ *
+ * @tparam T precision
+ * @param y0 initial conditions
+ * @param time_range range of time values
+ * @param system_func function which describes the behaviour of the system
+ * @return tensor::Tensor<T> result of the ode system
+ */
+template <typename T>
+tensor::Tensor<T> Euler(tensor::Tensor<T> const &y0, func::Range<T> &time_range,
+                        ode::Function<T> const &system_func);
+
+/**
+ * @brief Midpoint method for solving ODE
+ *
+ * @tparam T precision
+ * @param y0 initial conditions
+ * @param time_range range of time values
+ * @param system_func function which describes the behaviour of the system
+ * @return tensor::Tensor<T> result of the ode system
+ */
+template <typename T>
+tensor::Tensor<T> Midpoint(const tensor::Tensor<T> &y0,
+                           func::Range<T> &time_range, Function<T> system_func);
+
+/* ------------------------- IMPLEMENTATION --------------------------------- */
 
 template <typename T>
 tensor::Tensor<T> Euler(tensor::Tensor<T> const &y0, func::Range<T> &time_range,
                         ode::Function<T> const &system_func) {
-
   using namespace tensor;
 
   Tensor<T> y = y0;

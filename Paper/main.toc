@@ -79,11 +79,21 @@
 \contentsline {chapter}{\numberline {5}Intepolazione}{17}{chapter.5}%
 \etoc@startlocaltoc {10}
 \etoc@startlocaltoc {11}
-\contentsline {section}{\numberline {5.1}Esercizi}{17}{section.5.1}%
-\contentsline {mtocsection}{\numberline {5.1}Esercizi}{17}{section.5.1}%
-\contentsline {subsection}{\numberline {5.1.1}Interpolazione}{17}{subsection.5.1.1}%
-\contentsline {mtocsubsection}{\numberline {5.1.1}Interpolazione}{17}{subsection.5.1.1}%
-\contentsline {subsection}{\numberline {5.1.2}Funzione di Runge}{17}{subsection.5.1.2}%
-\contentsline {mtocsubsection}{\numberline {5.1.2}Funzione di Runge}{17}{subsection.5.1.2}%
-\contentsline {subsection}{\numberline {5.1.3}Esercizio 3?}{17}{subsection.5.1.3}%
-\contentsline {mtocsubsection}{\numberline {5.1.3}Esercizio 3?}{17}{subsection.5.1.3}%
+\contentsline {section}{\numberline {5.1}Implementazione preliminaria}{17}{section.5.1}%
+\contentsline {mtocsection}{\numberline {5.1}Implementazione preliminaria}{17}{section.5.1}%
+\contentsline {paragraph}{\nonumberline Classe \texttt {FunctionData}}{17}{paragraph*.74}%
+\contentsline {paragraph}{\nonumberline Classe \texttt {Range}}{17}{paragraph*.76}%
+\contentsline {section}{\numberline {5.2}Esercizi}{17}{section.5.2}%
+\contentsline {mtocsection}{\numberline {5.2}Esercizi}{17}{section.5.2}%
+\contentsline {subsection}{\numberline {5.2.1}Metodo diretto e polinomio di Newton}{17}{subsection.5.2.1}%
+\contentsline {mtocsubsection}{\numberline {5.2.1}Metodo diretto e polinomio di Newton}{17}{subsection.5.2.1}%
+\contentsline {paragraph}{\nonumberline Nozioni teoriche}{17}{paragraph*.78}%
+\contentsline {paragraph}{\nonumberline Implementazione metodo diretto}{17}{paragraph*.80}%
+\contentsline {subparagraph}{\nonumberline File necessari}{17}{subparagraph*.82}%
+\contentsline {paragraph}{\nonumberline Implementazione metodo di Newton}{18}{paragraph*.84}%
+\contentsline {subparagraph}{\nonumberline Considerazioni}{19}{subparagraph*.86}%
+\contentsline {paragraph}{\nonumberline Analisi dei risultati}{19}{paragraph*.88}%
+\contentsline {subsection}{\numberline {5.2.2}Funzione di Runge}{19}{subsection.5.2.2}%
+\contentsline {mtocsubsection}{\numberline {5.2.2}Funzione di Runge}{19}{subsection.5.2.2}%
+\contentsline {subsection}{\numberline {5.2.3}Esercizio 3?}{19}{subsection.5.2.3}%
+\contentsline {mtocsubsection}{\numberline {5.2.3}Esercizio 3?}{19}{subsection.5.2.3}%
