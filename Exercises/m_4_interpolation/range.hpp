@@ -1,5 +1,6 @@
 #pragma once
 
+#include <cassert>
 #include <cmath>
 #include <cstddef>
 #include <vector>
@@ -46,7 +47,9 @@ struct Range {
         node_type_(NodeType::kChebyshev),
         intrv_type_(intrv_type) {
     nodes_.reserve(num_nodes);  // Reserve space for Chebyshev nodes
-    GenerateChebyshevNodes();   // Precompute Chebyshev nodes
+    assert(num_nodes > 0);
+
+    GenerateChebyshevNodes();  // Precompute Chebyshev nodes
   }
 
   // Constructor for Fixed distance nodes
@@ -58,6 +61,9 @@ struct Range {
         step_(step),
         node_type_(NodeType::kFixed),
         intrv_type_(intrv_type) {
+
+    assert(step_ > 0);
+
     GenerateFixedNodes();  // Precompute fixed distance nodes
   }
 

@@ -29,12 +29,12 @@ int main(int argc, char const *argv[]) {
   initial_tensor(0) = 0.0;
   initial_tensor(1) = 1.0;
 
-  ODESolverBuilder<double> solver_builder =
-      ODESolver<double>::Builder()
+  auto solver_builder =
+      ode::ODESolver<double>::Builder()
           .InitialConditions(initial_tensor)
           .SystemFunction(Oscillator)
           // Note that _method corresponds to the Method values
-          .Method(static_cast<Method>(_method));
+          .Method(static_cast<ode::Method>(_method));
 
   if (_point == PT_1) {
     auto time_range = func::Range<double>::Fixed(0.0, 100.0, 0.001);

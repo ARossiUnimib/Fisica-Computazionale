@@ -93,8 +93,8 @@ int main(int argc, const char *argv[]) {
   initial_tensor(0) = 0.0;
   initial_tensor(1) = 1.0;
 
-  tensor::Tensor<double> result = ODESolver<double>::Builder()
-                                      .Method(Method::kRK4)
+  tensor::Tensor<double> result = ode::ODESolver<double>::Builder()
+                                      .Method(ode::Method::kRK4)
                                       .SystemFunction(ode_func)
                                       .InitialConditions(initial_tensor)
                                       .CoordinatesRange(time_range)

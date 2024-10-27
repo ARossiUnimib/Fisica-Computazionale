@@ -28,14 +28,14 @@ int main(int argc, char const **argv) {
   auto time_range = func::Range<double>::Fixed(0.0, 10.0, 0.01);
 
   // Note method is 1 to 3 corresponding to Euler, Midpoint, RK4
-  Method ode_method = static_cast<Method>(std::stoi(argv[1]));
+  auto ode_method = static_cast<ode::Method>(std::stoi(argv[1]));
 
-  auto solver = ODESolver<double>::Builder()
+  auto solver = ode::ODESolver<double>::Builder()
                                  .InitialConditions(initial_tensor)
                                  .CoordinatesRange(time_range)
                                  .SystemFunction(LorenzSystem)
                                  .Method(ode_method)
-                                 .BuildPtr();
+                                 .Build();
 
   tensor::Tensor<double> result = solver->Solve();
 
