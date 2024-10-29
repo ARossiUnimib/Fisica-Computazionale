@@ -5,6 +5,7 @@
 #include <memory>
 
 #include "../m_3_matrices/tensor.hpp"
+#include "../m_4_interpolation/range.hpp"
 #include "odes.hpp"
 
 namespace ode {
@@ -57,8 +58,8 @@ class ODESolver {
                             tensor::Tensor<T> const &prev_condition);
 
  private:
-  ODESolver<T>(Method method, tensor::Tensor<T> initial_conds,
-               func::Range<T> coords_range, ode::Function<T> system_func)
+  ODESolver(Method method, tensor::Tensor<T> initial_conds,
+            func::Range<T> coords_range, ode::Function<T> system_func)
       : method_(method),
         initial_conds_(initial_conds),
         coords_range_(coords_range),
@@ -67,7 +68,7 @@ class ODESolver {
   // ODESolver<T> &operator=(ODESolver<T> const &) = delete;
   // ODESolver<T> &operator=(ODESolver<T> &&) = delete;
 
-  ODESolver<T>()
+  ODESolver()
       : method_(Method::kNone),
         initial_conds_(tensor::Tensor<T>::Vector(0)),
         coords_range_(func::Range<T>::Fixed(0, 0)),
@@ -86,7 +87,7 @@ class ODESolverBuilder {
   struct empty_constr_ODESolver : public ODESolver<T> {};
 
  public:
-  ODESolverBuilder<T>()
+  ODESolverBuilder()
       : temp_(std::move(std::make_shared<empty_constr_ODESolver>())) {}
 
   ODESolverBuilder<T> Method(Method method) {
@@ -166,8 +167,8 @@ tensor::Tensor<T> ODESolver<T>::Solve() {
   return result;
 }
 
-// Binds "this", and the two arguments of the method to be usable as a member
-// class function pointer
+// Binds class pointer "this", and the two arguments of the method to be usable
+// as a member class function pointer
 #define BIND_METHOD_FUNC(method)                                \
   std::bind(&ODESolver<T>::method, this, std::placeholders::_1, \
             std::placeholders::_2)

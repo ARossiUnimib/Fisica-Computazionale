@@ -1,0 +1,110 @@
+\setchapterpreamble[u]{\margintoc}
+\chapter{ODE: Equazioni differenziali ordinarie}
+\labch{odes}
+
+\section{Esercizi}
+
+\subsection{Oscillatore approssimato}
+
+\paragraph{Richiesta}
+
+Risolvere l'equazione differenziale dell'oscillatore armonico con i seguenti valori iniziali:
+
+\begin{equation}
+\ddot{\theta}(t) = -\theta(t)
+\end{equation}
+con $\theta(0) = 0$ e $\dot{\theta}(0) = 1$.
+
+\begin{enumerate}
+    \item Utilizzare il metodo di Eulero, il metodo di Runge-Kutta del secondo ordine (RK2) e il metodo di Runge-Kutta del quarto ordine (RK4).
+
+    \item Ottenere la soluzione analitica $\theta(t)$ e confrontarla con la soluzione numerica $\eta(t;h)$ ottenuta con i tre metodi. Studiare l'errore:
+   \[
+   e(t,h) = \eta(t,h) - \theta(t)
+   \]
+   in funzione del passo $h$ e verificare che i metodi abbiano l'ordine atteso.
+
+\end{enumerate}
+
+\subsection{Oscillatore reale}
+
+\paragraph{Richiesta}
+
+Considerare l'equazione differenziale del pendolo senza l'approssimazione delle piccole oscillazioni:
+
+\begin{equation}
+\ddot{\theta}(t) = -\sin{\theta(t)}
+\end{equation}
+con $\theta(0) = 0$ e $\dot{\theta}(0) = 1$.
+
+\begin{enumerate}
+\item Risolvere numericamente l'equazione differenziale e tracciare il grafico di $\theta(t)$ e $\dot{\theta}(t)$.
+\item Ripetere l'esercizio includendo un termine di attrito:
+   \[
+   \ddot{\theta}(t) = -\sin{\theta(t)} - \gamma \dot{\theta}(t)
+   \]
+\item e un termine forzante: 
+   \[
+   \ddot{\theta}(t) = -\sin{\theta(t)} - \gamma \dot{\theta}(t) + A \sin{\omega t}
+   \]
+   con $\gamma \in (0, 2)$ e $\omega \in (0, 2)$.
+
+\end{enumerate}
+
+\subsection{Attrattore di Lorenz}
+
+\paragraph{Richiesta}
+
+Studiare il sistema di ODE:
+
+\begin{equation}
+\begin{cases}
+\dot{x}(t) = 10(y(t) - x(t)) \\
+\dot{y}(t) = 28x(t) - y(t) - xz(t) \\
+\dot{z}(t) = -8/3 z(t) + xy(t)
+\end{cases}
+\end{equation}
+
+\begin{enumerate}
+\item Utilizzare il metodo di Eulero, il metodo di Runge-Kutta del secondo ordine (RK2) e il metodo di Runge-Kutta del quarto ordine (RK4).
+\item Tracciare il grafico di $x(t)$, $y(t)$ e $z(t)$.
+\end{enumerate}
+
+\subsection{Sistema a tre corpi}
+
+\paragraph{Richiesta}
+
+Studiare il sistema gravitazionale che obbedisce alle equazioni del moto:
+
+\begin{equation}
+\ddot{\vec{x}}_i = \sum_{j \neq i} m_j \; \frac{ \vec{x}_j - \vec{x}_i}{|\vec{x}_j - \vec{x}_i|^3}
+\end{equation}
+
+Nel caso di tre masse puntiformi, $i = 1, 2, 3$, con i seguenti parametri e condizioni iniziali:
+
+\begin{itemize}
+    \item 
+        \quad\parbox{\linewidth}{
+            \begin{math}
+            m_1 = m_2 = m_3 = 1 \\ 
+            \vec{x}_1 = (1, 0, 0), \quad \dot{\vec{x}}_1 = (0, 0.15, -0.15) \\  
+            \vec{x}_1 = (-1, 0, 0), \quad \dot{\vec{x}}_1 = (0, -0.15, 0.15) \\ 
+            \vec{x}_1 = (0, 0, 0), \quad \dot{\vec{x}}_1 = (0, 0, 0)  
+            \end{math}
+            \\
+        }
+    \item 
+        \quad\parbox{\linewidth}{
+            \begin{math}
+            m_1 = 1.6, m_2 = m_3 = 0.4 \\ 
+            \vec{x}_1 = (1, 0, 0), \quad \dot{\vec{x}}_1 = (0, 0.4, 0) \\  
+            \vec{x}_1 = (-1, 0, 0), \quad \dot{\vec{x}}_1 = (0, -0.8, 0.7) \\ 
+            \vec{x}_1 = (0, 0, 0), \quad \dot{\vec{x}}_1 = (0, -0.8, -0.7)  
+            \end{math}
+        }
+\end{itemize}
+
+\begin{enumerate}
+\item Risolvere numericamente il sistema di equazioni.
+\item Tracciare il grafico dell'energia totale del sistema in funzione del tempo.
+\end{enumerate}

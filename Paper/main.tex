@@ -63,7 +63,7 @@
 % \makeglossaries % Make LaTeX produce the files required to compile the glossary
 % \input{glossary.tex} % Include the glossary definitions
 
-\makenomenclature % Make LaTeX produce the files required to compile the nomenclature
+%\makenomenclature % Make LaTeX produce the files required to compile the nomenclature
 
 % Reset sidenote counter at chapters
 %\counterwithin*{sidenote}{chapter}
@@ -94,17 +94,19 @@
 %	OPENING PAGE
 %----------------------------------------------------------------------------------------
 
-%\makeatletter
-%\extratitle{
-%	% In the title page, the title is vspaced by 9.5\baselineskip
-%	\vspace*{9\baselineskip}
-%	\vspace*{\parskip}
-%	\begin{center}
-%		% In the title page, \huge is set after the komafont for title
-%		\usekomafont{title}\huge\@title
-%	\end{center}
-%}
-%\makeatother
+\iffalse
+\makeatletter
+\extratitle{
+	% In the title page, the title is vspaced by 9.5\baselineskip
+	\vspace*{9\baselineskip}
+	\vspace*{\parskip}
+	\begin{center}
+		% In the title page, \huge is set after the komafont for title
+		\usekomafont{title}\huge\@title
+	\end{center}
+}
+\makeatother
+\fi
 
 %----------------------------------------------------------------------------------------
 %	OUTPUT TITLE PAGE AND PREVIOUS
@@ -118,10 +120,8 @@
 %	PREFACE
 %----------------------------------------------------------------------------------------
 
-\iffalse
-\input{chapters/preface.tex}
+\input{chapters/introduction.tex}
 \index{preface}
-\fi
 
 %----------------------------------------------------------------------------------------
 %	TABLE OF CONTENTS & LIST OF FIGURES/TABLES
@@ -130,9 +130,10 @@
 \begingroup % Local scope for the following commands
 
 % Define the style for the TOC, LOF, and LOT
-%\setstretch{1} % Uncomment to modify line spacing in the ToC
+\setstretch{1} % Uncomment to modify line spacing in the ToC
 %\hypersetup{linkcolor=blue} % Uncomment to set the colour of links in the ToC
 \setlength{\textheight}{230\hscale} % Manually adjust the height of the ToC pages
+
 
 % Turn on compatibility mode for the etoc package
 \etocstandarddisplaystyle % "toc display" as if etoc was not loaded
@@ -140,7 +141,7 @@
 
 \tableofcontents % Output the table of contents
 
-% \listoffigures % Output the list of figures
+%\listoffigures % Output the list of figures
 
 % Comment both of the following lines to have the LOF and the LOT on different pages
 \let\cleardoublepage\bigskip
@@ -157,13 +158,6 @@
 \mainmatter % Denotes the start of the main document content, resets page numbering and uses arabic numbers
 \setchapterstyle{kao} % Choose the default chapter heading style
 
-
-\input{chapters/introduction.tex}
-
-\pagelayout{wide} % No margins
-% \addpart{Class Options, Commands and Environments}
-\pagelayout{margin} % Restore margins
-
 \input{chapters/numbers.tex}
 
 \input{chapters/approximations.tex}
@@ -171,6 +165,8 @@
 \input{chapters/matrices.tex}
 
 \input{chapters/interpolation.tex}
+
+\input{chapters/odes.tex}
 
 \iffalse
 \input{chapters/textnotes.tex}
@@ -180,9 +176,6 @@
 \pagelayout{wide} % No margins
 \addpart{Design and Additional Features}
 \pagelayout{margin} % Restore margins
-
-\input{chapters/layout.tex}
-\input{chapters/mathematics.tex}
 
 \appendix % From here onwards, chapters are numbered with letters, as is the appendix convention
 
@@ -205,14 +198,18 @@
 
 % The bibliography needs to be compiled with biber using your LaTeX editor, or on the command line with 'biber main' from the template directory
 
+\iffalse
 \defbibnote{bibnote}{Here are the references in citation order.\par\bigskip} % Prepend this text to the bibliography
 \printbibliography[heading=bibintoc, title=Bibliography, prenote=bibnote] % Add the bibliography heading to the ToC, set the title of the bibliography and output the bibliography note
+\fi
 
 %----------------------------------------------------------------------------------------
 %	NOMENCLATURE
 %----------------------------------------------------------------------------------------
 
 % The nomenclature needs to be compiled on the command line with 'makeindex main.nlo -s nomencl.ist -o main.nls' from the template directory
+
+\iffalse
 
 \nomenclature{$c$}{Speed of light in a vacuum inertial frame}
 \nomenclature{$h$}{Planck constant}
@@ -221,11 +218,14 @@
 \renewcommand{\nompreamble}{The next list describes several symbols that will be later used within the body of the document.} % Prepend this text to the nomenclature
 
 \printnomenclature % Output the nomenclature
+\fi
 
 %----------------------------------------------------------------------------------------
 %	GREEK ALPHABET
 % 	Originally from https://gitlab.com/jim.hefferon/linear-algebra
 %----------------------------------------------------------------------------------------
+
+\iffalse
 
 \vspace{1cm}
 
@@ -253,6 +253,9 @@
 	Capitals shown are the ones that differ from Roman capitals.
 \end{center}
 
+\fi
+
+
 %----------------------------------------------------------------------------------------
 %	GLOSSARY
 %----------------------------------------------------------------------------------------
@@ -268,7 +271,7 @@
 
 % The index needs to be compiled on the command line with 'makeindex main' from the template directory
 
-\printindex % Output the index
+%\printindex % Output the index
 
 %----------------------------------------------------------------------------------------
 %	BACK COVER

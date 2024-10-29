@@ -2,6 +2,8 @@
 \chapter{Approssimazioni}
 \labch{approx}
 
+
+
 \section{Introduzione}
 
 Le approssimazioni di funzioni rivestono un ruolo fondamentale in ambito scientifico,
@@ -16,9 +18,9 @@ altrimenti sarebbero difficili da trattare analiticamente, con una precisione
 dipendente dalla complessità del modello e dalla quantità di risorse computazionali
 disponibili.
 
-Alcuni dei metodi più comuni includono l'approssimazione polinomiale;
+Alcuni dei metodi più comuni includono l'approssimazione polinomiale: tra cui
 le serie di Taylor, argomento di questa sezione; o tecniche come l'interpolazione
-che sarà l'argomento della quinta sezione.
+che sarà l'argomento della sezione pertinente.
 
 \section{Esercizi}
 
@@ -41,13 +43,28 @@ $$
 
 ove $n$ è il grado della serie di Taylor.
 
+\paragraph{Richiesta}
+
+Si consideri la funzione \( f(x) = \exp(x) \) nell'intervallo \( x \in [0.1, 1] \).
+
+Scrivere un programma in C che calcoli il fnzionale di approssimazione corrispondente (in doppia precisione)
+\[
+g_n(x) = \sum_{i=0}^{n} \frac{x^i}{i!}
+\]
+
+\begin{enumerate}
+    \item Verificare che l'errore scala approssimativamente come \( \frac{x^{n+1}}{(n+1)!} \) per \( n = 1, 2, 3, 4 \).
+    \item L'errore \( \left| f(x) - g(x) \right| \), nell'intervallo dato in \( x \), differisce da \( \frac{x^{n+1}}{(n+1)!} \): perché e per quali valori di \( x \)?
+\end{enumerate}
+
+
 \paragraph{Implementazione e osservazioni}
 
 % file necessari
 \subparagraph{File necessari} sorgente: \texttt{exp\_approx.c}, dati: \texttt{exp\_approx\_$n$.dat} \\ $n = 1, 2, 3, 4$
 
 \begin{marginfigure}
-	\centering
+    \hspace*{-2cm}
 	\includegraphics[width=1.5\textwidth]{exp_confront.png}
 	\caption{Confronto tra funzione esponenziale e la n-esima approssimazione}
 	\labfig{expfunc}
@@ -55,7 +72,7 @@ ove $n$ è il grado della serie di Taylor.
 
 
 \begin{marginfigure}
-	\centering
+    \hspace*{-2cm}
 	\includegraphics[width=1.5\textwidth]{error_diff_n.png}
 	\caption{Differenza tra errore teorico ed errore ottenuto}
 	\labfig{errordiff}
@@ -70,8 +87,10 @@ La funzione esponenziale ottenuta approssimando si può osservare in \reffig{exp
 	\item Sempre dalla \reffig{errordiff} si può notare come l'errore aumenti all'allontanarsi
 	      da x = 0 e cominci a differire dall'errore teorico.
 	      Ciò si intuscisce studiando la condizione per cui continui $\epsilon_{teorico} \approx \epsilon_{reale}$ è
-	      soddisfatta: $$\epsilon_{teorico} \ll 1$$ La condizione dipende
-	      da $n$ e $x$ per valori bassi di $n, x^n$ prevale sul fattoriale e la differenza
+	      soddisfatta: 
+          $$O(x^n) \rightarrow o(x^{n+1}) \rightarrow \epsilon_{teorico} \ll 1$$ 
+          La condizione dipende
+	      da $n$ e $x$: per valori bassi di $n, x^n$ prevale sul fattoriale e la differenza
 	      da $\epsilon_{teorico}$ è maggiormente visibile. Come si può vedere in \reffig{errordiff}
 	      per $n = 4$ e l'errore tende a 0 molto più velocemente.
 
@@ -90,6 +109,28 @@ $$
 	S(N) = \sum_{n=1}^{N} \frac{1}{n^2} \xrightarrow{N \to \infty} \zeta(2) = \frac{\pi^2}{6}
 $$
 
+\paragraph{Richiesta} 
+
+Calcolare la seguente somma
+
+\[
+\sum_{n=1}^{\infty} \frac{1}{n^2} = \frac{\pi^2}{6} = \lim_{N \to \infty} S(N)
+\]
+
+con
+
+\[
+S(N) = \sum_{n=1}^{N} \frac{1}{n^2}
+\]
+
+\begin{enumerate}
+    \item Calcolare la somma in precisione singola usando l'ordine normale \( n = 1, 2, \dots, N \)
+    \item Calcolare la somma in precisione singola usando l'ordine inverso \( n = N, \dots, 2, 1 \)
+    \item Studiare la convergenza di entrambe in funzione di \( N \), tracciando \( \left| S(N) - \frac{\pi^2}{6} \right| \)
+    \item Ripetere i punti 1, 2 e 3 in precisione doppia
+\end{enumerate}
+
+
 \paragraph{Osservazioni e conclusioni}
 
 \subparagraph{Singola precisione}
@@ -105,14 +146,15 @@ $$
 	S_{inv}(N) \approx \mathtt{1.6447674} \quad \text{per } N = 6000
 $$
 
-\begin{figure}[H]
+\begin{marginfigure}%[H]
 	%	\centering
+    %\hspace*{-2cm}
 	\includegraphics[width=1.5\columnwidth]{seq_inv_sum_error.png}
 	\caption{$|S(N) - \pi^6 / 2|$ per valori grandi di N, si nota un singolare
 		andamento della somma a partire da valori $ x \approx 4000$, \textbf{la
 			stessa cosa non succede invece per numeri a doppia precisione}}
 	\labfig{sumerr}
-\end{figure}
+\end{marginfigure}
 
 Il risultato è spiegabile in maniera equivalente a \ref{sec:propagation}: l'ordine
 della somma conta nella propagazione di errori in numeri a virgola mobile. Infatti:
@@ -136,8 +178,10 @@ della somma conta nella propagazione di errori in numeri a virgola mobile. Infat
 \end{itemize}
 \subparagraph{Doppia precisione}
 
+% TODO: probabilmente migliorare la spiegazione
+
 In doppia precisione l'errore macchina è ancora minore e l'effetto diventa trascurabile
-subentrano ulteriori errori non causati dalla precisione del numero ma da limiti 
+subentrano ulteriori errori (per numeri di $5 \cdot 10^5$) non causati dalla precisione del numero ma da limiti 
 del programma scritto o del compilatore/interprete utilizzato.
 
 In conclusione, si sottilinea, come nel capitolo precedente, l'importanza di considerare

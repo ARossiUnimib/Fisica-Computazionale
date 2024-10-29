@@ -4,16 +4,15 @@
 #include <iostream>
 
 #include "../m_3_matrices/tensor.hpp"
-#include "../m_4_interpolation/range.hpp"
 
 namespace ode {
 
 /**
- * @brief function which describes the behaviour of the system of every first
- * order derivatives
+ * @brief function which describes the the system behaviour at every first
+ * order derivative
  *
  * Given a vector of derivatives, Function describes the ode system completely
- * passing the initial value through a RK method
+ * passing the initial value through a ODE Numeric solver method
  *
  * @tparam T precision
  */

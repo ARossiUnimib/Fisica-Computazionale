@@ -4,7 +4,7 @@
 
 \section{Rappresentazione}
 
-La rappresentazione numerica a cui il calcolo scientifico si riferisce principalmente
+La rappresentazione numerica a cui il calcolo scientifico fa riferimento principalmente
 è quella dei numeri reali; nell’ambito informatico tale rappresentazione utilizza
 il concetto di numeri a virgola mobile come standard: i numeri reali vengono
 rappresentati attraverso una notazione scientifica in base due tramite la seguente formula:
@@ -56,7 +56,22 @@ due sottoclassi di numeri i cui nominativi nei linguaggi C-like sono:
 
 \end{description}
 
-% TODO: aggiungere richiesta degli esercizi
+\paragraph{Richiesta} Scriverete un programma C che esegua le seguenti operazioni:
+
+\begin{lstlisting}
+    define f in single precision = 1.2e34
+    for loop with 24 cycles:
+        f *= 2
+        print f in scientific notation
+    repeat for d in double precision, starting from 1.2e304
+    define d in double precision = 1e-13
+    for loop with 24 cycles:
+        d /= 2
+        print d and 1+d in scientific notation
+    repeat for single precision
+\end{lstlisting}
+
+Esaminare il range minimo e massimo e il ruolo dell'errore di macchina.
 
 \paragraph{Implementazione e osservazioni}
 
@@ -90,7 +105,6 @@ numeri a virgola mobile:
 	      \end{itemize}
 \end{enumerate}
 \subsection{Propagazione degli errori}
-
 \paragraph{Nozioni teoriche}
 
 E' immediato notare come i numeri a virgola mobile possano essere rappresentati come
@@ -111,6 +125,23 @@ $$
 
 Notiamo immediatamente quindi che se $x \gg y $ allora $\sigma_f \approx \sigma_x$ quindi
 si perde l'informazione su $y$ nella somma.
+
+
+\paragraph{Richiesta} 
+
+Si scriva in C un programma che esegua le seguenti operazioni:
+
+\begin{lstlisting}
+    calculate (0.7 + 0.1) + 0.3 and print 16 digits
+    calculate 0.7 + (0.1 + 0.3) and print 16 digits
+    define xt = 1.e20; yt = -1.e20; zt = 1
+    calculate (xt + yt) + zt
+    calculate xt + (yt + zt)
+\end{lstlisting}
+
+Esaminare la non-associatività dell'addizione e il ruolo degli errori di arrotondamento.
+
+
 
 \paragraph{Implementazione e osservazioni}
 

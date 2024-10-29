@@ -1,4 +1,5 @@
 #include "../ode_resolver.hpp"
+#include "../../m_4_interpolation/range.hpp"
 #include "../odes.hpp"
 
 tensor::Tensor<double> LorenzSystem(double t, tensor::Tensor<double> const &y) {
@@ -31,11 +32,11 @@ int main(int argc, char const **argv) {
   auto ode_method = static_cast<ode::Method>(std::stoi(argv[1]));
 
   auto solver = ode::ODESolver<double>::Builder()
-                                 .InitialConditions(initial_tensor)
-                                 .CoordinatesRange(time_range)
-                                 .SystemFunction(LorenzSystem)
-                                 .Method(ode_method)
-                                 .Build();
+                    .InitialConditions(initial_tensor)
+                    .CoordinatesRange(time_range)
+                    .SystemFunction(LorenzSystem)
+                    .Method(ode_method)
+                    .Build();
 
   tensor::Tensor<double> result = solver->Solve();
 

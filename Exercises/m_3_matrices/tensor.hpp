@@ -6,11 +6,6 @@
 #include <vector>
 
 namespace tensor {
-template <typename T>
-class Tensor;
-}
-
-namespace tensor {
 
 /*
  * This is a modified version of the matrix.h header provided in e-learning
@@ -137,6 +132,17 @@ class Tensor {
 
   int Rows() const { return rows_; }
 
+  // FIX: This is a temporary solution
+  Tensor<T> Row(int i) {
+    Tensor<T> out(1, cols_);
+
+    for (int j = 0; j < cols_; j++) {
+      out(0, j) = data_[Site(i, j)];
+    }
+
+    return out;
+  }
+
   std::vector<T> &RawData() { return data_; }
 
  private:
@@ -191,7 +197,7 @@ void Tensor<T>::LinearCombRows(int i, int j, T value, int final) {
 
 template <typename T>
 T Tensor<T>::operator()(int i, int j) const {
-  assert(i < rows_ && j < rows_);
+  assert(i < rows_ && j < cols_);
 
   return data_[Site(i, j)];
 }
@@ -238,9 +244,8 @@ T &Tensor<T>::operator()(int i) {
 }
 
 template <typename T>
-Tensor<T> Tensor<T>::operator+=(Tensor<T> const &b) const
-{
-    *this = *this + b;
+Tensor<T> Tensor<T>::operator+=(Tensor<T> const &b) const {
+  *this = *this + b;
 }
 template <typename T>
 Tensor<T> Tensor<T>::operator+(Tensor<T> const &b) const {

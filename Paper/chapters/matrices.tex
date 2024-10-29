@@ -14,8 +14,8 @@ C++. La librerie necessarie prima di proseguire sono le seguenti:
 	      su e-learning: l'header è stato generalizzato per interpretare sia
 	      vettori sia matrici rendendo le operazioni compatibili fra i due e
 	      facilitando il successivo svolgimento degli esercizi.
-	\item \texttt{tensor\_utils.hpp} contentente varie funzionalità utili e contente
-	      gli argomenti creati per ogni esercizio.
+	\item \texttt{tensor\_utils.hpp} contentente varie funzionalità utili e 
+	      gli algoritmi creati per ogni esercizio.
 \end{itemize}
 
 Le cartelle corrispettive dei vari esercisi conterranno solo la richiesta e i dati
@@ -23,17 +23,15 @@ proposti, mentre le funzionalità interne degli algoritmi verranno implementate
 principalmente in \texttt{tensor\_utils.hpp} per facilitare il riutilizzo nei moduli
 successivi.
 
-\paragraph{Introduzione}
-
 \section{Esercizi}
 
 \subsection{Soluzione di sistemi lineari con matrici triangolari}
 
 \paragraph{Nozioni teoriche}
 
-I sistemi lineari con matrici triangolari sono la tipologia di matrici più semplice da risolvere.
+I sistemi lineari con matrici triangolari sono la tipologia più semplice da risolvere.
 
-Preso ora una matrice $A$ triangolare superiore:
+Presa una matrice $A$ triangolare superiore:
 
 $$
 	A = \begin{bmatrix}
@@ -52,6 +50,19 @@ così via. Si ottiene quindi in generale la seguente formula, detta di \textit{B
 $$
 	x_i = \frac{1}{a_{ii}} ( b_i - \sum_{j=i+1}^{N-1} a_{ij}x_j )
 $$
+
+\paragraph{Richiesta}
+
+Scrivere una funzione che accetti una matrice triangolare superiore e implementi 
+la \textit{Backward substitution}. 
+
+Risolvere il sistema lineare \( U \vec{x} = \vec{b} \) per
+
+\[
+U = \begin{pmatrix} 2 & 1 & 1 \\ 0 & 1 & -2 \\ 0 & 0 & 1 \end{pmatrix} \quad \vec{b} = (1, -1, 4)
+\]
+
+Verificare che la soluzione sia corretta.
 
 \paragraph{Implementazione e stile di struttura tipica del codice}
 
@@ -107,8 +118,6 @@ template <typename T> Tensor<T> BackwardSubstitution(Tensor<T> const &A, Tensor<
 }
 
 \end{lstlisting}
-
-\newpage
 
 \paragraph{Analisi risultati}
 
@@ -183,11 +192,31 @@ $$
 	a_{ij} = a_{ij} - \frac{a_{ik}}{a_{kk}} a_{kj} \quad \quad b_i = b_i - \frac{a_{ik}}{a_{kk}} b_k
 $$
 
-Estendendo $b$ ad una matrice, la formula diventa:
+Estendendo $b$ ad una matrice (e quindi $X$), la formula diventa:
 
 $$
 	b_{ij} = b_{ij} - \underbrace{\frac{a_{ik}}{a_{kk}}}_{\lambda} b_{kj}
 $$
+
+Questo risultato sarà utile per calcolare l'inversa di una matrice. ($\vec{b} \rightarrow \mathbb{I}$)
+
+\paragraph{Richiesta}
+
+Scrivere una funzione dedicata per la risoluzione di sistemi lineari tramite
+eliminazione di Gauss, applicando la backward substitution successivamente.
+
+Risolvere il seguente sistema lineare:
+$$
+	\begin{bmatrix}
+		2 & 1 & 1  \\
+		1 & 1 & -2 \\
+		1 & 2 & 1
+	\end{bmatrix} \mathbf{X} = \begin{bmatrix}
+		x_0 \\ x_1 \\ x_2 \end{bmatrix}
+	\quad \Rightarrow \quad \mathbf{X} = \begin{bmatrix} 8 \\ -2 \\ 2 \end{bmatrix}
+$$
+
+e controllare la soluzione.
 
 \paragraph{Implementazione}
 
@@ -233,8 +262,6 @@ $$
 
 Il controllo si svolge in maniera equivalente al precedente esercizio.
 
-% % % % % % % % % \newpage
-
 \subsection{Decomposizione LU}
 
 \paragraph{Nozioni teoriche}
@@ -272,6 +299,17 @@ Concludiamo che una matrice decomposta può essere risolta, risolvendo i sistemi
 lineari associati alle matrici triangolari utilizzando i metodi di backward e
 forward substitution.
 
+\paragraph{Richiesta}
+
+Partendo dalla funzione che esegue l'eliminazione gaussiana, scrivi una nuova 
+funzione che accetti una matrice e calcoli \( L \) e \( U \). Testare sulla 
+matrice dell'Esercizio 2.
+
+Qual è il determinante di una matrice triangolare (inferiore o superiore)? Dalla 
+decomposizione LU scritta sopra, derivare la formula per calcolare il determinante 
+e scrivere un programma che calcoli il determinante di una matrice a partire dalla 
+decomposizione LU.
+
 \paragraph{Implementazione}
 
 \subparagraph{File necessari} \texttt{tensor\_utils.hpp}
@@ -289,12 +327,9 @@ La decomposizione LU può essere implementata come segue:
 \begin{lstlisting} [language=C++]
 template <typename T> TensorPair<T> LUDecomposition(Tensor<T> const &A)
 {
-    ... // Asserts
+    ... // Asserts e definizioni
 
-    T scalar;
-    auto L = Tensor<T>::SMatrix(A.Rows());
-
-    // U parte come una "deep copy" di A
+    // U viene costruita da una "deep copy" di A
     auto U = Tensor<T>(A);
 
     // Scegliamo diagonale di L unitaria
@@ -310,7 +345,7 @@ template <typename T> TensorPair<T> LUDecomposition(Tensor<T> const &A)
         {
             scalar = -U(i, j) / U(j, j);
 
-            // Lo scalare è effettivamente un elemento di L
+            // Lo scalare e' effettivamente un elemento di L
             L(i, j) = -scalar;
 
             // Riduciamo U
