@@ -132,8 +132,7 @@ class Tensor {
 
   int Rows() const { return rows_; }
 
-  // FIX: This is a temporary solution
-  Tensor<T> Row(int i) {
+  Tensor<T> Row(int i) const {
     Tensor<T> out(1, cols_);
 
     for (int j = 0; j < cols_; j++) {
@@ -287,8 +286,7 @@ T Tensor<T>::Norm() {
   T n = 0.0;
 
   for (int i = 0; i < rows_ * cols_; i++) {
-    T h = std::abs(data_[i]);
-    n += h * h;
+    n += data_[i] * data_[i];
   }
 
   return n;

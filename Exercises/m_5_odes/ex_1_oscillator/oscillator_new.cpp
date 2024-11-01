@@ -29,17 +29,20 @@ int main(int argc, char const *argv[]) {
   initial_tensor(0) = 0.0;
   initial_tensor(1) = 1.0;
 
+  auto method = static_cast<ode::Method>(_method);
+
   auto solver_builder =
       ode::ODESolver<double>::Builder()
           .InitialConditions(initial_tensor)
           .SystemFunction(Oscillator)
           // Note that _method corresponds to the Method values
-          .Method(static_cast<ode::Method>(_method));
+          .Method(method);
 
   if (_point == PT_1) {
-    auto time_range = func::Range<double>::Fixed(0.0, 100.0, 0.001);
+    auto time_range = func::Range<double>::Fixed(0.0, 100 * 3.14, 0.1);
 
-    auto solver = solver_builder.CoordinatesRange(time_range).BuildPtr();
+    auto solver =
+        solver_builder.Method(method).CoordinatesRange(time_range).Build();
 
     tensor::Tensor<double> solution = solver->Solve();
     ode::Print(solution, time_range.Start(), time_range.Step());
@@ -53,7 +56,9 @@ int main(int argc, char const *argv[]) {
       // Set range of the solution given step h
       auto time_range = func::Range<double>::Fixed(0.0, 10, h);
 
-      auto solver = solver_builder.CoordinatesRange(time_range).BuildPtr();
+      auto solver = solver_builder.SystemFunction(Oscillator)
+                        .CoordinatesRange(time_range)
+                        .Build();
 
       // Solve the current system with step h
       tensor::Tensor<double> h_solution = solver->Solve();

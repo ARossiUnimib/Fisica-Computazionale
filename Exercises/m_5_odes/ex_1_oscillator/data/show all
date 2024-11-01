@@ -1,0 +1,12 @@
+ The `set` command can be used to set _lots_ of options.  No screen is
+ drawn, however, until a `plot`, `splot`, or `replot` command is given.
+
+ The `show` command shows their settings;  `show all` shows all the settings.
+
+ Options changed using `set` can be returned to the default state by giving the
+ corresponding `unset` command.  See also the `reset` command, which returns
+ all settable parameters to default values.
+
+ The `set` and `unset` commands may optionally contain an iteration clause.
+ See `plot for`.
+

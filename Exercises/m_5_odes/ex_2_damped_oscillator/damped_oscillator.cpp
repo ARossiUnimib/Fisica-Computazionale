@@ -99,7 +99,7 @@ int main(int argc, const char *argv[]) {
                                       .InitialConditions(initial_tensor)
                                       .CoordinatesRange(time_range)
                                       .Build()
-                                      .Solve();
+                                      ->Solve();
 
   ode::Print(result, time_range.Start(), time_range.Step());
 }

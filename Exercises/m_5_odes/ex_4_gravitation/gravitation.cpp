@@ -51,7 +51,7 @@ int main(int argc, char const* argv[]) {
     initial_conditions(14) = 0.7;
     // v3 = 0, -0.8, 0.7
     initial_conditions(16) = -0.8;
-    initial_conditions(17) = 0.7;
+    initial_conditions(17) = -0.7;
   }
 
   auto solver_builder = ode::ODESolver<double>::Builder()
@@ -59,32 +59,17 @@ int main(int argc, char const* argv[]) {
                             .SystemFunction(NewtonGrav)
                             .Method(ode::Method::kRK4);
 
-  auto time_range = func::Range<double>::Fixed(0.0, 100.0, 0.1);
+  // TODO: _h = argv[3] ? std::stod(argv[3]) : 0.01;
+  double h = 0.001;
+
+  auto time_range = func::Range<double>::Fixed(0.0, 10.0, h);
+  tensor::Tensor<double> results =
+      solver_builder.CoordinatesRange(time_range).Build()->Solve();
 
   if (!_energy) {
-    tensor::Tensor<double> results =
-        solver_builder.CoordinatesRange(time_range).Build()->Solve();
-
     ode::Print(results, time_range.Start(), time_range.Step());
-
   } else {
-    // NOTE: smaller steps cause the total energy to fluctuate (example 0.01),
-    // meanwhile higher steps cause an increasing trend in the energy (example
-    // 0.1)
-    // RK methods are not symplectic, so the total energy is not conserved
-    // when the objects are near, the total energy becomes more negative
-    // requiring a very high step precision, when at large distances the energy
-    // becomes more stable A solution could be do implement a variable step size
-    // method to avoid this behavior
-
-    // TODO: _h = argv[3] ? std::stod(argv[3]) : 0.01;
-    double h = 0.0001;
-
-    time_range = func::Range<double>::Fixed(0.0, 100.0, h);
-
-    auto result = solver_builder.CoordinatesRange(time_range).Build()->Solve();
-
-    CalculateTotalEnergy(result, time_range);
+    CalculateTotalEnergy(results, time_range);
   }
 
   return 0;
@@ -145,12 +130,6 @@ tensor::Tensor<double> NewtonGrav(double t, const tensor::Tensor<double>& y) {
 
 void CalculateTotalEnergy(tensor::Tensor<double> const& result,
                           func::Range<double>& time_range) {
-  // result is stored with rows i as values at that time with respect to time i
-  // columns are r_1 r_2 r_3 v_1 v_2 v_3 so result(i, 0) is r_1 at time i
-  // print the total energy aside of the time
-  // the problem is in 3d so r_1 = (x1, y1, z1) and v_1 = (vx1, vy1, vz1), so
-  // result(i, 0) = x1 at time i
-
   for (int i = 0; i < result.Rows(); ++i) {
     auto r1 = tensor::Tensor<double>::Vector(3);
     auto r2 = tensor::Tensor<double>::Vector(3);
@@ -158,18 +137,28 @@ void CalculateTotalEnergy(tensor::Tensor<double> const& result,
     auto v1 = tensor::Tensor<double>::Vector(3);
     auto v2 = tensor::Tensor<double>::Vector(3);
     auto v3 = tensor::Tensor<double>::Vector(3);
+
+    // transofrm r and v in two matrixes
+    // r = [r1_x, r2_x, r3_x]
+    //     [r1_y, r2_y, r3_y]
+    //     [r1_z, r2_z, r3_z]
+    // TODO:
+    auto r = tensor::Tensor<double>::SMatrix(3);
+
     for (int j = 0; j < 3; ++j) {
       r1(j) = result(i, 3 * 0 + j);
       r2(j) = result(i, 3 * 1 + j);
       r3(j) = result(i, 3 * 2 + j);
-      v1(j) = result(i, 3 * 0 + 3 + j);
-      v2(j) = result(i, 3 * 1 + 3 + j);
-      v3(j) = result(i, 3 * 2 + 3 + j);
+      v1(j) = result(i, 3 * (0 + 3) + j);
+      v2(j) = result(i, 3 * (1 + 3) + j);
+      v3(j) = result(i, 3 * (2 + 3) + j);
     }
+
     // Kinetic energy
     auto ke1 = 0.5 * masses(0) * v1.Norm();
     auto ke2 = 0.5 * masses(1) * v2.Norm();
     auto ke3 = 0.5 * masses(2) * v3.Norm();
+
     // Potential energy
     auto pe1 = 0.5 * masses(0) * masses(1) / (r1 - r2).Norm();
     pe1 += 0.5 * masses(0) * masses(2) / (r1 - r3).Norm();
@@ -180,7 +169,9 @@ void CalculateTotalEnergy(tensor::Tensor<double> const& result,
     auto pe3 = 0.5 * masses(2) * masses(0) / (r3 - r1).Norm();
     pe3 += 0.5 * masses(2) * masses(1) / (r3 - r2).Norm();
 
+    auto kinetic_energy = ke1 + ke2 + ke3;
     auto total_energy = ke1 + ke2 + ke3 - (pe1 + pe2 + pe3);
-    std ::cout << time_range.Nodes()[i] << " " << total_energy << std::endl;
+    std ::cout << time_range.Nodes()[i] << " " << kinetic_energy << " "
+               << -(pe1 + pe2 + pe3) << std::endl;
   }
 }

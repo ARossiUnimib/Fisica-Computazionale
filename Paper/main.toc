@@ -1,10 +1,11 @@
 \@ifundefined {etoctocstyle}{\let \etoc@startlocaltoc \@gobble \let \etoc@settocdepth \@gobble \let \etoc@depthtag \@gobble \let \etoc@setlocaltop \@gobble }{}
-\babel@toc {nil}{}\relax
+\babel@toc {italian}{}\relax
+\babel@toc {italian}{}\relax
 \contentsline {chapter}{Preface}{iii}{chapter*.1}%
 \contentsline {paragraph}{\nonumberline Codice sorgente e dati}{iii}{paragraph*.3}%
 \contentsline {paragraph}{\nonumberline Lingua del codice}{iii}{paragraph*.5}%
 \contentsline {paragraph}{\nonumberline Introduzione dei moduli}{iii}{paragraph*.7}%
-\contentsline {chapter}{\nonumberline Contents}{v}{chapter*.8}%
+\contentsline {chapter}{\nonumberline Indice}{v}{chapter*.8}%
 \contentsline {chapter}{\numberline {1}Numeri}{1}{chapter.1}%
 \etoc@startlocaltoc {2}
 \etoc@startlocaltoc {3}
@@ -104,17 +105,27 @@
 \contentsline {chapter}{\numberline {5}ODE: Equazioni differenziali ordinarie}{21}{chapter.5}%
 \etoc@startlocaltoc {10}
 \etoc@startlocaltoc {11}
-\contentsline {section}{\numberline {5.1}Esercizi}{21}{section.5.1}%
-\contentsline {mtocsection}{\numberline {5.1}Esercizi}{21}{section.5.1}%
-\contentsline {subsection}{\numberline {5.1.1}Oscillatore approssimato}{21}{subsection.5.1.1}%
-\contentsline {mtocsubsection}{\numberline {5.1.1}Oscillatore approssimato}{21}{subsection.5.1.1}%
-\contentsline {paragraph}{\nonumberline Richiesta}{21}{paragraph*.109}%
-\contentsline {subsection}{\numberline {5.1.2}Oscillatore reale}{21}{subsection.5.1.2}%
-\contentsline {mtocsubsection}{\numberline {5.1.2}Oscillatore reale}{21}{subsection.5.1.2}%
-\contentsline {paragraph}{\nonumberline Richiesta}{21}{paragraph*.111}%
-\contentsline {subsection}{\numberline {5.1.3}Attrattore di Lorenz}{22}{subsection.5.1.3}%
-\contentsline {mtocsubsection}{\numberline {5.1.3}Attrattore di Lorenz}{22}{subsection.5.1.3}%
-\contentsline {paragraph}{\nonumberline Richiesta}{22}{paragraph*.113}%
-\contentsline {subsection}{\numberline {5.1.4}Sistema a tre corpi}{22}{subsection.5.1.4}%
-\contentsline {mtocsubsection}{\numberline {5.1.4}Sistema a tre corpi}{22}{subsection.5.1.4}%
-\contentsline {paragraph}{\nonumberline Richiesta}{22}{paragraph*.115}%
+\contentsline {section}{\numberline {5.1}Introduzione}{21}{section.5.1}%
+\contentsline {mtocsection}{\numberline {5.1}Introduzione}{21}{section.5.1}%
+\contentsline {subsection}{\numberline {5.1.1}Metodi numerici}{21}{subsection.5.1.1}%
+\contentsline {mtocsubsection}{\numberline {5.1.1}Metodi numerici}{21}{subsection.5.1.1}%
+\contentsline {paragraph}{\nonumberline Metodo di Eulero}{22}{paragraph*.109}%
+\contentsline {paragraph}{\nonumberline Metodo RK2 ed RK4}{22}{paragraph*.111}%
+\contentsline {section}{\numberline {5.2}Implementazione preliminaria}{23}{section.5.2}%
+\contentsline {mtocsection}{\numberline {5.2}Implementazione preliminaria}{23}{section.5.2}%
+\contentsline {paragraph}{\nonumberline Classe \texttt {ODESolver}}{23}{paragraph*.113}%
+\contentsline {section}{\numberline {5.3}Esercizi}{24}{section.5.3}%
+\contentsline {mtocsection}{\numberline {5.3}Esercizi}{24}{section.5.3}%
+\contentsline {subsection}{\numberline {5.3.1}Oscillatore approssimato}{24}{subsection.5.3.1}%
+\contentsline {mtocsubsection}{\numberline {5.3.1}Oscillatore approssimato}{24}{subsection.5.3.1}%
+\contentsline {paragraph}{\nonumberline Richiesta}{24}{paragraph*.115}%
+\contentsline {paragraph}{\nonumberline Osservazioni e analisi risultati}{24}{paragraph*.117}%
+\contentsline {subsection}{\numberline {5.3.2}Oscillatore reale}{24}{subsection.5.3.2}%
+\contentsline {mtocsubsection}{\numberline {5.3.2}Oscillatore reale}{24}{subsection.5.3.2}%
+\contentsline {paragraph}{\nonumberline Richiesta}{24}{paragraph*.122}%
+\contentsline {subsection}{\numberline {5.3.3}Attrattore di Lorenz}{25}{subsection.5.3.3}%
+\contentsline {mtocsubsection}{\numberline {5.3.3}Attrattore di Lorenz}{25}{subsection.5.3.3}%
+\contentsline {paragraph}{\nonumberline Richiesta}{25}{paragraph*.124}%
+\contentsline {subsection}{\numberline {5.3.4}Sistema a tre corpi}{25}{subsection.5.3.4}%
+\contentsline {mtocsubsection}{\numberline {5.3.4}Sistema a tre corpi}{25}{subsection.5.3.4}%
+\contentsline {paragraph}{\nonumberline Richiesta}{25}{paragraph*.126}%
