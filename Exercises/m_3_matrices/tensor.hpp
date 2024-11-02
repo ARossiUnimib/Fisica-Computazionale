@@ -88,7 +88,8 @@ class Tensor {
 
   Tensor<T> Dagger();
 
-  T Norm();
+  T NormSquared();
+  T Norm() { return sqrt(NormSquared()); }
 
   /* ----------------- SOLUTION INVARIANT OPERATIONS ---------------------- */
 
@@ -132,6 +133,10 @@ class Tensor {
 
   int Rows() const { return rows_; }
 
+  // HACK: this is not an optimal solution: we are creating a new object and
+  // copying the same values everytime. A solution could be to use std::span
+  // (C++20 later); for the complexity and size of the proposed exercises it's
+  // probably not needed an optimization tho.
   Tensor<T> Row(int i) const {
     Tensor<T> out(1, cols_);
 
@@ -282,7 +287,7 @@ Tensor<T> Tensor<T>::Dagger() {
 }
 
 template <typename T>
-T Tensor<T>::Norm() {
+T Tensor<T>::NormSquared() {
   T n = 0.0;
 
   for (int i = 0; i < rows_ * cols_; i++) {

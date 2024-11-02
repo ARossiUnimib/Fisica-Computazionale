@@ -11,13 +11,13 @@ void CalculateTotalEnergy(tensor::Tensor<double> const& result,
                           func::Range<double>& time_range);
 
 int main(int argc, char const* argv[]) {
-  auto _conds = argc < 3 ? 0 : std::stoi(argv[1]);
-  auto _energy = argc != 3 ? 0 : std::stoi(argv[2]);
+  int _conds = argc == 1 ? 0 : std::stoi(argv[1]);
+  double h = argc != 3 ? 0.01 : std::stod(argv[2]);
+  int _energy = argc != 4 ? 0 : std::stoi(argv[3]);
 
   if (!_conds) {
-    // print usage <initial_conds (1 or 2)> <energy 1 (default: 0)>
-    std::cout << "Usage: gravitation <initial_conds (1 or 2)> <energy 0 or 1"
-                 "(default: 0)>\n";
+    std::cout << "Usage: gravitation <initial_conds (1 or 2)>  <step (default: "
+                 "0.01)> <energy 0 or 1 (default: 0)\n";
     return EXIT_FAILURE;
   }
 
@@ -54,17 +54,15 @@ int main(int argc, char const* argv[]) {
     initial_conditions(17) = -0.7;
   }
 
-  auto solver_builder = ode::ODESolver<double>::Builder()
-                            .InitialConditions(initial_conditions)
-                            .SystemFunction(NewtonGrav)
-                            .Method(ode::Method::kRK4);
+  auto time_range = func::Range<double>::Fixed(0.0, 100.0, h);
 
-  // TODO: _h = argv[3] ? std::stod(argv[3]) : 0.01;
-  double h = 0.001;
-
-  auto time_range = func::Range<double>::Fixed(0.0, 10.0, h);
-  tensor::Tensor<double> results =
-      solver_builder.CoordinatesRange(time_range).Build()->Solve();
+  tensor::Tensor<double> results = ode::ODESolver<double>::Builder()
+                                       .InitialConditions(initial_conditions)
+                                       .SystemFunction(NewtonGrav)
+                                       .Method(ode::Method::kRK4)
+                                       .CoordinatesRange(time_range)
+                                       .Build()
+                                       ->Solve();
 
   if (!_energy) {
     ode::Print(results, time_range.Start(), time_range.Step());
@@ -80,9 +78,6 @@ tensor::Tensor<double> NewtonGrav(double t, const tensor::Tensor<double>& y) {
   // Create a tensor to hold the derivatives
   auto dydt = tensor::Tensor<double>::Vector(3 * 3 * 2);
 
-  // Gravitational constant (set to 1 for simplicity)
-  const double kG = 1.0;
-
   // Helper lambda to compute the gravitational acceleration between two bodies
   auto grav_accell = [&](int i, int j) -> tensor::Tensor<double> {
     auto r_ij = tensor::Tensor<double>::Vector(3);
@@ -90,13 +85,13 @@ tensor::Tensor<double> NewtonGrav(double t, const tensor::Tensor<double>& y) {
       r_ij(k) = y(3 * i + k) - y(3 * j + k);
     }
 
-    double dist = sqrt(r_ij.Norm());
+    double dist = r_ij.Norm();
     double dist_cubed = std::pow(dist, 3);
 
     auto accell = tensor::Tensor<double>::Vector(3);
 
     for (int k = 0; k < 3; ++k) {
-      accell(k) = -kG * masses(j) * r_ij(k) / dist_cubed;
+      accell(k) = -masses(j) * r_ij(k) / dist_cubed;
     }
 
     return accell;
@@ -131,47 +126,35 @@ tensor::Tensor<double> NewtonGrav(double t, const tensor::Tensor<double>& y) {
 void CalculateTotalEnergy(tensor::Tensor<double> const& result,
                           func::Range<double>& time_range) {
   for (int i = 0; i < result.Rows(); ++i) {
-    auto r1 = tensor::Tensor<double>::Vector(3);
-    auto r2 = tensor::Tensor<double>::Vector(3);
-    auto r3 = tensor::Tensor<double>::Vector(3);
-    auto v1 = tensor::Tensor<double>::Vector(3);
-    auto v2 = tensor::Tensor<double>::Vector(3);
-    auto v3 = tensor::Tensor<double>::Vector(3);
-
-    // transofrm r and v in two matrixes
-    // r = [r1_x, r2_x, r3_x]
-    //     [r1_y, r2_y, r3_y]
-    //     [r1_z, r2_z, r3_z]
-    // TODO:
+    // NOTE: copying results in new tensors is not necessary but the code is
+    // more understandable this way
     auto r = tensor::Tensor<double>::SMatrix(3);
+    auto v = tensor::Tensor<double>::SMatrix(3);
 
     for (int j = 0; j < 3; ++j) {
-      r1(j) = result(i, 3 * 0 + j);
-      r2(j) = result(i, 3 * 1 + j);
-      r3(j) = result(i, 3 * 2 + j);
-      v1(j) = result(i, 3 * (0 + 3) + j);
-      v2(j) = result(i, 3 * (1 + 3) + j);
-      v3(j) = result(i, 3 * (2 + 3) + j);
+      for (int k = 0; k < 3; ++k) {
+        r(j, k) = result(i, 3 * j + k);
+        v(j, k) = result(i, 3 * (j + 3) + k);
+      }
     }
 
-    // Kinetic energy
-    auto ke1 = 0.5 * masses(0) * v1.Norm();
-    auto ke2 = 0.5 * masses(1) * v2.Norm();
-    auto ke3 = 0.5 * masses(2) * v3.Norm();
+    double ke = 0.0;
+    for (int j = 0; j < 3; ++j) {
+      for (int k = 0; k < 3; ++k) {
+        ke += 0.5 * masses(j) * v(j, k) * v(j, k);
+      }
+    }
 
-    // Potential energy
-    auto pe1 = 0.5 * masses(0) * masses(1) / (r1 - r2).Norm();
-    pe1 += 0.5 * masses(0) * masses(2) / (r1 - r3).Norm();
+    double pe = 0.0;
+    for (int j = 0; j < 3; ++j) {
+      for (int k = j + 1; k < 3; ++k) {
+        pe -= masses(j) * masses(k) / sqrt((r.Row(j) - r.Row(k)).NormSquared());
+      }
+    }
 
-    auto pe2 = 0.5 * masses(1) * masses(0) / (r2 - r1).Norm();
-    pe2 += 0.5 * masses(1) * masses(2) / (r2 - r3).Norm();
+    auto total_energy = ke + pe;
 
-    auto pe3 = 0.5 * masses(2) * masses(0) / (r3 - r1).Norm();
-    pe3 += 0.5 * masses(2) * masses(1) / (r3 - r2).Norm();
-
-    auto kinetic_energy = ke1 + ke2 + ke3;
-    auto total_energy = ke1 + ke2 + ke3 - (pe1 + pe2 + pe3);
-    std ::cout << time_range.Nodes()[i] << " " << kinetic_energy << " "
-               << -(pe1 + pe2 + pe3) << std::endl;
+    std ::cout << time_range.Nodes()[i] << " " << ke << " " << pe << " "
+               << total_energy << std::endl;
   }
 }
