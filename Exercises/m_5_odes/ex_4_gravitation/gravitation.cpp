@@ -3,14 +3,20 @@
 #include "../ode_resolver.hpp"
 #include "../odes.hpp"
 
+// masses passed to NewtonGrav function without being function arguments
 static tensor::Tensor<double> masses = tensor::Tensor<double>::One(3);
 
+// The second order differential equation for the gravitational force is split
+// in a system of first order differential equations, to be solved by the
+// ODESolver
 tensor::Tensor<double> NewtonGrav(double t, tensor::Tensor<double> const& y);
 
+// Helper function for the second point of the exercise
 void CalculateTotalEnergy(tensor::Tensor<double> const& result,
                           func::Range<double>& time_range);
 
 int main(int argc, char const* argv[]) {
+  // Interpreting input arguments
   int _conds = argc == 1 ? 0 : std::stoi(argv[1]);
   double h = argc != 3 ? 0.01 : std::stod(argv[2]);
   int _energy = argc != 4 ? 0 : std::stoi(argv[3]);
@@ -21,7 +27,10 @@ int main(int argc, char const* argv[]) {
     return EXIT_FAILURE;
   }
 
-  // Initial positions
+  // NOTE: the positions and the velocities are stored in this way:
+  // r1_x r1_y ... r3_z v1_x v1_y v1_z ...
+  // Position 1 of axis x will be y(3 * 0 + 0)
+  // Velocity 1 of axis x will be y(3 * (0 + 3) + 0)
   auto initial_conditions = tensor::Tensor<double>::Vector(3 * 3 * 2);
 
   // r1 = 1,0,0
@@ -73,12 +82,11 @@ int main(int argc, char const* argv[]) {
   return 0;
 }
 
-// System of ODEs representing the 3-body problem
 tensor::Tensor<double> NewtonGrav(double t, const tensor::Tensor<double>& y) {
-  // Create a tensor to hold the derivatives
   auto dydt = tensor::Tensor<double>::Vector(3 * 3 * 2);
 
   // Helper lambda to compute the gravitational acceleration between two bodies
+  // i and j indicates body 0, 1 or 2
   auto grav_accell = [&](int i, int j) -> tensor::Tensor<double> {
     auto r_ij = tensor::Tensor<double>::Vector(3);
     for (int k = 0; k < 3; k++) {
@@ -97,10 +105,9 @@ tensor::Tensor<double> NewtonGrav(double t, const tensor::Tensor<double>& y) {
     return accell;
   };
 
-  // Calculate derivatives for each body
   for (int i = 0; i < 3; ++i) {
-    // Position derivatives (velocity)
     for (int k = 0; k < 3; ++k) {
+      // Update positions
       dydt(3 * i + k) = y(3 * (i + 3) + k);
     }
 
@@ -109,14 +116,12 @@ tensor::Tensor<double> NewtonGrav(double t, const tensor::Tensor<double>& y) {
 
     // The position in the array of the other two bodies is (i + 1) % 3
     // and (i + 2) % 3
-
     auto acc1 = grav_accell(i, (i + 1) % 3);
     auto acc2 = grav_accell(i, (i + 2) % 3);
 
-    acc = acc1 + acc2;
-
     for (int k = 0; k < 3; ++k) {
-      dydt(3 * (i + 3) + k) = acc(k);
+      // Update velocities
+      dydt(3 * (i + 3) + k) = (acc1 + acc2)(k);
     }
   }
 
@@ -148,11 +153,11 @@ void CalculateTotalEnergy(tensor::Tensor<double> const& result,
     double pe = 0.0;
     for (int j = 0; j < 3; ++j) {
       for (int k = j + 1; k < 3; ++k) {
-        pe -= masses(j) * masses(k) / sqrt((r.Row(j) - r.Row(k)).NormSquared());
+        pe -= masses(j) * masses(k) / (r.Row(j) - r.Row(k)).Norm();
       }
     }
 
-    auto total_energy = ke + pe;
+    double total_energy = ke + pe;
 
     std ::cout << time_range.Nodes()[i] << " " << ke << " " << pe << " "
                << total_energy << std::endl;
