@@ -3,6 +3,8 @@
 #include <cassert>
 #include <cmath>
 #include <cstddef>
+#include <iostream>
+#include <iterator>
 #include <vector>
 
 namespace func {
@@ -61,7 +63,6 @@ struct Range {
         step_(step),
         node_type_(NodeType::kFixed),
         intrv_type_(intrv_type) {
-
     assert(step_ > 0);
 
     GenerateFixedNodes();  // Precompute fixed distance nodes
@@ -169,9 +170,36 @@ void Range<T>::GenerateChebyshevNodes() {
 
 template <typename T>
 void Range<T>::GenerateFixedNodes() {
-  for (T current = start_;
-       (intrv_type_ == IntervalType::kInclusive) ? (current <= end_)
-                                                 : (current < end_);
+// Used to check which exercises are using this behaviour to avoid possible
+// bugs
+#ifndef NDEBUG
+  if (sizeof(T) == sizeof(float) || sizeof(T) == sizeof(double)) {
+    std::cout << "WARNING: using floating point can cause the last digit of "
+                 "Range to be dropped"
+              << std::endl;
+  }
+#endif
+
+  // FIX: cause of the error propagation of floating points
+  // it is not guaranteed that "current" at final step is equal to
+  // "end_"!
+  double _precision_fix;
+
+  switch (sizeof(T)) {
+    case sizeof(float):
+      _precision_fix = 1e-5;
+      break;
+    case sizeof(double):
+      _precision_fix = 1e-15;
+      break;
+    default:
+      _precision_fix = 0;
+      break;
+  }
+
+  for (T current = start_; (intrv_type_ == IntervalType::kInclusive)
+                               ? (current <= end_ + _precision_fix)
+                               : (current < end_);
        current += step_) {
     nodes_.push_back(current);
   }
