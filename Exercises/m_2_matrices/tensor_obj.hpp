@@ -1,9 +1,14 @@
 #pragma once
 
-#include <cassert>
+#include <complex>
 #include <cstdlib>
 #include <cstring>
 #include <vector>
+
+#include "../utils.hpp"
+
+#define ENABLE_REAL_NUMBER(T) std::enable_if_t<std::is_arithmetic<T>::value, T>
+#define ENABLE_COMPLEX_NUMBER(T) std::enable_if_t<std::is_complex<T>::value, T>
 
 namespace tensor {
 
@@ -43,17 +48,23 @@ class Tensor {
     return out;
   }
 
+  static Tensor<T> RandomVector(int n) {
+    Tensor<T> out(n, 1);
+    for (int i = 0; i < n; i++) out(i) = utils::RandomValue(0.0, 100.0);
+    return out;
+  }
+
   static Tensor<T> Random(int n) {
     Tensor<T> out(n, n);
     for (int i = 0; i < n; i++)
-      for (int j = 0; j < n; j++) out(i, j) = rand() % 100;
+      for (int j = 0; j < n; j++) out(i, j) = utils::RandomValue(0.0, 100.0);
     return out;
   }
 
   static Tensor<T> Random(int n, int m) {
     Tensor<T> out(n, m);
     for (int i = 0; i < n; i++)
-      for (int j = 0; j < m; j++) out(i, j) = rand() % 100;
+      for (int j = 0; j < m; j++) out(i, j) = utils::RandomValue(0.0, 100.0);
     return out;
   }
 
@@ -88,7 +99,8 @@ class Tensor {
 
   Tensor<T> Dagger();
 
-  T NormSquared();
+  auto NormSquared();
+
   T Norm() { return sqrt(NormSquared()); }
 
   /* ----------------- SOLUTION INVARIANT OPERATIONS ---------------------- */
@@ -106,7 +118,11 @@ class Tensor {
   // Action via a scalar
   Tensor<T> operator*(T const &d) const;
 
+  Tensor<T> operator/(T const &d) const;
+
   Tensor<T> operator*(T d);
+
+  Tensor<T> operator/(T d);
 
   /* ---------------------------------------------------------------------- */
 
@@ -161,7 +177,8 @@ class Tensor {
 
   Tensor(std::vector<T> data, int rows, int cols)
       : rows_(rows), cols_(cols), data_(data) {
-    assert(data.size() == rows * cols);
+    LOG_ASSERT(data.size() == rows * cols, "Data size is not compatible",
+               utils::ERROR);
   }
 
  private:
@@ -178,22 +195,19 @@ class Tensor {
 
 template <typename T>
 void Tensor<T>::SwapRows(int i, int j) {
-  T *tmp = new T[cols_];
+  LOG_ASSERT(i < rows_ && j < rows_, "SwapRows: Index out of bounds", utils::ERROR);
 
-  // Move slices of the std::vector data on the correct column representation
-  // in the std::vector format
-  std::copy(tmp, &data_[Site(i, 0)], sizeof(T) * cols_);
-  std::copy(&data_[Site(i, 0)], &cols_[Site(j, 0)], sizeof(T) * cols_);
-  std::copy(&data_[Site(j, 0)], tmp, sizeof(T) * cols_);
+  if (i == j) return;
 
-  delete[] tmp;
+  for (int col = 0; col < cols_; col++) {
+    std::swap(data_[Site(i, col)], data_[Site(j, col)]);
+  }
 }
 
 template <typename T>
 void Tensor<T>::LinearCombRows(int i, int j, T value, int final) {
-  assert(i < rows_ && j < rows_);
-  assert(final < rows_);
-
+  LOG_ASSERT(i < rows_ && j < rows_ && final < rows_, "Index out of bounds",
+             utils::ERROR);
   for (int k = 0; k < cols_; k++) {
     data_[Site(final, k)] = data_[Site(i, k)] + value * data_[Site(j, k)];
   }
@@ -201,31 +215,30 @@ void Tensor<T>::LinearCombRows(int i, int j, T value, int final) {
 
 template <typename T>
 T Tensor<T>::operator()(int i, int j) const {
-  assert(i < rows_ && j < cols_);
+  LOG_ASSERT(i < rows_ && j < cols_, "operator(i, j): Index out of bounds", utils::ERROR);
 
   return data_[Site(i, j)];
 }
 
 template <typename T>
 T &Tensor<T>::operator()(int i, int j) {
-  assert(i < rows_ && j < cols_);
+  LOG_ASSERT(i < rows_ && j < cols_, "operator(i, j): Index out of bounds", utils::ERROR);
 
   return data_[Site(i, j)];
 }
 
 template <typename T>
 T Tensor<T>::operator()(int i) const {
-  // Tensor should be a vector
-  assert(rows_ == 1 || cols_ == 1);
+  LOG_ASSERT(rows_ == 1 || cols_ == 1, "Tensor is not a vector", utils::ERROR);
 
   // Check if vector is transposed
   if (cols_ == 1) {
-    assert(i < rows_);
+    LOG_ASSERT(i < rows_, "operator(i): Index out of bounds", utils::ERROR);
 
     return data_[Site(i, 0)];
   }
 
-  assert(i < cols_);
+  LOG_ASSERT(i < cols_, "operator(i): Index out of bounds", utils::ERROR);
 
   return data_[Site(0, i)];
 }
@@ -233,16 +246,16 @@ T Tensor<T>::operator()(int i) const {
 template <typename T>
 T &Tensor<T>::operator()(int i) {
   // Tensor should be a vector
-  assert(rows_ == 1 || cols_ == 1);
+  LOG_ASSERT(rows_ == 1 || cols_ == 1, "Tensor is not a vector", utils::ERROR);
 
   // Check if vector is transposed
   if (cols_ == 1) {
-    assert(i < rows_);
+    LOG_ASSERT(i < rows_, "operator(i): Index out of bounds", utils::ERROR);
 
     return data_[Site(i, 0)];
   }
 
-  assert(i < cols_);
+  LOG_ASSERT(i < cols_, "operator(i): Index out of bounds", utils::ERROR);
 
   return data_[Site(0, i)];
 }
@@ -254,7 +267,8 @@ Tensor<T> Tensor<T>::operator+=(Tensor<T> const &b) const {
 template <typename T>
 Tensor<T> Tensor<T>::operator+(Tensor<T> const &b) const {
   // Tensors should have the same dimension
-  assert((rows_ == b.rows_) && (cols_ == b.cols_));
+  LOG_ASSERT((rows_ == b.rows_) && (cols_ == b.cols_),
+             "Tensors do not have the same dimensions", utils::ERROR);
 
   Tensor<T> out(rows_, cols_);
 
@@ -265,9 +279,6 @@ Tensor<T> Tensor<T>::operator+(Tensor<T> const &b) const {
 
 template <typename T>
 Tensor<T> Tensor<T>::Dot(Tensor<T> const &a) const {
-  // Check for compability of the tensors for a dot product
-  assert((cols_ == a.rows_));
-
   Tensor<T> out(rows_, a.cols_);
 
   for (int i = 0; i < rows_; i++)
@@ -276,22 +287,42 @@ Tensor<T> Tensor<T>::Dot(Tensor<T> const &a) const {
   return out;
 }
 
+// HACK: std::conj can't elaborate real T numbers types at compile time we
+// need to specify when to used std::conj
+template <typename T>
+auto safe_conj(const T &value) -> ENABLE_REAL_NUMBER(T) {
+  return value;  // If T is real, return the value as is
+}
+
+template <typename T>
+auto safe_conj(const std::complex<T> &value) -> std::complex<T> {
+  return std::conj(value);  // If T is complex, use std::conj
+}
+
 template <typename T>
 Tensor<T> Tensor<T>::Dagger() {
   Tensor<T> out(cols_, rows_);
 
-  for (int i = 0; i < cols_; i++)
-    for (int j = 0; j < rows_; j++) out(i, j) = conj(data_[Site(j, i)]);
+  for (int i = 0; i < cols_; i++) {
+    for (int j = 0; j < rows_; j++) {
+      out(i, j) = safe_conj(data_[Site(j, i)]);
+    }
+  }
 
   return out;
 }
 
 template <typename T>
-T Tensor<T>::NormSquared() {
+auto Tensor<T>::NormSquared() {
   T n = 0.0;
 
   for (int i = 0; i < rows_ * cols_; i++) {
-    n += data_[i] * data_[i];
+    if constexpr (std::is_arithmetic<T>::value) {
+      n += data_[i] * data_[i];
+    } else if constexpr (std::is_same<
+                             T, std::complex<typename T::value_type>>::value) {
+      n += std::norm(data_[i]);
+    }
   }
 
   return n;
@@ -312,10 +343,24 @@ Tensor<T> Tensor<T>::operator*(T const &d) const {
 }
 
 template <typename T>
+Tensor<T> Tensor<T>::operator/(T const &d) const {
+  Tensor<T> out(*this);
+  for (int i = 0; i < rows_ * cols_; i++) out.data_[i] /= d;
+  return out;
+}
+
+template <typename T>
 Tensor<T> Tensor<T>::operator*(T d) {
   Tensor<T> out(*this);
   for (int i = 0; i < rows_ * cols_; i++) out.data_[i] *= d;
 
+  return out;
+}
+
+template <typename T>
+Tensor<T> Tensor<T>::operator/(T d) {
+  Tensor<T> out(*this);
+  for (int i = 0; i < rows_ * cols_; i++) out.data_[i] /= d;
   return out;
 }
 

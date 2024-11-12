@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../m_3_matrices/tensor.hpp"
-#include "../m_3_matrices/tensor_utils.hpp"
+#include "../m_2_matrices/tensor.hpp"
+#include "../m_2_matrices/tensor_utils.hpp"
 #include "function_data.hpp"
 #include "function_utils.hpp"
 #include "range.hpp"

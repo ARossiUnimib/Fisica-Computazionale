@@ -1,11 +1,11 @@
 #pragma once
 
-#include <cassert>
 #include <cmath>
 #include <cstddef>
 #include <iostream>
-#include <iterator>
 #include <vector>
+
+#include "../utils.hpp"
 
 namespace func {
 
@@ -49,7 +49,9 @@ struct Range {
         node_type_(NodeType::kChebyshev),
         intrv_type_(intrv_type) {
     nodes_.reserve(num_nodes);  // Reserve space for Chebyshev nodes
-    assert(num_nodes > 0);
+
+    LOG_ASSERT(num_nodes > 0, "The number of the nodes must be greater than 0",
+               utils::ERROR);
 
     GenerateChebyshevNodes();  // Precompute Chebyshev nodes
   }
@@ -63,7 +65,8 @@ struct Range {
         step_(step),
         node_type_(NodeType::kFixed),
         intrv_type_(intrv_type) {
-    assert(step_ > 0);
+    LOG_ASSERT(step_ > 0, "The numbetr of steps must be greater than 0",
+               utils::ERROR);
 
     GenerateFixedNodes();  // Precompute fixed distance nodes
   }
@@ -173,11 +176,10 @@ void Range<T>::GenerateFixedNodes() {
 // Used to check which exercises are using this behaviour to avoid possible
 // bugs
 #ifndef NDEBUG
-  if (sizeof(T) == sizeof(float) || sizeof(T) == sizeof(double)) {
-    std::cout << "WARNING: using floating point can cause the last digit of "
-                 "Range to be dropped"
-              << std::endl;
+  if (std::is_floating_point<T>::value) {
+    LOG_WARN("Using floating point can cause the last digit to be dropped");
   }
+
 #endif
 
   // FIX: cause of the error propagation of floating points

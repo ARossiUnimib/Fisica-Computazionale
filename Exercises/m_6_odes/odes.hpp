@@ -3,7 +3,7 @@
 #include <functional>
 #include <iostream>
 
-#include "../m_3_matrices/tensor.hpp"
+#include "../m_2_matrices/tensor.hpp"
 
 namespace ode {
 

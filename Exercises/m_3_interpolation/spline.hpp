@@ -1,7 +1,8 @@
 #pragma once
 
-#include "../m_3_matrices/tensor.hpp"
-#include "../m_3_matrices/tensor_utils.hpp"
+#include "../m_2_matrices/tensor.hpp"
+#include "../m_2_matrices/tensor_utils.hpp"
+#include "../utils.hpp"
 #include "function_data.hpp"
 
 template <typename T>
@@ -11,21 +12,44 @@ class Spline {
       : func_data_(func_data),
         func_values_(std::vector<T>()),
         order_(order),
-        matrix_(tensor::Tensor<T>::SMatrix(2 * (func_data_.Size() - 1))) {
-        FillMatrix();
-        GenerateCoefficients();
-    }
+        matrix_(tensor::Tensor<T>::SMatrix((order+1) * (func_data_.Size() - 1))) {
+    FillMatrix();
+    GenerateCoefficients();
+  }
 
   T operator()(T x) const {
     // get index for the specified x in the interval
     int i = 0;
-    for (i = 0; x < func_data_.X(i); i++);
 
-    // TODO: maybe throw an error instead
+    // value should be between func_data.X(i) and func_data_(X(i+1))
+    while (x >= func_data_.X(i + 1) && i < func_data_.Size()) {
+      i++;
+    }
+
     assert(i < func_data_.Size());
 
+
+    // TODO: fix last element of the spline
+
+
     // NOTE: coeffs are stored as a_1 b_1 c_1 a_2 b_2 ...
-    return coeffs_(i) + coeffs_(i + 1) * x + coeffs_(i + 2) * x * x;
+    // linear spline
+    switch (order_) {
+      case 1: {
+        T a = coeffs_(2 * i);
+        T b = coeffs_(2 * i + 1);
+        return a + b * x;
+      }
+      // quadratic spline
+      case 2: {
+        T a = coeffs_(3 * i);
+        T b = coeffs_(3 * i + 1);
+        T c = coeffs_(3 * i + 2);
+        return a + b * x + c * x * x;
+      }
+      default:
+        LOG_ERROR("Order not implemented");
+    }
   }
 
  private:
@@ -59,6 +83,7 @@ class Spline {
           i += 2;
           j++;
         }
+
         break;
       }
 
@@ -67,7 +92,7 @@ class Spline {
         int i = 0;
         int j = 0;
 
-        while (3 * n) {
+        while (i < 3 * (n - 1)) {
           matrix_(i, i) = matrix_(i + 1, i) = matrix_(i + 2, i + 1) = 1;
 
           // x_j and x_{j+1}
@@ -80,12 +105,15 @@ class Spline {
           matrix_(i + 1, i + 2) = x_2 * x_2;
 
           matrix_(i + 2, i + 2) = 2 * x_2;
-          matrix_(i + 2, i + 4) = -1;
-          matrix_(i + 2, i + 5) = -2 * x_2;
 
           func_values_.push_back(func_data_.F(j));
           func_values_.push_back(func_data_.F(j + 1));
           func_values_.push_back(0);
+
+          if (i < 3 * (n - 2)) {
+            matrix_(i + 2, i + 4) = -1;
+            matrix_(i + 2, i + 5) = -2 * x_2;
+          }
 
           i += 3;
           j++;
@@ -94,8 +122,7 @@ class Spline {
         break;
       }
       default:
-        // TODO: implement generic algorithm for nth order
-        assert(false);
+        LOG_ERROR("Order not implemented");
     }
   }
 

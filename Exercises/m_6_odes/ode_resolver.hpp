@@ -4,8 +4,8 @@
 #include <functional>
 #include <memory>
 
-#include "../m_3_matrices/tensor.hpp"
-#include "../m_4_interpolation/range.hpp"
+#include "../m_2_matrices/tensor.hpp"
+#include "../m_3_interpolation/range.hpp"
 #include "odes.hpp"
 
 namespace ode {
