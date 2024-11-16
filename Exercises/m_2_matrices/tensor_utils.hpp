@@ -3,6 +3,7 @@
 #include <cassert>
 #include <iostream>
 #include <limits>
+#include <stdexcept>
 
 #include "../utils.hpp"
 #include "tensor.hpp"
@@ -151,21 +152,27 @@ Tensor<T> GaussianElimination(Tensor<T> A, Tensor<T> b) {
     }
   }
 
+#ifndef NDEBUG
   // HACK: cut off floating point values that are very close to zero
   // NOTE: this could lead to a singular matrix
-  double tol = std::numeric_limits<T>::epsilon();
   for (int i = 0; i < N; i++) {
     for (int j = 0; j < N; j++) {
-      if (std::abs(A(i, j)) < tol) {
+      // FIXME:
+      if (std::abs(A(i, j)) < 1e-4) {  // utils::Tolerance<T>()) {
         // Singular matrix
-        LOG_ASSERT(i != j,
-                   "rank(A) < dim(A) !, backward subst division by zero!",
-                   utils::ERROR);
+        if (i == j) {
+          LOG_WARN("rank(A) < dim(A) !, backward subst division by zero!");
+          tensor::Print(A);
+          throw std::runtime_error("Solution is singular");
+        }
 
+        LOG_WARN("values are near zero!");
+        // throw std::runtime_error("Solution is singular");
         A(i, j) = 0;
       }
     }
   }
+#endif
 
   return BackwardSubstitution(A, b);
 }

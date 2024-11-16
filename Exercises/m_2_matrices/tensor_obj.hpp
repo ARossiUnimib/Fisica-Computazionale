@@ -50,7 +50,7 @@ class Tensor {
 
   static Tensor<T> RandomVector(int n) {
     Tensor<T> out(n, 1);
-    for (int i = 0; i < n; i++) out(i) = utils::RandomValue(0.0, 100.0);
+    for (int i = 0; i < n; i++) out(i) = utils::RandomValue(0.1, 5.0);
     return out;
   }
 

@@ -98,15 +98,15 @@ std::vector<T> PolynomialRoots(tensor::Tensor<T> coefficients, int n,
   // Inverse is too unstable
   // auto solution = eigen::PowerMethodDeflation(coeffs_matrix, n,
   // n_eigenvalues);
-  auto solution = eigen::PowerMethodDeflation(coeffs_matrix, n, n_eigenvalues);
+  auto solution = eigen::PowerMethodDeflation(coeffs_matrix, n);
 
-    // convert in vector
-std::vector<T> roots;
-    for (auto &&[eigenvalue, eigenvector] : solution) {
-        roots.push_back(eigenvalue);
-            }
-            
-    return roots;
+  // convert in vector
+  std::vector<T> roots;
+  for (auto &&[eigenvalue, eigenvector] : solution) {
+    roots.push_back(eigenvalue);
+  }
+
+  return roots;
 }
 
 }  // namespace func

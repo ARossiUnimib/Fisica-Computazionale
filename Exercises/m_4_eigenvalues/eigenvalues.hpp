@@ -1,22 +1,17 @@
 #pragma once
 
+#include <complex>
+#include <stdexcept>
 #include <utility>
 
 #include "../m_2_matrices/tensor.hpp"
+#include "../utils.hpp"
 
 namespace eigen {
 
 template <typename T>
 T RayleighQuotient(tensor::Tensor<T> const& A, tensor::Tensor<T>& x) {
-  auto y = x.Dagger().Dot(A).Dot(x);
-  auto z = x.Dagger().Dot(x);
-  return y(0) / z(0);
-}
-
-// get tolerance based on the precision of the type
-template <typename T>
-T Tolerance() {
-  return std::numeric_limits<T>::epsilon();
+  return x.Dagger().Dot(A).Dot(x)(0);
 }
 
 template <typename T>
@@ -24,17 +19,15 @@ std::pair<T, tensor::Tensor<T>> PowerMethod(tensor::Tensor<T> const& A,
                                             int n_max) {
   tensor::Tensor<T> x = tensor::Tensor<T>::RandomVector(A.Rows());
 
-  int i = 0;
-  while (i < n_max) {
+  for (int i = 0; i < n_max; i++) {
     tensor::Tensor<T> y = A.Dot(x);
 
     auto delta = std::abs(RayleighQuotient(A, x) - RayleighQuotient(A, y));
-    if (delta < Tolerance<T>()) {
+    if (std::abs(delta) < 1e-6) {
       break;
     }
 
     x = y / y.Norm();
-    i++;
   }
 
   return {RayleighQuotient(A, x), x};
@@ -43,27 +36,31 @@ std::pair<T, tensor::Tensor<T>> PowerMethod(tensor::Tensor<T> const& A,
 template <typename T>
 std::pair<T, tensor::Tensor<T>> InversePowerMethod(tensor::Tensor<T> const& A,
                                                    int n) {
-  // auto I = tensor::Tensor<T>::Identity(A.Rows());
-
   // NOTE: Initial guess can change the estimated eigenvalue
+  // FIXME: imaginary part is 0!
   auto x = tensor::Tensor<T>::RandomVector(A.Rows());
 
   // NOTE: shift operation creates more problems than it solves: disabled at
   // the moment
-
+  // auto I = tensor::Tensor<T>::Identity(A.Rows());
   // T mu = RayleighQuotient(A, x);
 
   for (int i = 0; i < n; i++) {
-    // Rule of thumb
-    LOG_ASSERT(n < A.Rows() * 3,
-               "Inverse power method converges fast, avoid large numbers "
-               "otherwise a "
-               "singular matrix will be produced in gaussian elimination",
-               // NOTE: maybe implement a method to avoid the singularity
-               utils::WARN);
+    tensor::Tensor<T> y = tensor::Tensor<T>::Vector(A.Rows());
 
-    auto y = tensor::GaussianElimination(A, x);
-    // auto y = tensor::GaussianElimination(A - I * mu, x);
+    try {
+      y = tensor::GaussianElimination(A, x);
+      // y = tensor::GaussianElimination(A - I * mu, x);
+    } catch (const std::runtime_error& e) {
+      LOG_INFO("Matrix become singular");
+      break;
+    }
+
+    auto delta = RayleighQuotient(A, x) - RayleighQuotient(A, y);
+    if (std::abs(delta) < 1e-6) {
+      LOG_INFO("Tolerance was exceeded");
+      break;
+    }
 
     x = y / y.Norm();
 
@@ -75,11 +72,11 @@ std::pair<T, tensor::Tensor<T>> InversePowerMethod(tensor::Tensor<T> const& A,
 
 template <typename T>
 std::vector<std::pair<T, tensor::Tensor<T>>> PowerMethodDeflation(
-    tensor::Tensor<T> const& A, int n, int num_eigenvalues) {
+    tensor::Tensor<T> const& A, int n) {
   tensor::Tensor<T> A_deflated = A;
   std::vector<std::pair<T, tensor::Tensor<T>>> eigenpairs;
 
-  for (int i = 0; i < num_eigenvalues; i++) {
+  for (int i = 0; i < A.Rows(); i++) {
     T eigenvalue;
     tensor::Tensor<T> eigenvector;
     std::tie(eigenvalue, eigenvector) = PowerMethod(A_deflated, n);
@@ -94,13 +91,15 @@ std::vector<std::pair<T, tensor::Tensor<T>>> PowerMethodDeflation(
 }
 
 template <typename T>
-// NOTE: the method is not stable it seems, for close eigenvalues at least
+// NOTE: this is only for testing purpose, obviously the inverse power method
+// deflation creates singular matrices
 std::vector<std::pair<T, tensor::Tensor<T>>> InversePowerMethodDeflation(
-    tensor::Tensor<T> const& A, int n, int num_eigenvalues) {
+    tensor::Tensor<T> const& A, int n) {
+  
   tensor::Tensor<T> A_deflated = A;
   std::vector<std::pair<T, tensor::Tensor<T>>> eigenpairs;
 
-  for (int i = 0; i < num_eigenvalues; i++) {
+  for (int i = 0; i < A.Rows(); i++) {
     T eigenvalue;
     tensor::Tensor<T> eigenvector;
     std::tie(eigenvalue, eigenvector) = InversePowerMethod(A_deflated, n);
@@ -111,7 +110,7 @@ std::vector<std::pair<T, tensor::Tensor<T>>> InversePowerMethodDeflation(
         A_deflated - eigenvalue * eigenvector.Dot(eigenvector.Dagger());
   }
 
-  return eigenpairs;  // Return all computed eigenvalue/eigenvector pairs
+  return eigenpairs;
 }
 
 }  // namespace eigen

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cmath>
+#include <complex>
 #include <csignal>
 #include <iostream>
 #include <ostream>
@@ -87,8 +88,8 @@ inline void UtilsLog(const std::string &message, int type) {}
 
 template <typename T>
 T RandomValue(T a, T b) {
-  static std::random_device rd;   // Seed for randomness
-  static std::mt19937 gen(rd());  // Mersenne Twister generator
+  static std::random_device rd;
+  static std::mt19937 gen(rd());
 
   if constexpr (std::is_integral<T>::value) {
     std::uniform_int_distribution<T> dis(a, b);
