@@ -2,7 +2,7 @@
 #include <iostream>
 #include <ostream>
 
-#include "roots.hpp"
+#include "../roots.hpp"
 
 int main() {
   std::function<double(double)> f = [](double x) {

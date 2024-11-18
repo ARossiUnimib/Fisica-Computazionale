@@ -1,16 +1,18 @@
 #include <cmath>
 
-#include "../m_3_interpolation/range.hpp"
-#include "monte_carlo.hpp"
+#include "../../m_3_interpolation/range.hpp"
+#include "../monte_carlo.hpp"
 
 // e^-x
-double GenerateExponential(double x) {
+double GenerateExponential(double const x) {
   // log base e
   return -std::log(1 - x);
 }
 
 // x*e^(-x^2)
-double GenerateOddGaussian(double x) { return std::sqrt(-std::log(1 - 2 * x)); }
+double GenerateOddGaussian(double const x) {
+  return std::sqrt(-std::log(1 - 2 * x));
+}
 
 int main(int argc, char *argv[]) {
   int es_point = argc > 1 ? std::stoi(argv[1]) : 0;
@@ -30,15 +32,15 @@ int main(int argc, char *argv[]) {
       // Domain is [0,1) (using inclusive boundaries since it's very unlikely to
       // happen to be 1)
       auto range_gen = func::Range<double>::Fixed(0, 1);
-      frequencies = montecarlo::AccumulateValues(n_iter, range_gen, range_val,
-                                                 GenerateExponential);
+      frequencies = montecarlo::AccumulateValues<double>(
+          range_gen, range_val, GenerateExponential, n_iter);
       break;
     }
     case 2: {
       // Domain is [0,1/2)
       auto range_gen = func::Range<double>::Fixed(0, 1.0 / 2);
-      frequencies = montecarlo::AccumulateValues(n_iter, range_gen, range_val,
-                                                 GenerateOddGaussian);
+      frequencies = montecarlo::AccumulateValues<double>(
+          range_gen, range_val, GenerateOddGaussian, n_iter);
       break;
     }
   }

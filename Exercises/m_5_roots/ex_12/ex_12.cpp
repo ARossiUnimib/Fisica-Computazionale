@@ -1,6 +1,6 @@
 #include <cmath>
 
-#include "roots.hpp"
+#include "../roots.hpp"
 
 int main() {
   // legendre poly at order 10

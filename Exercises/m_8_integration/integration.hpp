@@ -70,6 +70,7 @@ std::pair<T, T> Simpson(T a, T b, T (*f)(T), int n) {
   return {dx / 3 * sum, error};
 }
 
+
 template <typename T>
 std::pair<T, T> GaussLegendreQuadrature(T a, T b, T (*f)(T), int n) {
   T sum = 0;
@@ -103,7 +104,7 @@ func::FunctionData<T> HermitePolynomial(int n, func::Range<T> x) {
   func::FunctionData<T> p;
   for (auto x_ : x) {
     p.Add(x_, std::pow(-1, n) * std::exp(x_ * x_) *
-                       Derivative(std::exp, -x_ * x_, n));
+                  Derivative(std::exp, -x_ * x_, n));
   }
   return p;
 }

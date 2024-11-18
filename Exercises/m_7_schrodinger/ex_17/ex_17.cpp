@@ -3,8 +3,8 @@
 #include <functional>
 #include <ostream>
 
-#include "../m_2_matrices/tensor.hpp"
-#include "../m_4_eigenvalues/eigenvalues.hpp"
+#include "../../m_2_matrices/tensor.hpp"
+#include "../../m_4_eigenvalues/eigenvalues.hpp"
 
 using namespace std::complex_literals;
 

@@ -3,23 +3,15 @@
 #include <stdlib.h>
 
 /*
- * Exp con semplicemente taylor
+ * Exponential approximation using Taylor series
  */
 double exp_approx(double x, int steps);
 
 /*
- * Versione alternativa che utilizza taylor ma raggrupa usando il termine prece
- * dente invece di ricalcolarlo
- */
-
-/**
- * Versione alternativa di exp_approx
+ * Alternative version but reuses the previous term instead of recalculating it
  */
 double exp_alt(double x, int steps);
 
-/**
- * Calcola il fattoriale di un numero
- */
 int factorial(int n);
 
 int main(int argc, char const *argv[]) {

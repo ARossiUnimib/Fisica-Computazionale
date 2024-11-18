@@ -1,7 +1,7 @@
 #include <cmath>
 #include <complex>
 
-#include "../m_2_matrices/tensor.hpp"
+#include "../../m_2_matrices/tensor.hpp"
 
 using Complex = std::complex<double>;
 using ComplexTensor = tensor::Tensor<Complex>;

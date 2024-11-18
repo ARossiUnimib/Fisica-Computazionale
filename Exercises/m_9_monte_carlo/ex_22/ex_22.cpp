@@ -1,12 +1,12 @@
-#include "../m_3_interpolation/range.hpp"
-#include "monte_carlo.hpp"
+#include "../../m_3_interpolation/range.hpp"
+#include "../monte_carlo.hpp"
 
-int main(int argc, char const **argv) {
+double ThetaCircle(std::vector<double> const& x) {
+  return x[0] * x[0] + x[1] * x[1] <= 1 ? 1 : 0;
+}
+
+int main(int argc, char const** argv) {
   int es_point = argc > 1 ? std::stoi(argv[1]) : 0;
-
-  std::function<double(std::vector<double>)> f = [](std::vector<double> x) {
-    return x[0] * x[0] + x[1] * x[1] <= 1 ? 1 : 0;
-  };
 
   // TODO: dint understand what it means by "analytic prediction"
   switch (es_point) {
@@ -19,8 +19,8 @@ int main(int argc, char const **argv) {
       std::cout << "1/N\tDistance\tError" << "\n";
 
       for (auto N : N_range) {
-        auto [mean, error] =
-            montecarlo::UniformSampling(f, {{0, 1}, {0, 1}}, N);
+        auto [mean, error] = montecarlo::UniformSampling<double>(
+            ThetaCircle, {{0, 1}, {0, 1}}, N);
 
         std::cout << 1.0 / N << "\t" << std::abs(mean - M_PI / 4) << "\t"
                   << error << "\t" << 1.0 / N << "\n";

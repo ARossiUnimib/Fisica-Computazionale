@@ -1,9 +1,9 @@
 #include <complex>
 
-#include "../m_2_matrices/tensor_ops.hpp"
-#include "../m_2_matrices/tensor_utils.hpp"
-#include "../m_3_interpolation/range.hpp"
-#include "eigenvalues.hpp"
+#include "../../m_2_matrices/tensor_ops.hpp"
+#include "../../m_2_matrices/tensor_utils.hpp"
+#include "../../m_3_interpolation/range.hpp"
+#include "../eigenvalues.hpp"
 
 int main(int argc, char const **argv) {
   int es_point = argv[1] ? std::stoi(argv[1]) : 0;
