@@ -1,7 +1,6 @@
 #pragma once
 
 #include <cmath>
-#include <complex>
 #include <csignal>
 #include <iostream>
 #include <ostream>
@@ -30,6 +29,7 @@ enum LogLevel { INFO, WARN, ERROR };
 
 #ifndef NDEBUG
 
+// TODO: implement stack trace
 inline void UtilsLog(const std::string &message, int type, int line,
                      const char *file) {
   // Set prefix

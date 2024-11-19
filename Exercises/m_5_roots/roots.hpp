@@ -3,8 +3,6 @@
 #include <cassert>
 #include <cstdlib>
 #include <functional>
-#include <iostream>
-#include <ostream>
 
 #include "../m_2_matrices/tensor.hpp"
 #include "../m_4_eigenvalues/eigenvalues.hpp"
@@ -12,11 +10,22 @@
 namespace func {
 
 template <typename T>
-T Bisection(std::function<T(T)> f, T a, T b, T tol = 1e-6) {
+T Bisection(std::function<T(T)> f, T a, T b, T tol = 1e-6, int n_tol = 1000) {
   assert(f(a) * f(b) < 0);
 
   T c = 0.0;
-  while (b - a > tol) {
+  int n = 0;
+  while (true) {
+    if (n > n_tol) {
+      // NOTE: Probably we shoud log error
+      LOG_WARN("Bisection did not converge");
+      break;
+    }
+
+    if (std::abs(b - a) < tol) {
+      break;
+    }
+
     c = (a + b) / 2.0;
 
     if (f(c) == 0.0) {
@@ -26,60 +35,61 @@ T Bisection(std::function<T(T)> f, T a, T b, T tol = 1e-6) {
     } else {
       a = c;
     }
+
+    n++;
   }
   return c;
 }
 
-template <typename T>
-T NewtonRaphson(std::function<T(T)> f, std::function<T(T)> f_prime, T x0,
-                T tol = 1e-16, int n_tol = 1000) {
-  T x = x0;
-  T x_new = x0;
+template <typename T, typename F = std::function<T(T)> const&>
+T NewtonRaphson(F f, F f_prime, T x0, T tol = 1e-16, int n_tol = 1000) {
+  double x1;
   int n = 0;
-  while (true) {
-    x = x_new;
-    x_new = x - f(x) / f_prime(x);
 
-    if (n > n_tol) {
-      std::cerr << "Newton-Raphson did not converge for value: " << x0
-                << std::endl;
-      break;
+  while (n < n_tol) {
+    x1 = x0 - f(x0) / f_prime(x0);
+
+    if (std::abs(x1 - x0) < tol) {
+      LOG_WARN("Newton-Raphson did not converge");
+      return x1;
     }
-    if (std::abs(x_new - x) < tol) {
-      break;
-    }
+
+    x0 = x1;
     n++;
   }
-  return x_new;
+
+  LOG_WARN("Newton-Raphson did not converge");
+  return x1;
 }
 
 template <typename T>
-T Secant(std::function<T(T)> f, T x0, T x1, T tol = 1e-6) {
-  T x = x0;
-  T x_new = x1;
-  T x_old = x0;
+T Secant(std::function<T(T)> const& f, T x0, T x1, T tol = 1e-6,
+         int n_tol = 1000) {
+  double x2;
+  int n = 0;
 
-  T f_old = f(x0);
-  T f_new = f(x1);
+  while (n < n_tol) {
+    x2 = x1 - f(x1) * (x1 - x0) / (f(x1) - f(x0));
 
-  while (true) {
-    x_old = x;
-    x = x_new;
-    f_new = f(x);
-    x_new = x - f_new * (x - x_old) / (f_new - f_old);
-    f_old = f_new;
-
-    if (std::abs(x_new - x) < tol) {
-      break;
+    if (std::abs(x2 - x1) < tol) {
+      LOG_WARN("Secant did not converge");
+      return x2;
     }
+
+    x0 = x1;
+    x1 = x2;
+    n++;
   }
-  return x_new;
+
+  LOG_WARN("Secant did not converge");
+  return x2;
 }
 
 template <typename T>
 std::vector<T> PolynomialRoots(tensor::Tensor<T> coefficients, int n,
                                int n_eigenvalues) {
-  assert(coefficients.Rows() > 1);
+  LOG_ASSERT(coefficients.Rows() > 1,
+             "Polynomial must have at least 2 coefficients", utils::ERROR);
 
   // Number of normalized coeffcients
   int n_coeffs = coefficients.Rows() - 1;
@@ -95,14 +105,10 @@ std::vector<T> PolynomialRoots(tensor::Tensor<T> coefficients, int n,
     coeffs_matrix(n_coeffs - 1, i) = -coefficients(i) / coefficients(n_coeffs);
   }
 
-  // Inverse is too unstable
-  // auto solution = eigen::PowerMethodDeflation(coeffs_matrix, n,
-  // n_eigenvalues);
   auto solution = eigen::PowerMethodDeflation(coeffs_matrix, n);
 
-  // convert in vector
   std::vector<T> roots;
-  for (auto &&[eigenvalue, eigenvector] : solution) {
+  for (auto&& [eigenvalue, eigenvector] : solution) {
     roots.push_back(eigenvalue);
   }
 
