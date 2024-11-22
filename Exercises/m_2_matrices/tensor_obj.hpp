@@ -99,9 +99,9 @@ class Tensor {
 
   Tensor<T> Dagger();
 
-  auto NormSquared();
+  auto NormSquared() const;
 
-  T Norm() { return sqrt(NormSquared()); }
+  T Norm() const { return sqrt(NormSquared()); }
 
   /* ----------------- SOLUTION INVARIANT OPERATIONS ---------------------- */
 
@@ -313,7 +313,7 @@ Tensor<T> Tensor<T>::Dagger() {
 }
 
 template <typename T>
-auto Tensor<T>::NormSquared() {
+auto Tensor<T>::NormSquared() const {
   T n = 0.0;
 
   for (int i = 0; i < rows_ * cols_; i++) {

@@ -58,9 +58,7 @@ inline void UtilsLog(const std::string &message, int type, int line,
 
   std::cout << "[" << prefix << "] " << message;
 
-  // at line and file
-
-  std::cout << " at " << file << ":" << line << std::endl;
+    std::cout << " at " << file << ":" << line << std::endl;
 }
 
 #define LOG_ASSERT(expr, message, type)          \
