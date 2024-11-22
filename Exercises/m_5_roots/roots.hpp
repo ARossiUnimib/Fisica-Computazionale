@@ -87,7 +87,7 @@ T Secant(std::function<T(T)> const& f, T x0, T x1, T tol = 1e-6,
 
 template <typename T>
 std::vector<T> PolynomialRoots(tensor::Tensor<T> coefficients, int n,
-                               int n_eigenvalues) {
+                               int n_eigenvalues, T alpha = 0) {
   LOG_ASSERT(coefficients.Rows() > 1,
              "Polynomial must have at least 2 coefficients", utils::ERROR);
 
@@ -105,7 +105,7 @@ std::vector<T> PolynomialRoots(tensor::Tensor<T> coefficients, int n,
     coeffs_matrix(n_coeffs - 1, i) = -coefficients(i) / coefficients(n_coeffs);
   }
 
-  auto solution = eigen::PowerMethodDeflation(coeffs_matrix, n);
+  auto solution = eigen::PowerMethodDeflation(coeffs_matrix, n, alpha);
 
   std::vector<T> roots;
   for (auto&& [eigenvalue, eigenvector] : solution) {

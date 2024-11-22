@@ -8,7 +8,7 @@ int main() {
   auto coefficients = tensor::Tensor<double>::FromData(std::vector<double>{
       -63.0, 0, 3465.0, 0, -30030.0, 0, 90090.0, 0, -109395.0, 0, 46189.0});
 
-  auto f_prime = func::PolynomialRoots(coefficients, 10000, 10);
+  auto f_prime = func::PolynomialRoots(coefficients, 1000, 11, 0.1);
 
   for (int i = 0; i < f_prime.size(); i++) {
     std::cout << f_prime[i] << std::endl;

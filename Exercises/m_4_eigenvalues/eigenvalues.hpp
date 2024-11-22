@@ -1,6 +1,5 @@
 #pragma once
 
-#include <complex>
 #include <stdexcept>
 #include <utility>
 
@@ -16,13 +15,19 @@ T RayleighQuotient(tensor::Tensor<T> const& A, tensor::Tensor<T>& x) {
 
 template <typename T>
 std::pair<T, tensor::Tensor<T>> PowerMethod(tensor::Tensor<T> const& A,
-                                            int n_max) {
+                                            int n_max, T alpha = 0) {
   tensor::Tensor<T> x = tensor::Tensor<T>::RandomVector(A.Rows());
+  x = x / x.Norm();
+
+  tensor::Tensor<T> I = tensor::Tensor<T>::Identity(A.Rows());
+  tensor::Tensor<T> shifted_A = A + alpha * I;
 
   for (int i = 0; i < n_max; i++) {
-    tensor::Tensor<T> y = A.Dot(x);
+    tensor::Tensor<T> y = shifted_A.Dot(x);
 
-    auto delta = std::abs(RayleighQuotient(A, x) - RayleighQuotient(A, y));
+    auto delta = std::abs(RayleighQuotient(shifted_A, x) -
+                          RayleighQuotient(shifted_A, y));
+
     if (std::abs(delta) < 1e-6) {
       break;
     }
@@ -30,7 +35,8 @@ std::pair<T, tensor::Tensor<T>> PowerMethod(tensor::Tensor<T> const& A,
     x = y / y.Norm();
   }
 
-  return {RayleighQuotient(A, x), x};
+  // Eigenvalue remains the same: (A-aI)v=Av-av=λv-av=(λ-a)v
+  return {RayleighQuotient(shifted_A, x) - alpha, x};
 }
 
 template <typename T>
@@ -70,24 +76,21 @@ std::pair<T, tensor::Tensor<T>> InversePowerMethod(tensor::Tensor<T> const& A,
   return {RayleighQuotient(A, x), x};
 }
 
-
-// NOTE: it doesnt work well with eigenvalues that are both positive and negative
-// like the legendre polynomials
-// Take for example a simple matrix like diag(a, -a)
-// We should make all eigenvalues positive using A'=A+aI and then returning to A
-// "Shifted power method"
-// Tikonov regularization
+// NOTE: it doesnt work well with eigenvalues that are both positive and
+// negative like the legendre polynomials Take for example a simple matrix like
+// diag(a, -a) We should make all eigenvalues positive using A'=A+aI and then
+// returning to A "Shifted power method" Tikonov regularization
 // TODO:
 template <typename T>
 std::vector<std::pair<T, tensor::Tensor<T>>> PowerMethodDeflation(
-    tensor::Tensor<T> const& A, int n) {
+    tensor::Tensor<T> const& A, int n, T alpha = 0) {
   tensor::Tensor<T> A_deflated = A;
   std::vector<std::pair<T, tensor::Tensor<T>>> eigenpairs;
 
   for (int i = 0; i < A.Rows(); i++) {
     T eigenvalue;
     tensor::Tensor<T> eigenvector;
-    std::tie(eigenvalue, eigenvector) = PowerMethod(A_deflated, n);
+    std::tie(eigenvalue, eigenvector) = PowerMethod(A_deflated, n, alpha);
 
     eigenpairs.push_back({eigenvalue, eigenvector});
 
@@ -103,7 +106,6 @@ template <typename T>
 // deflation creates singular matrices
 std::vector<std::pair<T, tensor::Tensor<T>>> InversePowerMethodDeflation(
     tensor::Tensor<T> const& A, int n) {
-  
   tensor::Tensor<T> A_deflated = A;
   std::vector<std::pair<T, tensor::Tensor<T>>> eigenpairs;
 
