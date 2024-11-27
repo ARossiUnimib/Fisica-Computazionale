@@ -24,3 +24,5 @@
 **/*.cb2
 **/*.lb
 
+# Schrodinger solutions is very large
+Exercises/m_7_schrodinger/ex_18/ex_18.dat
