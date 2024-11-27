@@ -76,11 +76,6 @@ std::pair<T, tensor::Tensor<T>> InversePowerMethod(tensor::Tensor<T> const& A,
   return {RayleighQuotient(A, x), x};
 }
 
-// NOTE: it doesnt work well with eigenvalues that are both positive and
-// negative like the legendre polynomials Take for example a simple matrix like
-// diag(a, -a) We should make all eigenvalues positive using A'=A+aI and then
-// returning to A "Shifted power method" Tikonov regularization
-// TODO:
 template <typename T>
 std::vector<std::pair<T, tensor::Tensor<T>>> PowerMethodDeflation(
     tensor::Tensor<T> const& A, int n, T alpha = 0) {

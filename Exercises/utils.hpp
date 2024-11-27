@@ -58,7 +58,7 @@ inline void UtilsLog(const std::string &message, int type, int line,
 
   std::cout << "[" << prefix << "] " << message;
 
-    std::cout << " at " << file << ":" << line << std::endl;
+  std::cout << " at " << file << ":" << line << std::endl;
 }
 
 #define LOG_ASSERT(expr, message, type)          \
@@ -83,6 +83,17 @@ inline void UtilsLog(const std::string &message, int type) {}
 #define LOG_ERROR(message)
 
 #endif
+
+inline int Factorial(int n) {
+  int result = 1;
+
+  while (n > 1) {
+    result *= n;
+    n--;
+  }
+
+  return result;
+}
 
 template <typename T>
 T RandomValue(T a, T b) {

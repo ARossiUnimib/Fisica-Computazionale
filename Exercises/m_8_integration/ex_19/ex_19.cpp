@@ -1,26 +1,24 @@
-#include <cmath>
-#include <functional>
-#include <iostream>
-#include <ostream>
-
 #include "../integration.hpp"
 
-double f(double x) { return std::sin(x / 2) * std::sin(x / 2); }
+double f(double x) { return 4.0 / (1 + x * x); }
 
-double analytical_sol(double a, double b) {
-  return 0.5 * (b - a + std::sin(a) - std::sin(b));
-}
+int main() {
+  int N = 1000;
 
-int main(int argc, char const *argv[]) {
-  double a = 0;
+  for (int n = 0; n < N; n++) {
+    double dx = 1.0 / n;
+    auto [trapez, _] = integration::Trapezoid(0.0, 1.0, f, n);
+    auto [simpson, __] = integration::Simpson(0.0, 1.0, f, n);
+    auto [quad, ___] = integration::GaussLegendreQuadrature(0.0, 1.0, f, n);
+    double err_trapez = std::abs(M_PI - trapez);
+    double err_simpson = std::abs(M_PI - simpson);
+    double err_quad = std::abs(M_PI - quad);
 
-  for (double b = 1; b > 0.001; b /= 1.05) {
-    auto [trap_sol, err1] = integration::Trapezoid(a, b, f, 1);
-    auto [simp_sol, err2] = integration::Simpson(a, b, f, 1);
-
-    std::cout << b << " " << std::abs(trap_sol - analytical_sol(a, b)) << " "
-              << std::abs(simp_sol - analytical_sol(a, b)) << std::endl;
+    std::cout << dx << " " << err_trapez << " " << err_simpson << " "
+              << err_quad << "\n";
   }
+
+  std::cout << std::endl;
 
   return 0;
 }

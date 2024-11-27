@@ -1,5 +1,6 @@
 #pragma once
 
+#include <algorithm>
 #include <cassert>
 #include <cstdlib>
 #include <functional>
@@ -87,7 +88,7 @@ T Secant(std::function<T(T)> const& f, T x0, T x1, T tol = 1e-6,
 
 template <typename T>
 std::vector<T> PolynomialRoots(tensor::Tensor<T> coefficients, int n,
-                               int n_eigenvalues, T alpha = 0) {
+                               T alpha = 0, bool sort = true) {
   LOG_ASSERT(coefficients.Rows() > 1,
              "Polynomial must have at least 2 coefficients", utils::ERROR);
 
@@ -110,6 +111,10 @@ std::vector<T> PolynomialRoots(tensor::Tensor<T> coefficients, int n,
   std::vector<T> roots;
   for (auto&& [eigenvalue, eigenvector] : solution) {
     roots.push_back(eigenvalue);
+  }
+
+  if (sort) {
+    std::sort(roots.begin(), roots.end());
   }
 
   return roots;

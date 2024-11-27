@@ -5,8 +5,11 @@
 #include <utility>
 #include <vector>
 
+#include "../m_2_matrices/tensor.hpp"
 #include "../m_3_interpolation/function_data.hpp"
 #include "../m_3_interpolation/range.hpp"
+#include "../m_5_roots/roots.hpp"
+#include "../utils.hpp"
 
 namespace integration {
 
@@ -70,9 +73,9 @@ std::pair<T, T> Simpson(T a, T b, T (*f)(T), int n) {
   return {dx / 3 * sum, error};
 }
 
-
 template <typename T>
-std::pair<T, T> GaussLegendreQuadrature(T a, T b, T (*f)(T), int n) {
+std::pair<T, T> GaussLegendreQuadrature(T a, T b, std::function<T(T)> f,
+                                        int n) {
   T sum = 0;
   T dx = (b - a) / n;
   for (int i = 0; i < n; i++) {
@@ -98,15 +101,67 @@ T Derivative(double (*f)(T), T x, int n, double dx = 0.0001) {
 }
 
 // Calculate Hermite polynomial of orden n
-// H_n(x) = (-1)^n e^(x^2) (d^n/dx^n e^(-x^2))
+// Using explicit sum representation
+// https://en.wikipedia.org/wiki/Hermite_polynomials
+// NOTE: Hermite polynomials scales as n! ... very inefficient to compute and also it is easy to exceed maximum floating type size 
 template <typename T>
-func::FunctionData<T> HermitePolynomial(int n, func::Range<T> x) {
-  func::FunctionData<T> p;
-  for (auto x_ : x) {
-    p.Add(x_, std::pow(-1, n) * std::exp(x_ * x_) *
-                  Derivative(std::exp, -x_ * x_, n));
+tensor::Tensor<T> HermitePolynomial(int n) {
+  std::vector<T> coefficients(n + 1);
+
+  for (int m = 0; m <= floor(n / 2.0); m++) {
+    using namespace utils;
+    int sign = m % 2 == 0 ? 1 : -1;
+    coefficients[n - 2 * m] =
+        static_cast<T>(Factorial(n) * sign * pow(2, n - 2 * m) /
+                       (Factorial(m) * Factorial(n - 2 * m)));
   }
-  return p;
+
+  return tensor::Tensor<T>::FromData(coefficients);
+}
+
+template <typename T>
+T LagrangePolynomial(T x, int i, std::vector<T> j_data) {
+  T product = 1;
+  for (int j = 0; j < j_data.size(); j++) {
+    if (i != j) {
+      product *= (x - j_data[j]) / (j_data[i] - j_data[j]);
+    }
+  }
+  return product;
+}
+
+template <typename T>
+std::vector<std::pair<T, T>> GenerateGaussHermiteCoeffs(T a, T b, int n_poly,
+                                                        int n_int,
+                                                        int n_eigen) {
+  tensor::Tensor<double> coeffs =
+      integration::HermitePolynomial<double>(n_poly);
+  std::vector<T> zeros = func::PolynomialRoots(coeffs, n_eigen, 0.1);
+
+  std::vector<std::pair<T, T>> weights(zeros.size());
+
+  for (int i = 0; i < zeros.size(); i++) {
+    std::function<T(T)> f = [&zeros, &i](T x) {
+      return exp(-x * x) * LagrangePolynomial(x, i, zeros);
+    };
+
+    weights[i].first = zeros[i];
+    weights[i].second = GaussLegendreQuadrature(a, b, f, n_int).first;
+  }
+
+  return weights;
+}
+
+//  FIXME: It clearly needs a class to store the precomputed Coefficients
+template <typename T>
+T GaussHermiteQuadrature(T a, T b, std::function<T(T)> f, int n_poly = 10,
+                         int n_int = 1000, int n_eigen = 1000) {
+  auto weights = GenerateGaussHermiteCoeffs(a, b, n_poly, n_int, n_eigen);
+  T sum = 0;
+  for (int i = 0; i < weights.size(); i++) {
+    sum += weights[i].second * f(weights[i].first);
+  }
+  return sum;
 }
 
 }  // namespace integration
