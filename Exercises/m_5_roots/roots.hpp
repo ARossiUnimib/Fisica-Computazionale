@@ -19,7 +19,6 @@ T Bisection(std::function<T(T)> f, T a, T b, T tol = 1e-6, int n_tol = 1000) {
   while (true) {
     if (n > n_tol) {
       // NOTE: Probably we shoud log error
-      LOG_WARN("Bisection did not converge");
       break;
     }
 
@@ -51,7 +50,6 @@ T NewtonRaphson(F f, F f_prime, T x0, T tol = 1e-16, int n_tol = 1000) {
     x1 = x0 - f(x0) / f_prime(x0);
 
     if (std::abs(x1 - x0) < tol) {
-      LOG_WARN("Newton-Raphson did not converge");
       return x1;
     }
 
@@ -73,7 +71,6 @@ T Secant(std::function<T(T)> const& f, T x0, T x1, T tol = 1e-6,
     x2 = x1 - f(x1) * (x1 - x0) / (f(x1) - f(x0));
 
     if (std::abs(x2 - x1) < tol) {
-      LOG_WARN("Secant did not converge");
       return x2;
     }
 

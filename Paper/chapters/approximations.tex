@@ -1,10 +1,4 @@
-\setchapterpreamble[u]{\margintoc}
-\chapter{Approssimazioni}
-\labch{approx}
-
-
-
-\section{Introduzione}
+\section{Introduzione: Approssimazioni}
 
 Le approssimazioni di funzioni rivestono un ruolo fondamentale in ambito scientifico,
 specialmente nella fisica computazionale, dove spesso non è possibile risolvere
@@ -64,7 +58,7 @@ g_n(x) = \sum_{i=0}^{n} \frac{x^i}{i!}
 \subparagraph{File necessari} sorgente: \texttt{exp\_approx.c}, dati: \texttt{exp\_approx\_$n$.dat} \\ $n = 1, 2, 3, 4$
 
 \begin{marginfigure}
-    \hspace*{-2cm}
+    %\hspace*{-2cm}
 	\includegraphics[width=1.5\textwidth]{exp_confront.png}
 	\caption{Confronto tra funzione esponenziale e la n-esima approssimazione}
 	\labfig{expfunc}
@@ -72,7 +66,7 @@ g_n(x) = \sum_{i=0}^{n} \frac{x^i}{i!}
 
 
 \begin{marginfigure}
-    \hspace*{-2cm}
+    %\hspace*{-2cm}
 	\includegraphics[width=1.5\textwidth]{error_diff_n.png}
 	\caption{Differenza tra errore teorico ed errore ottenuto}
 	\labfig{errordiff}
@@ -148,7 +142,7 @@ $$
 
 \begin{marginfigure}%[H]
 	%	\centering
-    %\hspace*{-2cm}
+    \hspace*{-2cm}
 	\includegraphics[width=1.5\columnwidth]{seq_inv_sum_error.png}
 	\caption{$|S(N) - \pi^6 / 2|$ per valori grandi di N, si nota un singolare
 		andamento della somma a partire da valori $ x \approx 4000$, \textbf{la

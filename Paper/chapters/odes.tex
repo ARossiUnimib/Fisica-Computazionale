@@ -1,5 +1,5 @@
 \setchapterpreamble[u]{\margintoc}
-\chapter{ODE: Equazioni differenziali ordinarie}
+\chapter{Equazioni differenziali ordinarie}
 \labch{odes}
 
 \section{Introduzione}
@@ -320,6 +320,91 @@ con $\theta(0) = 0$ e $\dot{\theta}(0) = 1$.
 
 \end{enumerate}
 
+\paragraph{Implementazione}
+
+\subparagraph{File necessari} \texttt{damped\_oscillator.cpp}
+
+L'implmentazione necessita solamente di scrivere il sistema di equazioni differenziali, di seguito e' proposta l'implementazione del terzo punto:
+
+\begin{lstlisting} [language=C++]
+tensor::Tensor<double> ForcedOscillator(double t,
+                                        tensor::Tensor<double> const &y) {
+  auto dydt = tensor::Tensor<double>::Vector(2);
+
+  // Dividiamo l'equazione differenziale di secondo ordine 
+  // in due di primo ordine
+  dydt(0) = y(1);
+
+  // Le costanti vengono passate globalmente
+  dydt(1) = -sin(y(0)) - kGamma * y(1) + kA * sin((2.0 / 3) * t);
+
+  return dydt;
+}
+\end{lstlisting}
+
+\paragraph{Osservazioni e analisi risultati}
+
+\begin{enumerate}
+
+	\item Si ottengono i seguenti risultati per il primo punto, si utilizza inoltre, per limitare i plot ottenuti, che il metodo utilizzato sia \textit{RK4}:
+
+	      \begin{figure} [H]
+		      \centering
+		      \includegraphics[width=1\textwidth]{real_oscillator_1.png}
+		      \caption{Oscillatore ideale imperturbato $(\theta(0)=0, \dot{\theta}(0)=1)$, nel caso di equilibrio stabile. Nella prima figura si possono osservare $\theta(t), \dot{\theta}(t)$, nel secondo $\dot{\theta}(\theta)$, lo spazio delle fasi}
+		      \labfig{real_oscil_1}
+	      \end{figure}
+
+	      \begin{figure} [H]
+		      \centering
+		      \includegraphics[width=1\textwidth]{real_oscillator_1_1.png}
+		      \caption{Oscillatore ideale imperturbato $(\theta(0)=0, \dot{\theta}(0)=3)$, nel caso non in equilibro.}
+		      \labfig{real_oscil_1_1}
+	      \end{figure}
+
+	      Come si puo' osservare lo spazio delle fasi e' composto principalmente da due
+	      casi di traiettorie: la prima in \reffig{real_oscil_1} corrisponde ad un ellisse; mentre, se l'energia cinetica supera l'energia potenziale di carattere oscillatoria, si osserva il caso non in equilibrio: al di sopra e al di sotto delle possibili traiettorie ellissoidali si ottengono traiettorie sinusoidali come in \reffig{real_oscil_1_1}. I risultati corrispondono correttamete con la teoria.
+
+	\item Nel caso dell'oscillatore smorzato si ottengono i seguenti risultati:
+
+	      \begin{figure} [H]
+		      \centering
+		      \includegraphics[width=1\textwidth]{real_oscillator_2_0.5.png}
+		      \caption{Oscillatore ideale smorzato $(\theta(0)=0, \dot{\theta}(0)=1)$, nel caso $\gamma=0.5$.}
+		      \labfig{real_oscil_2_0.5}
+	      \end{figure}
+
+	      \begin{figure} [H]
+		      \centering
+		      \includegraphics[width=1\textwidth]{real_oscillator_2_1.5.png}
+		      \caption{Oscillatore ideale imperturbato $(\theta(0)=0, \dot{\theta}(0)=1)$, nel caso $\gamma=1.5$.}
+		      \labfig{real_oscil_2_1.5}
+	      \end{figure}
+
+	      Si osserva in questo caso che il termine di smorzamento influenza la traiettoria delle oscillazioni, in particolare, per $\gamma=0.5$ si osserva un'oscillazione smorzata, mentre per $\gamma=1.5$ si osserva un'oscillazione smorzata simil-critica. Lo spazio delle fasi assume una traiettoria a spirale: la spiegazione fisica e' molto semplice, lo smorzamento porta ad un continuo rallentamento del sistema che e' destinato (qualsiasi siano i valori iniziali) a convergere ad un punto. Per questa ragione non vengono inclusi casi di valori iniziali differenti poiche' si otterra' sempre un carattere oscillatorio iniziale per sistemi inizialmente non stabili ma che cadranno necessariamente in una spirale simile alle sovracitate.
+
+	\item Si studia,infine, il caso di smorzamento forzato:
+
+	      \begin{figure} [H]
+		      \centering
+		      \includegraphics[width=1\textwidth]{real_oscillator_3_0.5_0.5.png}
+		      \caption{Oscillatore forzato $(\theta(0)=0, \dot{\theta}(0)=1)$, nel caso $\gamma=0.5, A=0.5$.}
+		      \labfig{real_oscil_3_0.5}
+	      \end{figure}
+
+	      \begin{figure} [H]
+		      \centering
+		      \includegraphics[width=1\textwidth]{real_oscillator_3_1.5_1.5.png}
+		      \caption{Oscillatore forzato $(\theta(0)=0, \dot{\theta}(0)=1)$, nel caso $\gamma=1.5, A=1.5$.}
+		      \labfig{real_oscil_3_1.5}
+	      \end{figure}
+
+	      In \reffig{real_oscil_3_0.5} e in \reffig{real_oscil_3_1.5} si evince chiaramente l'effetto del termine forzante: la traiettoria inizialmente a spirale si dilata e torna ad un caso ellissoide coerentemente con il caso in equilibrio imperturbato. La forzante, il termine $A$, definisce la nuova ampiezza di oscillazione stabile, mentre il termine $\gamma$ definisce la velocità di convergenza al nuovo equilibrio.
+
+
+
+\end{enumerate}
+
 
 
 \subsection{Attrattore di Lorenz}
@@ -341,6 +426,38 @@ Studiare il sistema di ODE:
 	\item Tracciare il grafico di $(x, y)$, $(x, z)$ e $(y, z)$.
 \end{enumerate}
 
+\paragraph{Implementazione}
+
+\subparagraph{File necessari} \texttt{lorenz.cpp}
+
+L'implementazione del sistema di equazioni differenziali è immediata essendo gia'
+al primo ordine.
+
+\paragraph{Osservazioni e analisi risultati}
+
+Considerando un passo $\Delta t = 0.01$, un intervallo di tempo $t \in [0, 10]$ e valori iniziali $\vec{r}(0)=(0,0,0), \dot{r}(0)=(1,1,1)$ si ottengono le seguenti sezioni della soluzione:
+
+\begin{figure} [H]
+	\centering
+	\includegraphics[width=1\textwidth]{lorenz_x_y.png}
+	\labfig{real_oscil_3_1.5}
+\end{figure}
+
+\begin{figure} [H]
+	\centering
+	\includegraphics[width=1\textwidth]{lorenz_y_z.png}
+	\labfig{real_oscil_3_1.5}
+\end{figure}
+
+\begin{figure} [H]
+	\centering
+	\includegraphics[width=1\textwidth]{lorenz_x_z.png}
+	\labfig{real_oscil_3_1.5}
+\end{figure}
+
+Il risultato ottenuto e' il noto \textit{Attrattore di Lorenz}, e' inoltre risaputo dalla teoria che il sistema di equazioni differenziali descritto sia caotico: piccole variazioni nei valori iniziali portano a grandi variazioni nel sistema, come si puo' notare dai grafici ottenuti, infatti la differenza dell'ordine del metodo (sopratutto nel metodo di Eulero) porta una variazione considerevole nello step successivo che porta quindi ad un risultato considerevolmente diverso dato un intervallo di tempo adeguato rispetto al differenza tra gli ordine dei metodi considerati. Inoltre, si osserva che il sistema e' invariante per rotazioni, infatti, le traiettorie ottenute sono simmetriche rispetto all'asse $z$.
+
+
 \subsection{Sistema a tre corpi}
 
 \paragraph{Richiesta}
@@ -349,6 +466,7 @@ Studiare il sistema gravitazionale che obbedisce alle equazioni del moto:
 
 \begin{equation}
 	\ddot{\vec{x}}_i = \sum_{j \neq i} m_j \; \frac{ \vec{x}_j - \vec{x}_i}{|\vec{x}_j - \vec{x}_i|^3}
+	\label{eq:3body}
 \end{equation}
 
 Nel caso di tre masse puntiformi, $i = 1, 2, 3$, con i seguenti parametri e condizioni iniziali:
@@ -379,3 +497,127 @@ Nel caso di tre masse puntiformi, $i = 1, 2, 3$, con i seguenti parametri e cond
 	\item Risolvere numericamente il sistema di equazioni.
 	\item Tracciare il grafico dell'energia totale del sistema in funzione del tempo.
 \end{enumerate}
+
+\paragraph{Implementazione}
+
+\subparagraph{File necessari} \texttt{gravitation.cpp}
+
+Nella matrice della soluzione si sceglie di ordinare la soluzione ad ogni time step nel seguente modo:
+
+\[
+	\begin{pmatrix}
+		r_{1,x}(t_0) & r_{1,y}(t_0) & \dots & r_{3,z}(t_0) & v_{1,x}(t_0) & \dots & v_{3,z}(t_0) \\
+		\vdots                                                                                   \\
+
+		r_{1,x}(t_n) & r_{1,y}(t_n) & \dots & r_{3,z}(t_n) & v_{1,x}(t_n) & \dots & v_{3,z}(t_n) \\
+	\end{pmatrix}
+\]
+
+La funzione che definisce il sistema dovra' quindi tradurre l'equazione \ref{eq:3body} in un sistema di equazioni differenziali al primo ordine che rispettino l'ordine della matrice:
+
+\begin{lstlisting} [language=C++]
+...
+  // Calcoliamo la accelerazione di interazione per ogni corpo
+  auto grav_accell = [&](int i, int j) -> tensor::Tensor<double> {
+    auto r_ij = tensor::Tensor<double>::Vector(3);
+    for (int k = 0; k < 3; k++) {
+      // Utilizziamo l'ordine specificato nella matrice
+      r_ij(k) = y(3 * i + k) - y(3 * j + k);
+    }
+
+    double dist = r_ij.Norm();
+    double dist_cubed = std::pow(dist, 3);
+
+    auto accell = tensor::Tensor<double>::Vector(3);
+
+    for (int k = 0; k < 3; ++k) {
+      accell(k) = -masses(j) * r_ij(k) / dist_cubed;
+    }
+
+    return accell;
+  };
+
+  for (int i = 0; i < 3; ++i) {
+    for (int k = 0; k < 3; ++k) {
+      // Vengono aggiornate le posizioni
+      dydt(3 * i + k) = y(3 * (i + 3) + k);
+    }
+
+    auto acc = tensor::Tensor<double>::Vector(3);
+    // Utilizzando modulo 3 si riottengono gli indici delle posizioni 
+    // dei corpi e calcoliamo l'accelerazione
+    auto acc1 = grav_accell(i, (i + 1) % 3);
+    auto acc2 = grav_accell(i, (i + 2) % 3);
+
+    for (int k = 0; k < 3; ++k) {
+      // Si aggiornano le velocita'
+      dydt(3 * (i + 3) + k) = (acc1 + acc2)(k);
+    }
+  }
+\end{lstlisting}
+
+Si ottiene dunque la nuova riga della matrice dal vettore riga \texttt{dydt} allo step successivo.
+
+
+
+\paragraph{Osservazioni e analisi risultati}
+
+Utilizzando il metodo $RK4$ e step $\Delta t = 0.01$ si ottengono i seguenti risultati:
+
+\begin{enumerate}
+	\item
+	      \begin{marginfigure}
+		      \includegraphics[width=1.5\textwidth]{gravitation_1_xy.png}
+		      \caption{Sezione sul piano XY del primo punto}
+		      \labfig{grav_1}
+	      \end{marginfigure}
+
+	      \begin{marginfigure}
+		      \includegraphics[width=1.5\textwidth]{grav_energy_1.png}
+		      \caption{Grafico delle energie per il punto 1}
+		      \labfig{grav_energy_1}
+	      \end{marginfigure}
+
+	      Dalle figure \reffig{grav_1} e \reffig{grav_energy_1} si osserva che, data la simmetria dei dati iniziali, la traiettoria dei corpi e' simmetrica rispetto all'asse $x$. Inoltre, si osserva che l'energia totale del sistema e' conservata, come ci si aspetta dal sistema gravitazionale, per valori non troppo grandi di $t$, piu' aumenta il tempo piu' il trend dell'energia totale diminuisce seguendo una retta di pendenza negativa, l'approssimazione del metodo $RK4$ dissipa energia per valori grandi di $t$; si conferma, inoltre, la presenza di un sistema legato data la presenza di una energia totale negativa.
+
+
+	\item
+	      \begin{marginfigure}
+		      \includegraphics[width=1.5\textwidth]{gravitation_2_xy.png}
+		      \caption{Sezione sul piano XY del primo punto}
+		      \labfig{grav_2}
+	      \end{marginfigure}
+
+	      \begin{marginfigure}
+		      \includegraphics[width=1.5\textwidth]{grav_energy_2.png}
+		      \caption{Grafico delle energie per il punto 2}
+		      \labfig{grav_energy_2}
+	      \end{marginfigure}
+
+	      % Stesso trend negativo per le energie, il sistema e' in questo caso instabile 
+
+        Nei grafici \reffig{grav_2} e \reffig{grav_energy_2} si osserva che il sistema e' caotico e legato. Si ripresenta nuovamente la pendenza negativa dell'energia totale seppure con un coefficiente relativamente basso non apprezabile a queste scale.
+
+
+\paragraph{Conclusioni}
+
+I metodi Runge-Kutta utilizzati negli esercizi non garantiscono la conservazione dell'energia del sistema: quando i corpi si avvicinano molto tra di loro si perdono molte informazioni sul sistema, quest'ultime e l'intervallo di step utilizzato non sono adeguatamente distribuiti rispetto alla forza esercitata tra i due corpi nello step corrente. Utilizzando degli intervalli di tempo in funzione della distanza tra i corpi si otterrebbero misure piu' precise, utilizzando, come nel seguente esercizio, uno step fisso nel calcolo si perdono informazioni quando i corpi sono piu' vicini e quindi molto piu' veloci. Oltre a questa soluzione personalmente ipotizzata si possono utilizzare metodi che garantiscono la conservazione di dell'energia: i \textit{Metodi Simplettici} 
+
+%TODO: citare metodi simplettici
+
+
+
+
+
+
+
+\end{enumerate}
+
+
+
+
+
+
+
+
+

@@ -135,6 +135,5 @@ class Spline {
   int order_;
   // Matrix to calculate coefficients
   tensor::Tensor<T> matrix_;
-
   tensor::Tensor<T> coeffs_;
 };

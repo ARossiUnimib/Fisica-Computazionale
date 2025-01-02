@@ -51,18 +51,16 @@ int main(int argc, char const *argv[]) {
   switch (kEsPoint) {
     case 1: {
       std::cout << "Analytical root: " << analytical_root << "\n";
-      std::cout << "Bisection method: " << method_func(kTolerance, kN)
-                << std::endl;
+      std::cout << "Method: " << method_func(kTolerance, kN) << std::endl;
       break;
     }
 
     case 2: {
-      std::cout << "x f(root) approx_root-root\n";
+      std::cout << "x f(root) approx_root\n";
 
       for (double x = 0.000001; x <= 1; x *= 1.5) {
-        double roots = method_func(x, kN);
-        double error_bisection = std::abs(roots - analytical_root);
-        std::cout << x << " " << f(roots) << " " << error_bisection << "\n";
+        double root = method_func(x, kN);
+        std::cout << x << " " << f(root) << " " << root << "\n";
       }
 
       std::cout << std::endl;
@@ -76,24 +74,18 @@ int main(int argc, char const *argv[]) {
       // convergence rate
       // meanwhile bisection convergence with some oscillation on the slope
       // it would be wise to se if the mean remains constant
-      double prev_error = 0;
+      double prev_error = INFINITY;
       for (int i = 1; i <= kN; i++) {
         double roots = method_func(kTolerance, i);
         double error = std::abs(roots - analytical_root);
 
-        if (i > 1 && prev_error != 0) {
-          std::cout << i << " " << error << " " << error / prev_error << "\n";
-        } else {
-          std::cout << i << " " << error << " "
-                    << "0\n";
-        }
+        std::cout << prev_error << " " << error << " " << "\n";
 
         prev_error = error;
       }
 
+      break;
     }
-
-    break;
   }
   return EXIT_SUCCESS;
 }

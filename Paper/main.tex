@@ -56,6 +56,10 @@
 % Load the package for hyperreferences
 \usepackage{kaorefs}
 
+\usepackage{csquotes}
+
+\usepackage{algorithm2e}
+
 \graphicspath{{examples/documentation/images/}{images/}} % Paths in which to look for images
 
 \makeindex[columns=3, title=Alphabetical Index, intoc] % Make LaTeX produce the files required to compile the index
@@ -67,6 +71,7 @@
 
 % Reset sidenote counter at chapters
 %\counterwithin*{sidenote}{chapter}
+
 
 %----------------------------------------------------------------------------------------
 
@@ -160,13 +165,19 @@
 
 \input{chapters/numbers.tex}
 
-\input{chapters/approximations.tex}
-
 \input{chapters/matrices.tex}
 
 \input{chapters/interpolation.tex}
 
+\input{chapters/eigenvalues.tex}
+
+\input{chapters/roots.tex}
+
 \input{chapters/odes.tex}
+
+\input{chapters/schroedinger.tex}
+
+\input{chapters/integration.tex}
 
 \iffalse
 \input{chapters/textnotes.tex}

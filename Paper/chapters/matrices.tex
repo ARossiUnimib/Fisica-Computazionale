@@ -10,7 +10,7 @@ Da questo capitolo in poi, il codice sorgente utilizzerà come linguaggio primar
 C++. La librerie necessarie prima di proseguire sono le seguenti:
 
 \begin{itemize}
-	\item \texttt{tensor.hpp} versione modificata di \texttt{matrix.h} disponibile
+	\item \texttt{tensor\_obj.hpp} versione modificata di \texttt{matrix.h} disponibile
 	      su e-learning: l'header è stato generalizzato per interpretare sia
 	      vettori sia matrici rendendo le operazioni compatibili fra i due e
 	      facilitando il successivo svolgimento degli esercizi.
@@ -87,9 +87,11 @@ template <typename T> Tensor<T> BackwardSubstitution(Tensor<T> const &A, Tensor<
     *   compilazione per evitare questi ulteriori controlli
     */
 
-    assert(A.Cols() == A.Rows());
-    assert(A.Rows() == b.Rows());
-    assert(IsUpperTriangular(A));
+    LOG_ASSERT(A.Cols() == A.Rows(), "A must be a square matrix", utils::ERROR);
+    LOG_ASSERT(Ama otteniamo le seguenti interpolazioni:.Cols() == b.Rows(), "A and b are dimensionally incompatible",
+             utils::ERROR);
+    LOG_ASSERT(IsUpperTriangular(A), "A is not upper triangular", utils::ERROR);
+
 
     ... // Definizione delle variabili
 

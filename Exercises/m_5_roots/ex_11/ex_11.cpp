@@ -1,42 +1,50 @@
 #include <cmath>
-#include <iostream>
-#include <ostream>
 
 #include "../roots.hpp"
 
-int main(int argc, char const *argv[]) {
-  const int kN = argc > 1 ? std::stoi(argv[1]) : 100;
+int main() {
+  auto legendre_coeffs = tensor::Tensor<double>::FromData(std::vector<double>{
+      -63.0, 0, 3465.0, 0, -30030.0, 0, 90090.0, 0, -109395.0, 0, 46189.0});
 
-  std::function<double(double)> f = [](double x) {
-    return sqrt(x + 1) * cos(x / 2) * cos(x / 2) * cos(x / 2);
-  };
+  auto hermite_coeffs = tensor::Tensor<double>::FromData(
+      std::vector<double>{-120, 0, 720, 0, -480, 0, 64});
 
-  std::function<double(double)> f_prime = [](double x) {
-    return (cos(x / 2) * cos(x / 2) * (cos(x / 2) - 3 * (x + 1) * sin(x / 2))) /
-           (2 * sqrt(x + 1));
-  };
-
-  double prev_bisect_error = 1.0;
-  double prev_newton_error = 1.0;
-  double prev_secant_error = 1.0;
-
-  for (int i = 0; i < kN; i++) {
-#define DISTANCE(f_, f, a, b, c) std::abs(f_(f, a, b, 1e-5, i) - M_PI)
-    double bisect_error = DISTANCE(func::Bisection, f, 0.8, 2 * M_PI, i);
-    double newton_error = DISTANCE(func::NewtonRaphson, f, f_prime, 0.8, i);
-    // NOTE: secant method converges with a power of the golden ratio istead of 2
-    double secant_error = DISTANCE(func::Secant, f, 0.8, 2 * M_PI, i);
-#undef DISTANCE
-    // print convergence rate only
-    std::cout << i << " "<< bisect_error / prev_bisect_error
-              << " "<< newton_error / prev_newton_error
-              << " " << secant_error / prev_secant_error << std::endl;
-
-    prev_bisect_error = bisect_error;
-    prev_newton_error = newton_error;
-    prev_secant_error = secant_error;
+  auto legendre_roots = func::PolynomialRoots(legendre_coeffs, 1000, 0.01);
+  std::cout << "Legendre roots:" << std::endl;
+  for (int i = 0; i < legendre_roots.size(); i++) {
+    std::cout << legendre_roots[i] << std::endl;
   }
-  std::cout << std::endl;
+
+
+  std::cout << "Legendre Check:" << std::endl;
+  // print values of the polynomial at the roots
+  for (int i = 0; i < legendre_roots.size(); i++) {
+    // cycle through the coefficients and the power
+    double value = 0.0;
+    for (int j = 0; j < legendre_coeffs.Rows(); j++) {
+      value += legendre_coeffs(j) * std::pow(legendre_roots[i], j);
+    }
+    std::cout << value << std::endl;
+  }
+
+  auto hermite_roots = func::PolynomialRoots(hermite_coeffs, 1000, 0.3);
+  std::cout << "Hermite roots:" << std::endl;
+  for (int i = 0; i < legendre_roots.size(); i++) {
+    std::cout << hermite_roots[i] << std::endl;
+  }
+
+
+  std::cout << "Hermite Check:" << std::endl;
+  // print values of the polynomial at the roots
+  for (int i = 0; i < hermite_roots.size(); i++) {
+    // cycle through the coefficients and the power
+    double value = 0.0;
+    for (int j = 0; j < hermite_coeffs.Rows(); j++) {
+      value += hermite_coeffs(j) * std::pow(hermite_roots[i], j);
+    }
+    std::cout << value << std::endl;
+  }
+
 
   return 0;
 }

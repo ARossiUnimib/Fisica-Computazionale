@@ -6,11 +6,11 @@
 \contentsline {paragraph}{\nonumberline Lingua del codice}{iii}{paragraph*.5}%
 \contentsline {paragraph}{\nonumberline Introduzione dei moduli}{iii}{paragraph*.7}%
 \contentsline {chapter}{\nonumberline Indice}{v}{chapter*.8}%
-\contentsline {chapter}{\numberline {1}Numeri}{1}{chapter.1}%
+\contentsline {chapter}{\numberline {1}Numeri e approssimazioni}{1}{chapter.1}%
 \etoc@startlocaltoc {2}
 \etoc@startlocaltoc {3}
-\contentsline {section}{\numberline {1.1}Rappresentazione}{1}{section.1.1}%
-\contentsline {mtocsection}{\numberline {1.1}Rappresentazione}{1}{section.1.1}%
+\contentsline {section}{\numberline {1.1}Introduzione: Numeri}{1}{section.1.1}%
+\contentsline {mtocsection}{\numberline {1.1}Introduzione: Numeri}{1}{section.1.1}%
 \contentsline {section}{\numberline {1.2}Esercizi}{1}{section.1.2}%
 \contentsline {mtocsection}{\numberline {1.2}Esercizi}{1}{section.1.2}%
 \contentsline {subsection}{\numberline {1.2.1}Precisione}{1}{subsection.1.2.1}%
@@ -29,103 +29,178 @@
 \contentsline {subparagraph}{\nonumberline File necessari}{3}{subparagraph*.28}%
 \contentsline {paragraph}{\nonumberline Analisi}{3}{paragraph*.30}%
 \contentsline {paragraph}{\nonumberline Conclusioni}{4}{paragraph*.32}%
-\contentsline {chapter}{\numberline {2}Approssimazioni}{5}{chapter.2}%
+\contentsline {section}{\numberline {1.3}Introduzione: Approssimazioni}{4}{section.1.3}%
+\contentsline {mtocsection}{\numberline {1.3}Introduzione: Approssimazioni}{4}{section.1.3}%
+\contentsline {section}{\numberline {1.4}Esercizi}{4}{section.1.4}%
+\contentsline {mtocsection}{\numberline {1.4}Esercizi}{4}{section.1.4}%
+\contentsline {subsection}{\numberline {1.4.1}Funzione esponenziale}{4}{subsection.1.4.1}%
+\contentsline {mtocsubsection}{\numberline {1.4.1}Funzione esponenziale}{4}{subsection.1.4.1}%
+\contentsline {paragraph}{\nonumberline Nozioni teoriche}{4}{paragraph*.34}%
+\contentsline {paragraph}{\nonumberline Richiesta}{4}{paragraph*.36}%
+\contentsline {paragraph}{\nonumberline Implementazione e osservazioni}{5}{paragraph*.38}%
+\contentsline {subparagraph}{\nonumberline File necessari}{5}{subparagraph*.40}%
+\contentsline {subsection}{\numberline {1.4.2}Problema di Basilea}{5}{subsection.1.4.2}%
+\contentsline {mtocsubsection}{\numberline {1.4.2}Problema di Basilea}{5}{subsection.1.4.2}%
+\contentsline {paragraph}{\nonumberline Nozioni teoriche}{5}{paragraph*.44}%
+\contentsline {paragraph}{\nonumberline Richiesta}{5}{paragraph*.46}%
+\contentsline {paragraph}{\nonumberline Osservazioni e conclusioni}{6}{paragraph*.48}%
+\contentsline {subparagraph}{\nonumberline Singola precisione}{6}{subparagraph*.50}%
+\contentsline {subparagraph}{\nonumberline Doppia precisione}{6}{subparagraph*.53}%
+\contentsline {chapter}{\numberline {2}Matrici}{7}{chapter.2}%
 \etoc@startlocaltoc {4}
 \etoc@startlocaltoc {5}
-\contentsline {section}{\numberline {2.1}Introduzione}{5}{section.2.1}%
-\contentsline {mtocsection}{\numberline {2.1}Introduzione}{5}{section.2.1}%
-\contentsline {section}{\numberline {2.2}Esercizi}{5}{section.2.2}%
-\contentsline {mtocsection}{\numberline {2.2}Esercizi}{5}{section.2.2}%
-\contentsline {subsection}{\numberline {2.2.1}Funzione esponenziale}{5}{subsection.2.2.1}%
-\contentsline {mtocsubsection}{\numberline {2.2.1}Funzione esponenziale}{5}{subsection.2.2.1}%
-\contentsline {paragraph}{\nonumberline Nozioni teoriche}{5}{paragraph*.34}%
-\contentsline {paragraph}{\nonumberline Richiesta}{5}{paragraph*.36}%
-\contentsline {paragraph}{\nonumberline Implementazione e osservazioni}{6}{paragraph*.38}%
-\contentsline {subparagraph}{\nonumberline File necessari}{6}{subparagraph*.40}%
-\contentsline {subsection}{\numberline {2.2.2}Problema di Basilea}{6}{subsection.2.2.2}%
-\contentsline {mtocsubsection}{\numberline {2.2.2}Problema di Basilea}{6}{subsection.2.2.2}%
-\contentsline {paragraph}{\nonumberline Nozioni teoriche}{6}{paragraph*.44}%
-\contentsline {paragraph}{\nonumberline Richiesta}{6}{paragraph*.46}%
-\contentsline {paragraph}{\nonumberline Osservazioni e conclusioni}{7}{paragraph*.48}%
-\contentsline {subparagraph}{\nonumberline Singola precisione}{7}{subparagraph*.50}%
-\contentsline {subparagraph}{\nonumberline Doppia precisione}{7}{subparagraph*.53}%
-\contentsline {chapter}{\numberline {3}Matrici}{9}{chapter.3}%
+\contentsline {section}{\numberline {2.1}Introduzione}{7}{section.2.1}%
+\contentsline {mtocsection}{\numberline {2.1}Introduzione}{7}{section.2.1}%
+\contentsline {paragraph}{\nonumberline Struttura del codice}{7}{paragraph*.55}%
+\contentsline {section}{\numberline {2.2}Esercizi}{7}{section.2.2}%
+\contentsline {mtocsection}{\numberline {2.2}Esercizi}{7}{section.2.2}%
+\contentsline {subsection}{\numberline {2.2.1}Soluzione di sistemi lineari con matrici triangolari}{7}{subsection.2.2.1}%
+\contentsline {mtocsubsection}{\numberline {2.2.1}Soluzione di sistemi lineari con matrici triangolari}{7}{subsection.2.2.1}%
+\contentsline {paragraph}{\nonumberline Nozioni teoriche}{7}{paragraph*.57}%
+\contentsline {paragraph}{\nonumberline Richiesta}{8}{paragraph*.59}%
+\contentsline {paragraph}{\nonumberline Implementazione e stile di struttura tipica del codice}{8}{paragraph*.61}%
+\contentsline {paragraph}{\nonumberline Analisi risultati}{9}{paragraph*.63}%
+\contentsline {subparagraph}{\nonumberline File necessari}{9}{subparagraph*.65}%
+\contentsline {subparagraph}{\nonumberline Risultato e controllo}{9}{subparagraph*.67}%
+\contentsline {subsection}{\numberline {2.2.2}Eliminazione di Gauss}{9}{subsection.2.2.2}%
+\contentsline {mtocsubsection}{\numberline {2.2.2}Eliminazione di Gauss}{9}{subsection.2.2.2}%
+\contentsline {paragraph}{\nonumberline Nozioni teoriche}{9}{paragraph*.69}%
+\contentsline {paragraph}{\nonumberline Richiesta}{10}{paragraph*.71}%
+\contentsline {paragraph}{\nonumberline Implementazione}{10}{paragraph*.73}%
+\contentsline {paragraph}{\nonumberline Analisi risultati}{10}{paragraph*.75}%
+\contentsline {subparagraph}{\nonumberline File necessari}{10}{subparagraph*.77}%
+\contentsline {subparagraph}{\nonumberline Soluzione}{11}{subparagraph*.79}%
+\contentsline {subsection}{\numberline {2.2.3}Decomposizione LU}{11}{subsection.2.2.3}%
+\contentsline {mtocsubsection}{\numberline {2.2.3}Decomposizione LU}{11}{subsection.2.2.3}%
+\contentsline {paragraph}{\nonumberline Nozioni teoriche}{11}{paragraph*.81}%
+\contentsline {paragraph}{\nonumberline Richiesta}{11}{paragraph*.83}%
+\contentsline {paragraph}{\nonumberline Implementazione}{11}{paragraph*.85}%
+\contentsline {subparagraph}{\nonumberline File necessari}{12}{subparagraph*.87}%
+\contentsline {paragraph}{\nonumberline Analisi risultati}{13}{paragraph*.89}%
+\contentsline {subparagraph}{\nonumberline File necessari}{13}{subparagraph*.91}%
+\contentsline {chapter}{\numberline {3}Intepolazione}{15}{chapter.3}%
 \etoc@startlocaltoc {6}
 \etoc@startlocaltoc {7}
-\contentsline {section}{\numberline {3.1}Introduzione}{9}{section.3.1}%
-\contentsline {mtocsection}{\numberline {3.1}Introduzione}{9}{section.3.1}%
-\contentsline {paragraph}{\nonumberline Struttura del codice}{9}{paragraph*.55}%
-\contentsline {section}{\numberline {3.2}Esercizi}{9}{section.3.2}%
-\contentsline {mtocsection}{\numberline {3.2}Esercizi}{9}{section.3.2}%
-\contentsline {subsection}{\numberline {3.2.1}Soluzione di sistemi lineari con matrici triangolari}{9}{subsection.3.2.1}%
-\contentsline {mtocsubsection}{\numberline {3.2.1}Soluzione di sistemi lineari con matrici triangolari}{9}{subsection.3.2.1}%
-\contentsline {paragraph}{\nonumberline Nozioni teoriche}{9}{paragraph*.57}%
-\contentsline {paragraph}{\nonumberline Richiesta}{10}{paragraph*.59}%
-\contentsline {paragraph}{\nonumberline Implementazione e stile di struttura tipica del codice}{10}{paragraph*.61}%
-\contentsline {paragraph}{\nonumberline Analisi risultati}{11}{paragraph*.63}%
-\contentsline {subparagraph}{\nonumberline File necessari}{11}{subparagraph*.65}%
-\contentsline {subparagraph}{\nonumberline Risultato e controllo}{11}{subparagraph*.67}%
-\contentsline {subsection}{\numberline {3.2.2}Eliminazione di Gauss}{11}{subsection.3.2.2}%
-\contentsline {mtocsubsection}{\numberline {3.2.2}Eliminazione di Gauss}{11}{subsection.3.2.2}%
-\contentsline {paragraph}{\nonumberline Nozioni teoriche}{11}{paragraph*.69}%
-\contentsline {paragraph}{\nonumberline Richiesta}{12}{paragraph*.71}%
-\contentsline {paragraph}{\nonumberline Implementazione}{12}{paragraph*.73}%
-\contentsline {paragraph}{\nonumberline Analisi risultati}{12}{paragraph*.75}%
-\contentsline {subparagraph}{\nonumberline File necessari}{12}{subparagraph*.77}%
-\contentsline {subparagraph}{\nonumberline Soluzione}{13}{subparagraph*.79}%
-\contentsline {subsection}{\numberline {3.2.3}Decomposizione LU}{13}{subsection.3.2.3}%
-\contentsline {mtocsubsection}{\numberline {3.2.3}Decomposizione LU}{13}{subsection.3.2.3}%
-\contentsline {paragraph}{\nonumberline Nozioni teoriche}{13}{paragraph*.81}%
-\contentsline {paragraph}{\nonumberline Richiesta}{13}{paragraph*.83}%
-\contentsline {paragraph}{\nonumberline Implementazione}{13}{paragraph*.85}%
-\contentsline {subparagraph}{\nonumberline File necessari}{14}{subparagraph*.87}%
-\contentsline {paragraph}{\nonumberline Analisi risultati}{15}{paragraph*.89}%
-\contentsline {subparagraph}{\nonumberline File necessari}{15}{subparagraph*.91}%
-\contentsline {chapter}{\numberline {4}Intepolazione}{17}{chapter.4}%
+\contentsline {section}{\numberline {3.1}Implementazione preliminaria}{15}{section.3.1}%
+\contentsline {mtocsection}{\numberline {3.1}Implementazione preliminaria}{15}{section.3.1}%
+\contentsline {paragraph}{\nonumberline Classe \texttt {FunctionData}}{15}{paragraph*.93}%
+\contentsline {paragraph}{\nonumberline Classe \texttt {Range}}{15}{paragraph*.95}%
+\contentsline {section}{\numberline {3.2}Esercizi}{15}{section.3.2}%
+\contentsline {mtocsection}{\numberline {3.2}Esercizi}{15}{section.3.2}%
+\contentsline {subsection}{\numberline {3.2.1}Esercizio 6}{15}{subsection.3.2.1}%
+\contentsline {mtocsubsection}{\numberline {3.2.1}Esercizio 6}{15}{subsection.3.2.1}%
+\contentsline {paragraph}{\nonumberline Nozioni teoriche}{15}{paragraph*.97}%
+\contentsline {paragraph}{\nonumberline Implementazione metodo diretto}{15}{paragraph*.99}%
+\contentsline {subparagraph}{\nonumberline File necessari}{15}{subparagraph*.101}%
+\contentsline {paragraph}{\nonumberline Implementazione metodo di Newton}{16}{paragraph*.103}%
+\contentsline {subparagraph}{\nonumberline Considerazioni}{17}{subparagraph*.105}%
+\contentsline {subsubsection}{\nonumberline Punto 1}{17}{subsubsection*.107}%
+\contentsline {paragraph}{\nonumberline Analisi e conclusioni}{17}{figure.caption.110}%
+\contentsline {subsubsection}{\nonumberline Punto 2: Funzione di Runge}{17}{subsubsection*.112}%
+\contentsline {paragraph}{\nonumberline Analisi dei risultati}{17}{figure.caption.116}%
+\contentsline {paragraph}{\nonumberline Conclusioni}{17}{paragraph*.118}%
+\contentsline {subsection}{\numberline {3.2.2}Esercizio 7}{17}{subsection.3.2.2}%
+\contentsline {mtocsubsection}{\numberline {3.2.2}Esercizio 7}{17}{subsection.3.2.2}%
+\contentsline {paragraph}{\nonumberline Nozioni teoriche}{17}{paragraph*.120}%
+\contentsline {paragraph}{\nonumberline Implementazione}{18}{paragraph*.122}%
+\contentsline {paragraph}{\nonumberline Analisi risultati}{18}{figure.caption.127}%
+\contentsline {subparagraph}{\nonumberline Spline lineare}{18}{subparagraph*.129}%
+\contentsline {subparagraph}{\nonumberline Spline quadratica}{18}{subparagraph*.131}%
+\contentsline {chapter}{\numberline {4}Autovalori e autovettori}{19}{chapter.4}%
 \etoc@startlocaltoc {8}
 \etoc@startlocaltoc {9}
-\contentsline {section}{\numberline {4.1}Implementazione preliminaria}{17}{section.4.1}%
-\contentsline {mtocsection}{\numberline {4.1}Implementazione preliminaria}{17}{section.4.1}%
-\contentsline {paragraph}{\nonumberline Classe \texttt {FunctionData}}{17}{paragraph*.93}%
-\contentsline {paragraph}{\nonumberline Classe \texttt {Range}}{17}{paragraph*.95}%
-\contentsline {section}{\numberline {4.2}Esercizi}{17}{section.4.2}%
-\contentsline {mtocsection}{\numberline {4.2}Esercizi}{17}{section.4.2}%
-\contentsline {subsection}{\numberline {4.2.1}Metodo diretto e polinomio di Newton}{17}{subsection.4.2.1}%
-\contentsline {mtocsubsection}{\numberline {4.2.1}Metodo diretto e polinomio di Newton}{17}{subsection.4.2.1}%
-\contentsline {paragraph}{\nonumberline Nozioni teoriche}{17}{paragraph*.97}%
-\contentsline {paragraph}{\nonumberline Implementazione metodo diretto}{17}{paragraph*.99}%
-\contentsline {subparagraph}{\nonumberline File necessari}{17}{subparagraph*.101}%
-\contentsline {paragraph}{\nonumberline Implementazione metodo di Newton}{18}{paragraph*.103}%
-\contentsline {subparagraph}{\nonumberline Considerazioni}{19}{subparagraph*.105}%
-\contentsline {paragraph}{\nonumberline Analisi dei risultati}{19}{paragraph*.107}%
-\contentsline {subsection}{\numberline {4.2.2}Funzione di Runge}{19}{subsection.4.2.2}%
-\contentsline {mtocsubsection}{\numberline {4.2.2}Funzione di Runge}{19}{subsection.4.2.2}%
-\contentsline {subsection}{\numberline {4.2.3}Esercizio 3?}{19}{subsection.4.2.3}%
-\contentsline {mtocsubsection}{\numberline {4.2.3}Esercizio 3?}{19}{subsection.4.2.3}%
-\contentsline {chapter}{\numberline {5}ODE: Equazioni differenziali ordinarie}{21}{chapter.5}%
+\contentsline {section}{\numberline {4.1}Introduzione ed esercizio 8}{19}{section.4.1}%
+\contentsline {mtocsection}{\numberline {4.1}Introduzione ed esercizio 8}{19}{section.4.1}%
+\contentsline {subparagraph}{\nonumberline File necessari}{19}{subparagraph*.133}%
+\contentsline {subparagraph}{\nonumberline Esercizio}{19}{subparagraph*.135}%
+\contentsline {section}{\numberline {4.2}Punto 1: Power method}{19}{section.4.2}%
+\contentsline {mtocsection}{\numberline {4.2}Punto 1: Power method}{19}{section.4.2}%
+\contentsline {paragraph}{\nonumberline Nozioni teoriche}{19}{paragraph*.137}%
+\contentsline {subparagraph}{\nonumberline Shifted Power Method}{20}{subparagraph*.139}%
+\contentsline {paragraph}{\nonumberline Implementazione}{20}{paragraph*.141}%
+\contentsline {paragraph}{\nonumberline Risultati}{20}{paragraph*.143}%
+\contentsline {section}{\numberline {4.3}Punto 2: Inverse Power method}{20}{section.4.3}%
+\contentsline {mtocsection}{\numberline {4.3}Punto 2: Inverse Power method}{20}{section.4.3}%
+\contentsline {paragraph}{\nonumberline Nozioni teoriche}{20}{paragraph*.145}%
+\contentsline {paragraph}{\nonumberline Risultati}{20}{paragraph*.147}%
+\contentsline {section}{\numberline {4.4}Punto 3: studio della convergenza}{21}{section.4.4}%
+\contentsline {mtocsection}{\numberline {4.4}Punto 3: studio della convergenza}{21}{section.4.4}%
+\contentsline {paragraph}{\nonumberline Risultati}{21}{figure.caption.150}%
+\contentsline {paragraph}{\nonumberline Analisi e conclusioni}{21}{figure.caption.153}%
+\contentsline {section}{\numberline {4.5}Punto 4: Deflation method}{21}{section.4.5}%
+\contentsline {mtocsection}{\numberline {4.5}Punto 4: Deflation method}{21}{section.4.5}%
+\contentsline {paragraph}{\nonumberline Nozioni teoriche}{21}{paragraph*.155}%
+\contentsline {paragraph}{\nonumberline Implementazione}{21}{paragraph*.157}%
+\contentsline {paragraph}{\nonumberline Risultati}{21}{paragraph*.159}%
+\contentsline {chapter}{\numberline {5}Ricerca degli zeri}{23}{chapter.5}%
 \etoc@startlocaltoc {10}
 \etoc@startlocaltoc {11}
-\contentsline {section}{\numberline {5.1}Introduzione}{21}{section.5.1}%
-\contentsline {mtocsection}{\numberline {5.1}Introduzione}{21}{section.5.1}%
-\contentsline {subsection}{\numberline {5.1.1}Metodi numerici}{21}{subsection.5.1.1}%
-\contentsline {mtocsubsection}{\numberline {5.1.1}Metodi numerici}{21}{subsection.5.1.1}%
-\contentsline {paragraph}{\nonumberline Metodo di Eulero}{22}{paragraph*.109}%
-\contentsline {paragraph}{\nonumberline Metodo RK2 ed RK4}{22}{paragraph*.111}%
-\contentsline {section}{\numberline {5.2}Implementazione preliminaria}{23}{section.5.2}%
-\contentsline {mtocsection}{\numberline {5.2}Implementazione preliminaria}{23}{section.5.2}%
-\contentsline {paragraph}{\nonumberline Classe \texttt {ODESolver}}{23}{paragraph*.113}%
-\contentsline {section}{\numberline {5.3}Esercizi}{24}{section.5.3}%
-\contentsline {mtocsection}{\numberline {5.3}Esercizi}{24}{section.5.3}%
-\contentsline {subsection}{\numberline {5.3.1}Oscillatore approssimato}{24}{subsection.5.3.1}%
-\contentsline {mtocsubsection}{\numberline {5.3.1}Oscillatore approssimato}{24}{subsection.5.3.1}%
-\contentsline {paragraph}{\nonumberline Richiesta}{24}{paragraph*.115}%
-\contentsline {paragraph}{\nonumberline Osservazioni e analisi risultati}{24}{paragraph*.117}%
-\contentsline {subsection}{\numberline {5.3.2}Oscillatore reale}{24}{subsection.5.3.2}%
-\contentsline {mtocsubsection}{\numberline {5.3.2}Oscillatore reale}{24}{subsection.5.3.2}%
-\contentsline {paragraph}{\nonumberline Richiesta}{24}{paragraph*.122}%
-\contentsline {subsection}{\numberline {5.3.3}Attrattore di Lorenz}{25}{subsection.5.3.3}%
-\contentsline {mtocsubsection}{\numberline {5.3.3}Attrattore di Lorenz}{25}{subsection.5.3.3}%
-\contentsline {paragraph}{\nonumberline Richiesta}{25}{paragraph*.124}%
-\contentsline {subsection}{\numberline {5.3.4}Sistema a tre corpi}{25}{subsection.5.3.4}%
-\contentsline {mtocsubsection}{\numberline {5.3.4}Sistema a tre corpi}{25}{subsection.5.3.4}%
-\contentsline {paragraph}{\nonumberline Richiesta}{25}{paragraph*.126}%
+\contentsline {section}{\numberline {5.1}Esercizi}{23}{section.5.1}%
+\contentsline {mtocsection}{\numberline {5.1}Esercizi}{23}{section.5.1}%
+\contentsline {subsection}{\numberline {5.1.1}Esercizio 9}{23}{subsection.5.1.1}%
+\contentsline {mtocsubsection}{\numberline {5.1.1}Esercizio 9}{23}{subsection.5.1.1}%
+\contentsline {subsection}{\numberline {5.1.2}Esercizio 10}{23}{subsection.5.1.2}%
+\contentsline {mtocsubsection}{\numberline {5.1.2}Esercizio 10}{23}{subsection.5.1.2}%
+\contentsline {paragraph}{\nonumberline Convergenza lenta}{23}{paragraph*.162}%
+\contentsline {paragraph}{\nonumberline Cicli}{23}{paragraph*.164}%
+\contentsline {paragraph}{\nonumberline Condizioni iniziali}{23}{paragraph*.166}%
+\contentsline {subsection}{\numberline {5.1.3}Esercizio 11}{24}{subsection.5.1.3}%
+\contentsline {mtocsubsection}{\numberline {5.1.3}Esercizio 11}{24}{subsection.5.1.3}%
+\contentsline {paragraph}{\nonumberline Implementazione}{24}{paragraph*.170}%
+\contentsline {paragraph}{\nonumberline Analisi risultati}{24}{paragraph*.172}%
+\contentsline {chapter}{\numberline {6}Equazioni differenziali ordinarie}{25}{chapter.6}%
+\etoc@startlocaltoc {12}
+\etoc@startlocaltoc {13}
+\contentsline {section}{\numberline {6.1}Introduzione}{25}{section.6.1}%
+\contentsline {mtocsection}{\numberline {6.1}Introduzione}{25}{section.6.1}%
+\contentsline {subsection}{\numberline {6.1.1}Metodi numerici}{25}{subsection.6.1.1}%
+\contentsline {mtocsubsection}{\numberline {6.1.1}Metodi numerici}{25}{subsection.6.1.1}%
+\contentsline {paragraph}{\nonumberline Metodo di Eulero}{26}{paragraph*.174}%
+\contentsline {paragraph}{\nonumberline Metodo RK2 ed RK4}{26}{paragraph*.176}%
+\contentsline {section}{\numberline {6.2}Implementazione preliminaria}{27}{section.6.2}%
+\contentsline {mtocsection}{\numberline {6.2}Implementazione preliminaria}{27}{section.6.2}%
+\contentsline {paragraph}{\nonumberline Classe \texttt {ODESolver}}{27}{paragraph*.178}%
+\contentsline {section}{\numberline {6.3}Esercizi}{28}{section.6.3}%
+\contentsline {mtocsection}{\numberline {6.3}Esercizi}{28}{section.6.3}%
+\contentsline {subsection}{\numberline {6.3.1}Oscillatore approssimato}{28}{subsection.6.3.1}%
+\contentsline {mtocsubsection}{\numberline {6.3.1}Oscillatore approssimato}{28}{subsection.6.3.1}%
+\contentsline {paragraph}{\nonumberline Richiesta}{28}{paragraph*.180}%
+\contentsline {paragraph}{\nonumberline Osservazioni e analisi risultati}{28}{paragraph*.182}%
+\contentsline {subsection}{\numberline {6.3.2}Oscillatore reale}{28}{subsection.6.3.2}%
+\contentsline {mtocsubsection}{\numberline {6.3.2}Oscillatore reale}{28}{subsection.6.3.2}%
+\contentsline {paragraph}{\nonumberline Richiesta}{28}{paragraph*.187}%
+\contentsline {paragraph}{\nonumberline Implementazione}{29}{paragraph*.189}%
+\contentsline {subparagraph}{\nonumberline File necessari}{29}{subparagraph*.191}%
+\contentsline {paragraph}{\nonumberline Osservazioni e analisi risultati}{29}{paragraph*.193}%
+\contentsline {subsection}{\numberline {6.3.3}Attrattore di Lorenz}{31}{subsection.6.3.3}%
+\contentsline {mtocsubsection}{\numberline {6.3.3}Attrattore di Lorenz}{31}{subsection.6.3.3}%
+\contentsline {paragraph}{\nonumberline Richiesta}{31}{paragraph*.201}%
+\contentsline {paragraph}{\nonumberline Implementazione}{32}{paragraph*.203}%
+\contentsline {subparagraph}{\nonumberline File necessari}{32}{subparagraph*.205}%
+\contentsline {paragraph}{\nonumberline Osservazioni e analisi risultati}{32}{paragraph*.207}%
+\contentsline {subsection}{\numberline {6.3.4}Sistema a tre corpi}{33}{subsection.6.3.4}%
+\contentsline {mtocsubsection}{\numberline {6.3.4}Sistema a tre corpi}{33}{subsection.6.3.4}%
+\contentsline {paragraph}{\nonumberline Richiesta}{33}{paragraph*.212}%
+\contentsline {paragraph}{\nonumberline Implementazione}{34}{paragraph*.214}%
+\contentsline {subparagraph}{\nonumberline File necessari}{34}{subparagraph*.216}%
+\contentsline {paragraph}{\nonumberline Osservazioni e analisi risultati}{35}{paragraph*.218}%
+\contentsline {paragraph}{\nonumberline Conclusioni}{35}{paragraph*.224}%
+\contentsline {chapter}{\numberline {7}Equazione di Schrödinger}{37}{chapter.7}%
+\etoc@startlocaltoc {14}
+\etoc@startlocaltoc {15}
+\contentsline {section}{\numberline {7.1}Esercizi}{37}{section.7.1}%
+\contentsline {mtocsection}{\numberline {7.1}Esercizi}{37}{section.7.1}%
+\contentsline {subsection}{\numberline {7.1.1}Esercizio 16}{37}{subsection.7.1.1}%
+\contentsline {mtocsubsection}{\numberline {7.1.1}Esercizio 16}{37}{subsection.7.1.1}%
+\contentsline {paragraph}{\nonumberline Nozioni teoriche}{37}{paragraph*.226}%
+\contentsline {paragraph}{\nonumberline Implementazione}{37}{paragraph*.228}%
+\contentsline {subparagraph}{\nonumberline File necessari}{37}{subparagraph*.230}%
+\contentsline {paragraph}{\nonumberline Analisi dei risultati e conclusioni}{37}{paragraph*.232}%
+\contentsline {subsection}{\numberline {7.1.2}Esercizio 17}{37}{subsection.7.1.2}%
+\contentsline {mtocsubsection}{\numberline {7.1.2}Esercizio 17}{37}{subsection.7.1.2}%
+\contentsline {paragraph}{\nonumberline Nozioni teoriche}{37}{paragraph*.238}%
+\contentsline {paragraph}{\nonumberline Implementazione}{37}{paragraph*.240}%
+\contentsline {paragraph}{\nonumberline Analisi dei risultati e conclusioni}{37}{paragraph*.242}%
+\contentsline {chapter}{\numberline {8}Metodi di integrazione}{39}{chapter.8}%
+\etoc@startlocaltoc {16}
+\etoc@startlocaltoc {17}
